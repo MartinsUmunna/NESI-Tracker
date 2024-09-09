@@ -66,15 +66,7 @@ const Header = () => {
         </CenterContainer>
 
         <Stack spacing={1} direction="row" alignItems="center">
-          <Notifications />
-
-          <Box>
-            <Typography variant="h6" fontSize={12} color="textPrimary">R.Fortune</Typography>
-            <Typography variant="caption" fontSize={10} color="textSecondary">Management</Typography>
-          </Box>
-
           {lgDown ? <MobileRightSidebar /> : null}
-          <Profile />
           <Client />
         </Stack>
       </ToolbarStyled>

@@ -6,6 +6,7 @@ import ScrollToTop from './components/shared/ScrollToTop';
 import Router from './routes/Router';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 
+
 function App() {
   const routing = useRoutes(Router);
   const theme = ThemeSettings();

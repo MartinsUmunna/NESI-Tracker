@@ -6,7 +6,7 @@ import * as dropdownData from './data';
 import { IconMail } from '@tabler/icons';
 import { Stack } from '@mui/system';
 
-import CLientLogo from 'src/assets/images/logos/cropped-Kedco-Logo-web copy.png';
+import CLientLogo from 'src/assets/images/logos/EMRC-Logo.png';
 import unlimitedLogo from 'src/assets/images/backgrounds/unlimited-bg.png';
 import Scrollbar from 'src/components/custom-scroll/Scrollbar';
 

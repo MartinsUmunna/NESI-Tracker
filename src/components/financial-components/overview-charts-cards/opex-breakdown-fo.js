@@ -12,7 +12,7 @@ const OpexBreakdownFinancial = () => {
     setMonth(event.target.value);
   };
   return (
-    <Card elevation={0} sx={{ backgroundColor: '#e8ecef', py: 0 }}>
+    <Card elevation={0} sx={{ backgroundColor: '#f2f5f6', py: 0, boxShadow: 'rgb(145 158 171 / 30%) 0px 0px 2px 0px,rgb(145 158 171 / 12%) 0px 12px 24px -4px',}}>
       <CardContent sx={{ py: 2, px: 2 }}>
         <Grid container justifyContent="space-between">
           <Grid item xs={12} sm={12} display="flex" alignItems="center" textAlign="center">

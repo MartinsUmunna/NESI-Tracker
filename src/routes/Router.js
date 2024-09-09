@@ -7,49 +7,40 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 
-/* ****Commercial***** */
-const OverviewPage = Loadable(lazy(() => import('../views/overveiw/OverviewPage')));
-const CommercialOverviewLayout = Loadable(lazy(() => import('../views/commercial/commercial-overview')));
-const CommercialAllState = Loadable(lazy(() => import('../views/commercial/state/commercial-all-state')));
-const CommercialByState = Loadable(lazy(() => import('../views/commercial/state/commercial-by-state')));
-const CommercialAllBusinessDistricts = Loadable(lazy(() => import('../views/commercial/businessdistrict/commercial-all-business-district')));
-const CommercialByBusinessDistricts = Loadable(lazy(() => import('../views/commercial/businessdistrict/commercial-by-business-district')));
-const CommercialFeeder = Loadable(lazy(() => import('../views/commercial/feeder/commercial-feeder')));
-const CommercialServiceBand = Loadable(lazy(() => import('../views/commercial/serviceband/commercial-service-band')));
-const CommercialCustomer = Loadable(lazy(() => import('../views/commercial/customer/commercial-customer')));
+/* ****Industry***** */
+const Industry = Loadable(lazy(() => import('../views/overveiw/Industry')));
+const CommercialOverviewLayout = Loadable(lazy(() => import('../views/commercial/GenerationData')));
 
-/* ****Financial***** */
-const FinancialOverview = Loadable(lazy(() => import('../views/financial/financial-overview')));
-const FinancialAllState = Loadable(lazy(() => import('../views/financial/state/financial-all-state')));
-const FinancialByState = Loadable(lazy(() => import('../views/financial/state/financial-by-state')));
-const FinancialAllBusinessDistricts = Loadable(lazy(() => import('../views/financial/businessdistrict/financial-all-business-district')));
-const FinancialByBusinessDistricts = Loadable(lazy(() => import('../views/financial/businessdistrict/financial-by-business-district')));
-const FinancialFeeder = Loadable(lazy(() => import('../views/financial/feeder/financial-feeder')));
-const FinancialServiceBand = Loadable(lazy(() => import('../views/financial/serviceband/financial-service-band')));
-const FinancialCustomer = Loadable(lazy(() => import('../views/financial/customer/financial-customer')));
 
-/* ****Technical***** */
-const TechnicalOverview = Loadable(lazy(() => import('../views/technical/technical-overview')));
-const TechnicalAllState = Loadable(lazy(() => import('../views/technical/state/technical-all-state')));
-const TechnicalByState = Loadable(lazy(() => import('../views/technical/state/technical-by-state')));
-const TechnicalAllBusinessDistricts = Loadable(lazy(() => import('../views/technical/businessdistrict/technical-all-business-district')));
-const TechnicalByBusinessDistricts = Loadable(lazy(() => import('../views/technical/businessdistrict/technical-by-business-district')));
-const TechnicalFeeder = Loadable(lazy(() => import('../views/technical/feeder/technical-feeder')));
-const TechnicalServiceBand = Loadable(lazy(() => import('../views/technical/serviceband/technical-service-band')));
-const TechnicalCustomer = Loadable(lazy(() => import('../views/technical/customer/technical-customer')));
+/* ****Distribution***** */
+const FinancialOverview = Loadable(lazy(() => import('../views/financial/Disco')));
 
-/* ****Staff***** */
-const StaffOverview = Loadable(lazy(() => import('../views/staff/staff-overview')));
-const StaffAllState = Loadable(lazy(() => import('../views/staff/state/staff-all-state')));
-const StaffByState = Loadable(lazy(() => import('../views/staff/state/staff-by-state')));
-const StaffAllBusinessDistricts = Loadable(lazy(() => import('../views/staff/businessdistrict/staff-all-business-district')));
-const StaffByBusinessDistricts = Loadable(lazy(() => import('../views/staff/businessdistrict/staff-by-business-district')));
-const StaffFeeder = Loadable(lazy(() => import('../views/staff/feeder/staff-feeder')));
-const StaffServiceBand = Loadable(lazy(() => import('../views/staff/serviceband/staff-service-band')));
-const StaffCustomer = Loadable(lazy(() => import('../views/staff/customer/staff-customer')));
+/* ****Transmission***** */
+const Transmission = Loadable(lazy(() => import('../views/transmission/TransmissionData')));
+
+
+/* ****Customers***** */
+const TechnicalOverview = Loadable(lazy(() => import('../views/technical/CustomerData')));
+
+
+/* ****Mini Grids***** */
+const StaffOverview = Loadable(lazy(() => import('../views/staff/MiniGridsData')));
+
+/* ****Energy Report***** */
+const EnergyOverview = Loadable(lazy(() => import('../views/staff/EnergyReportData')));
+
+/* ****Energy Insights***** */
+const EnergyInsights = Loadable(lazy(() => import('../views/staff/EnergyInsightsData')));
+
+/* ****World Energy Report***** */
+const WorldData = Loadable(lazy(() => import('../views/world/WorldData')));
+
 
 
 const Homepage = Loadable(lazy(() => import('../views/homepage/homepage')))
+
+const WorldEnergyMix = Loadable(lazy(() => import('../components/world-components/WorldEnergyMix')));
+
 
 
 
@@ -58,45 +49,31 @@ const Router = [
     path: '/',
     element: <FullLayout />,
     children: [
-      { path: '/', element: <Navigate to="/overview/overviewpage" /> },
-      { path: '/overview/overviewpage', exact: true, element: <OverviewPage /> },
-      { path: '/commercial/commercial-overview', exact: true, element: <CommercialOverviewLayout /> },
-      { path: '/commercial/commercial-all-state', element: <CommercialAllState /> },
-      { path: '/commercial/commercial-by-state', element: <CommercialByState /> },
-      { path: '/commercial/commercial-all-business-district', element: <CommercialAllBusinessDistricts /> },
-      { path: '/commercial/commercial-by-business-district', element: <CommercialByBusinessDistricts /> },
-      { path: '/commercial/commercial-feeder', element: <CommercialFeeder /> },
-      { path: '/commercial/commercial-service-band', element: <CommercialServiceBand /> },
-      { path: '/commercial/commercial-customer', element: <CommercialCustomer /> },
+      { path: '/', element: <Navigate to="/overview/Industry" /> },
+      { path: '/overview/Industry', exact: true, element: <Industry /> },
+      { path: '/commercial/GenerationData', exact: true, element: <CommercialOverviewLayout /> },
+      
 
-      { path: '/financial/financial-overview', exact: true, element: <FinancialOverview /> },
-      { path: '/financial/financial-all-state', element: <FinancialAllState /> },
-      { path: '/financial/financial-by-state', element: <FinancialByState /> },
-      { path: '/financial/financial-all-business-district', element: <FinancialAllBusinessDistricts /> },
-      { path: '/financial/financial-by-business-district', element: <FinancialByBusinessDistricts /> },
-      { path: '/financial/financial-feeder', element: <FinancialFeeder /> },
-      { path: '/financial/financial-service-band', element: <FinancialServiceBand /> },
-      { path: '/financial/financial-customer', element: <FinancialCustomer /> },
+      { path: '/financial/Disco', exact: true, element: <FinancialOverview /> },
 
-      { path: '/technical/technical-overview', exact: true, element: <TechnicalOverview /> },
-      { path: '/technical/technical-all-state', element: <TechnicalAllState /> },
-      { path: '/technical/technical-by-state', element: <TechnicalByState /> },
-      { path: '/technical/technical-all-business-district', element: <TechnicalAllBusinessDistricts /> },
-      { path: '/technical/technical-by-business-district', element: <TechnicalByBusinessDistricts /> },
-      { path: '/technical/technical-feeder', element: <TechnicalFeeder /> },
-      { path: '/technical/technical-service-band', element: <TechnicalServiceBand /> },
-      { path: '/technical/technical-customer', element: <TechnicalCustomer /> },
+      { path: '/transmission/TransmissionData', exact: true, element: <Transmission /> },
+      
 
-      { path: '/staff/staff-overview', exact: true, element: <StaffOverview /> },
-      { path: '/staff/staff-all-state', element: <StaffAllState /> },
-      { path: '/staff/staff-by-state', element: <StaffByState /> },
-      { path: '/staff/staff-all-business-district', element: <StaffAllBusinessDistricts /> },
-      { path: '/staff/staff-by-business-district', element:<StaffByBusinessDistricts /> },
-      { path: '/staff/staff-feeder', element: <StaffFeeder /> },
-      { path: '/staff/staff-service-band', element: <StaffServiceBand /> },
-      { path: '/staff/staff-customer', element: <StaffCustomer /> },
+      { path: '/technical/CustomerData', exact: true, element: <TechnicalOverview /> },
+      
+
+      { path: '/staff/MiniGridsData', exact: true, element: <StaffOverview /> },
+
+      { path: '/staff/EnergyReportData', exact: true, element: <EnergyOverview /> },
+
+      { path: '/staff/EnergyInsightsData', exact: true, element: <EnergyInsights /> },
+
+      { path: '/world/WorldData', exact: true, element: <WorldData /> },
+      
 
       { path: '/home', element: <Homepage /> },
+
+      { path: '/WorldEnergyMix', exact: true, element: <WorldEnergyMix /> },
 
 
 

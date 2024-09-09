@@ -56,27 +56,27 @@ const StyledBox = styled(Box)(() => ({
 
 const demos = [
   {
-    link: '/overview/overviewpage',
+    link: '/overview/Industry',
     img: mainDemo,
     title: 'Overview',
   },
   {
-    link: '/commercial/commercial-overview',
+    link: '/commercial/GenerationData',
     img: darkDemo,
     title: 'Commercial',
   },
   {
-    link: '/financial/financial-overview',
+    link: '/financial/Disco',
     img: horizontalDemo,
     title: 'Financial',
   },
   {
-    link: '/technical/technical-overview',
+    link: '/technical/CustomerData',
     img: minisidebarDemo,
     title: 'Technical',
   },
   {
-    link: '/staff/staff-overview',
+    link: '/staff/MiniGridsData',
     img: rtlDemo,
     title: 'Staff Manager',
   },

@@ -20,6 +20,7 @@ import StateMapboxFinancialBBD from '../../../components/financial-components/by
 import StateCostBreakdownFinancialBBD from '../../../components/financial-components/by-business-district-chart-cards/statecost-breakdown-bbd';
 import TariffFinancialBBD from '../../../components/financial-components/by-business-district-chart-cards/tarrifs-bbd';
 import BusinessDistrictFilter from '/src/layouts/full/shared/breadcrumb/BusinessDistrictFilter';
+import OpexBreakdownFinancialBBD from '../../../components/financial-components/by-business-district-chart-cards/opex-breakdown-bbd';
 
 const BCrumb = [
   {
@@ -55,6 +56,10 @@ const FinancialByBusinessDistricts = () => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <StateMapboxFinancialBBD />
+        </Grid>
+        
+        <Grid item xs={12}>
+          <OpexBreakdownFinancialBBD />
         </Grid>
 
         <Grid item xs={12}>

@@ -47,10 +47,7 @@ const FinancialAllBusinessDistricts = () => {
         </Grid>
         <Grid item xs={12} >
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <CostBreakdownFinancialABD />
-            </Grid>
-            <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={8}>
           <TariffLossFinancialABD />
         </Grid>
         {/* column */}
@@ -64,6 +61,10 @@ const FinancialAllBusinessDistricts = () => {
             </Grid>
           </Grid>
         </Grid>
+            <Grid item xs={12}>
+              <CostBreakdownFinancialABD />
+            </Grid>
+        
           </Grid>
         </Grid>
       </Grid>

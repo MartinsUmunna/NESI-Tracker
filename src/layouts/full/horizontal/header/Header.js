@@ -16,7 +16,6 @@ const Header = () => {
   const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
-  // drawer
   const customizer = useSelector((state) => state.customizer);
   const dispatch = useDispatch();
 
@@ -24,7 +23,6 @@ const Header = () => {
     background: theme.palette.background.paper,
     justifyContent: 'center',
     backdropFilter: 'blur(4px)',
-
     [theme.breakpoints.up('lg')]: {
       minHeight: customizer.TopbarHeight,
     },
@@ -41,9 +39,6 @@ const Header = () => {
         <Box sx={{ width: lgDown ? '45px' : 'auto', overflow: 'hidden' }}>
           <Logo />
         </Box>
-        {/* ------------------------------------------- */}
-        {/* Toggle Button Sidebar */}
-        {/* ------------------------------------------- */}
         {lgDown ? (
           <IconButton
             color="inherit"
@@ -55,10 +50,9 @@ const Header = () => {
         ) : (
           ''
         )}
-        {/* ------------------------------------------- */}
-        {/* Search Dropdown */}
-        {/* ------------------------------------------- */}
         <Search />
+        {/* Place logo with img tag */}
+        
         {lgUp ? (
           <>
             <Navigation />
@@ -67,13 +61,7 @@ const Header = () => {
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
           <Language />
-          {/* ------------------------------------------- */}
-          {/* Ecommerce Dropdown */}
-          {/* ------------------------------------------- */}
           <Cart />
-          {/* ------------------------------------------- */}
-          {/* End Ecommerce Dropdown */}
-          {/* ------------------------------------------- */}
           <Notifications />
           <Profile />
         </Stack>

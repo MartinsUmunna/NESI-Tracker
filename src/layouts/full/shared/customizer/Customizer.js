@@ -87,6 +87,23 @@ const Customizer = () => {
       bgColor: '#FA896B',
       disp: 'ORANGE_THEME',
     },
+    {
+      id: 7,
+      bgColor: '#005440',
+      disp: 'DARK_GREEN_THEME',
+    },
+    {
+      id: 8,
+      bgColor: '#8BC34A',
+      disp: 'LIGHT_GREEN_THEME',
+    },
+    {
+      id: 9,
+      bgColor: '#FF9800',
+      disp: 'BURNT_ORANGE_THEME',
+    },
+    
+
   ];
 
   return (

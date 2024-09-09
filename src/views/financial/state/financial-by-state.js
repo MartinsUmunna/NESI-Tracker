@@ -19,6 +19,7 @@ import StateMapboxFinancialBS from '../../../components/financial-components/by-
 import StateCostBreakdownFinancialBS from '../../../components/financial-components/by-state-chart-cards/statecost-breakdown-bs';
 import StateFilter from 'src/layouts/full/shared/breadcrumb/StateFilter'
 import TariffFinancialBS from '../../../components/financial-components/by-state-chart-cards/tarrifs-bs';
+import OpexBreakdownFinancialBS from '../../../components/financial-components/by-state-chart-cards/opex-breakdown-bs';
 const BCrumb = [
   {
     to: '/',
@@ -45,6 +46,10 @@ const FinancialByState = () => {
         <Grid item xs={12}>
           <StateMapboxFinancialBS />
         </Grid>
+        <Grid item xs={12}>
+          <OpexBreakdownFinancialBS />
+        </Grid>
+        
 
         <Grid item xs={12}>
           <Grid container spacing={3}>

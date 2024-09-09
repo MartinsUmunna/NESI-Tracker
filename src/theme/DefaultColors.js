@@ -59,7 +59,7 @@ const baselightTheme = {
     },
     divider: '#e5eaef',
     background: {
-      default: '#ffffff',
+      default: '#ffffff', // Modified to white
     },
   },
 };

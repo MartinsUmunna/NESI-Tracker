@@ -38,7 +38,7 @@ const EnergyDeliveredStates = () => {
       show: false,
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      categories: [ 'Mar', 'Apr', 'May', 'Jun'],
       axisBorder: {
         show: false,
       },
@@ -68,7 +68,7 @@ const EnergyDeliveredStates = () => {
   const seriescolumnchart = [
     {
       name: 'Energy Delivered',
-      data: [180, 150, 110, 240, 200, 200, 300, 210, 200, 280, 190, 210],
+      data: [180, 150, 110, 240],
     },
   ];
 

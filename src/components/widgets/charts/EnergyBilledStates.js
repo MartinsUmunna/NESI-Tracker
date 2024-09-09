@@ -38,7 +38,7 @@ const EnergyBilledStates = () => {
       show: false,
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','Aug','Sep','Oct','Nov','Dec'],
+      categories: [ 'Mar', 'Apr', 'May', 'Jun'],
       axisBorder: {
         show: false,
       },
@@ -68,7 +68,7 @@ const EnergyBilledStates = () => {
   const seriescolumnchart = [
     {
       name: 'Energy Billed',
-      data: [90, 120, 110, 85, 100, 100, 125, 92,118,103,72,100],
+      data: [90, 120, 110, 85],
     },
   ];
 

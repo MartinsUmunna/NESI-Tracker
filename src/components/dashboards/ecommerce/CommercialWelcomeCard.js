@@ -5,8 +5,11 @@ import CustomSelect from '../../forms/theme-elements/CustomSelect';
 import welcomeImg from 'src/assets/images/backgrounds/overveiw-bg.svg';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
+import { useFilters } from 'src/components//contexts/FilterContext';
 
 const WelcomeCard = () => {
+  
   const theme = useTheme();
   const primaryLight = theme.palette.primary.light;
   const textColor = theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : '#2A3547';
@@ -14,6 +17,8 @@ const WelcomeCard = () => {
 
   const [year, setYear] = useState('All');
   const [month, setMonth] = useState('All');
+  const [metricsData, setMetricsData] = useState([]);
+  const [availableMonths, setAvailableMonths] = useState([]);
 
   const handleYearChange = (event) => {
     setYear(event.target.value);
@@ -23,10 +28,8 @@ const WelcomeCard = () => {
     setMonth(event.target.value);
   };
 
-  const years = ['All', '2023', '2024'];
+  const years = ['All', '2019', '2020', '2021', '2022', '2023', '2024'];
   const allMonths = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  const [availableMonths, setAvailableMonths] = useState(allMonths);
 
   useEffect(() => {
     if (year === '2024') {
@@ -37,7 +40,27 @@ const WelcomeCard = () => {
     }
   }, [year]);
 
-  // Sparkline chart options
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const response = await axios.get('http://localhost:5006/api/commercial/overview', {
+          params: {
+            year: year !== 'All' ? year : null,
+            month: month !== 'All' ? month : null
+          }
+        });
+        setMetricsData(response.data);
+      } catch (error) {
+        console.error('Error fetching metrics data:', error);
+      }
+    };
+
+    fetchMetrics();
+  }, [year, month]);
+
+  const totalMetrics = metricsData.find((data) => data.IsTotal === 1) || {};
+  const recentMetrics = metricsData.filter((data) => data.IsTotal === 0).slice(0, 4);
+
   const optionsSparkline = {
     chart: {
       type: 'area',
@@ -71,10 +94,9 @@ const WelcomeCard = () => {
     },
   };
 
-  // Hardcoded data for sparklines
-  const seriesEnergyDelivered = [{ data: [150, 160, 145, 175, 180, 155, 160, 170, 165, 150, 140, 175], name: '' }];
-  const seriesEnergyBilled = [{ data: [100, 110, 105, 115, 120, 95, 100, 110, 105, 90, 95, 115], name: '' }];
-  const seriesEnergyCollected = [{ data: [70, 65, 60, 75, 80, 55, 60, 70, 65, 52, 55, 89], name: '' }];
+  const seriesEnergyDelivered = [{ data: recentMetrics.map(m => m.EnergyDeliveredGWh), name: '' }];
+  const seriesEnergyBilled = [{ data: recentMetrics.map(m => m.EnergyBilledGWh), name: '' }];
+  const seriesEnergyCollected = [{ data: recentMetrics.map(m => m.EnergyCollectedGWh), name: '' }];
 
   return (
     <Card elevation={0} sx={{ backgroundColor: primaryLight, py: 0 }}>

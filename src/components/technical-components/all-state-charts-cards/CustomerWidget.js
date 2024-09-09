@@ -1,0 +1,131 @@
+import React from 'react';
+import Chart from 'react-apexcharts';
+import { useTheme } from '@mui/material/styles';
+import { CardContent, Typography, Avatar, Grid, Stack } from '@mui/material';
+import BlankCard from '../../shared/BlankCard';
+import { IconArrowDownRight } from '@tabler/icons';
+
+const CustomerWidget = () => {
+  // chart color
+  const theme = useTheme();
+  const primary = theme.palette.primary.main;
+  const secondary = theme.palette.secondary.main;
+
+  const formatValue = (value) => {
+    if (value >= 1000000) {
+      return (value / 1000000).toFixed(2) + 'M';
+    } else if (value >= 1000) {
+      return (value / 1000).toFixed(2) + 'K';
+    }
+    return value.toFixed(0);
+  };
+
+  // chart
+  const optionscolumnchart = {
+    chart: {
+      type: 'bar',
+      fontFamily: "'Plus Jakarta Sans', sans-serif;",
+      foreColor: '#adb0bb',
+      toolbar: {
+        show: false,
+      },
+    },
+    colors: [primary, secondary],
+    plotOptions: {
+      bar: {
+        borderRadius: 3,
+        columnWidth: '65%',
+        endingShape: 'rounded',
+        dataLabels: {
+          position: 'top',
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: '10px',
+        colors: [theme.palette.mode === 'dark' ? '#fff' : '#000'],
+      },
+      offsetY: -20,
+      formatter: function (val) {
+        return formatValue(val);
+      },
+    },
+    legend: {
+      show: true,
+      position: 'bottom',
+    },
+    grid: {
+      yaxis: {
+        lines: {
+          show: false,
+        },
+      },
+    },
+    xaxis: {
+      categories: ['Kano', 'Katsina', 'Jigawa'],
+      labels: {
+        style: {
+          fontSize: '10px',
+          fontWeight: 600,
+        },
+      },
+    },
+    yaxis: {
+      show: false, // Hide y-axis
+    },
+    tooltip: {
+      theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      y: {
+        formatter: function(val) {
+          return formatValue(val);
+        }
+      }
+      
+    },
+  };
+
+  const seriescolumnchart = [
+    {
+      name: 'Customer Number',
+      data: [3134714, 630520, 1150149],
+    },
+    
+  ];
+
+  return (
+    <BlankCard>
+      <CardContent sx={{ p: '25px' }}>
+        <Typography variant="h5">Customer Number</Typography>
+
+        <Grid container spacing={3}>
+          <Grid item xs={5} sx={{ paddingRight: '10px' }}>
+            <Typography variant="h4" mt={3} fontWeight={600}>4.915M</Typography>
+            <Typography variant="subtitle2" fontSize="12px" color="textSecondary">
+              (last month)
+            </Typography>
+            <Stack direction="row" spacing={1} mt={1} alignItems="center">
+              <Avatar sx={{ bgcolor: 'error.light', width: 20, height: 20 }}>
+                <IconArrowDownRight width={16} color="#FA896B" />
+              </Avatar>
+              <Typography variant="subtitle2" color="textSecondary">
+                4.89M
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={7}>
+            <Chart
+              options={optionscolumnchart}
+              series={seriescolumnchart}
+              type="bar"
+              height="125px"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </BlankCard>
+  );
+};
+
+export default CustomerWidget;

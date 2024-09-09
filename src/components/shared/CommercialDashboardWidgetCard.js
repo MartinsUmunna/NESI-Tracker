@@ -1,20 +1,15 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { IconGridDots } from '@tabler/icons';
 
 const CommercialDashboardWidgetCard = ({
   title,
   subtitle,
   children,
-  dataLabel1,
-  dataItem1,
-  dataLabel2,
-  dataItem2,
+  action,
 }) => {
   const customizer = useSelector((state) => state.customizer);
-
   const theme = useTheme();
   const borderColor = theme.palette.grey[100];
 
@@ -25,65 +20,24 @@ const CommercialDashboardWidgetCard = ({
       variant={!customizer.isCardShadow ? 'outlined' : undefined}
     >
       <CardContent sx={{ p: '30px' }}>
-        {title ? (
-          <Box>
-            {title ? <Typography variant="h5">{title}</Typography> : ''}
-
-            {subtitle ? (
-              <Typography variant="subtitle2" color="textSecondary">
-                {subtitle}
-              </Typography>
-            ) : (
-              ''
+        {title && (
+          <Box display="flex" justifyContent="space-between" mb={2}>
+            <Box>
+              <Typography variant="h5">{title}</Typography>
+              {subtitle && (
+                <Typography variant="subtitle2" color="textSecondary">
+                  {subtitle}
+                </Typography>
+              )}
+            </Box>
+            {action && (
+              <Box textAlign="right">
+                {action}
+              </Box>
             )}
           </Box>
-        ) : null}
-
+        )}
         {children}
-
-        <Stack direction="row" spacing={2} justifyContent="space-between" mt={2}>
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Box
-              width={38}
-              height={38}
-              bgcolor="primary.light"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <IconGridDots width={22} />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="textSecondary">
-                {dataLabel1}
-              </Typography>
-              <Typography variant="h6" fontWeight="600">
-                {dataItem1}
-              </Typography>
-            </Box>
-          </Stack>
-          {/* Remove this line to keep the right icon grid dots */}
-          {/* <Stack direction="row" spacing={2} alignItems="center">
-            <Box
-              width={38}
-              height={38}
-              bgcolor="grey.200"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <IconGridDots width={22} />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="textSecondary">
-                {dataLabel2}
-              </Typography>
-              <Typography variant="h6" fontWeight="600">
-                {dataItem2}
-              </Typography>
-            </Box>
-          </Stack> */}
-        </Stack>
       </CardContent>
     </Card>
   );

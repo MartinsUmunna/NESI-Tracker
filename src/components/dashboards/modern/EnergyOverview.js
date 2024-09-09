@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from '../../shared/EnergyComparisonAllStatesDashboardWidgetCard';
@@ -9,36 +9,29 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 const EnergyOverview = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-  const secondary = theme.palette.secondary.main;
-  const tertiary = theme.palette.error.main;
-
-  const [visibleSeries, setVisibleSeries] = useState([true, true, true]);
 
   const energyData = [
     { title: 'Delivered', value: 1772, change: 9, color: 'primary' },
-    { title: 'Billed', value: 1263, change: 6, color: 'secondary' },
-    { title: 'Collected', value: 989, change: -14, color: 'error' },
+    { title: 'Billed', value: 1263, change: 6, color: 'primary' },
+    { title: 'Collected', value: 989, change: -14, color: 'primary' },
   ];
 
-  const seriescolumnchart = [
+  const chartData = [
     {
       name: 'Delivered (GWh)',
-      data: [1273, 375, 124, 150, 200, 225, 190, 170, 219, 242, 197, 200],
-      color: primary,
+      data: [124, 150, 200, 225],
     },
     {
       name: 'Billed (GWh)',
-      data: [934, 253, 76, 55, 80, 160, 100, 80, 142, 125, 150, 119],
-      color: secondary,
+      data: [76, 55, 80, 160],
     },
     {
       name: 'Collected (GWh)',
-      data: [500, 109, 46, 35, 50, 120, 80, 50, 112, 96, 104, 85],
-      color: tertiary,
+      data: [46, 35, 50, 120],
     },
-  ].filter((_, index) => visibleSeries[index]);
+  ];
 
-  const optionscolumnchart = {
+  const createChartOptions = (title) => ({
     chart: {
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
@@ -53,7 +46,6 @@ const EnergyOverview = () => {
         borderRadius: 4,
         columnWidth: '45%',
         endingShape: 'rounded',
-        grouped: true,
         dataLabels: {
           position: 'top'
         }
@@ -61,7 +53,6 @@ const EnergyOverview = () => {
     },
     dataLabels: {
       enabled: true,
-      position:"top",
       style: {
         fontSize: '8px',
         colors: [theme.palette.mode === 'dark' ? '#fff' : '#000'],
@@ -71,18 +62,17 @@ const EnergyOverview = () => {
         return val.toFixed(0);
       },
     },
-    legend: {
-      show: true,
-    },
-    grid: {
-      yaxis: {
-        lines: {
-          show: false,
-        },
+    title: {
+      text: title,
+      align: 'center',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold',
+        color: theme.palette.text.primary,
       },
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar','Apr', 'May','Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      categories: ['Mar', 'Apr', 'May', 'Jun'],
       axisBorder: {
         show: false,
       },
@@ -90,7 +80,6 @@ const EnergyOverview = () => {
     yaxis: {
       tickAmount: 3,
       labels: {
-        show: true,
         style: {
           colors: theme.palette.mode === 'dark' ? '#fff' : '#adb0bb',
         },
@@ -99,13 +88,7 @@ const EnergyOverview = () => {
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
     },
-  };
-
-  const toggleSeriesVisibility = (index) => {
-    const newVisibleSeries = [...visibleSeries];
-    newVisibleSeries[index] = !newVisibleSeries[index];
-    setVisibleSeries(newVisibleSeries);
-  };
+  });
 
   return (
     <EnergyComparisonAllStatesDashboardWidgetCard title="Energy Comparison">
@@ -115,10 +98,9 @@ const EnergyOverview = () => {
             <Button
               variant="contained"
               fullWidth
-              onClick={() => toggleSeriesVisibility(index)}
               sx={{
-                bgcolor: visibleSeries[index] ? theme.palette[item.color].light : theme.palette.action.disabledBackground,
-                color: visibleSeries[index] ? theme.palette[item.color].main : theme.palette.text.disabled,
+                bgcolor: theme.palette[item.color].light,
+                color: theme.palette[item.color].main,
                 '&:hover': {
                   bgcolor: theme.palette[item.color].main,
                   color: theme.palette[item.color].contrastText,
@@ -155,7 +137,18 @@ const EnergyOverview = () => {
           </Grid>
         ))}
       </Grid>
-      <Chart options={optionscolumnchart} series={seriescolumnchart} type="bar" height="345px" />
+      <Grid container spacing={2}>
+        {chartData.map((data, index) => (
+          <Grid item xs={12} md={4} key={index}>
+            <Chart
+              options={createChartOptions(data.name)}
+              series={[{ name: data.name, data: data.data, color: primary }]}
+              type="bar"
+              height="345px"
+            />
+          </Grid>
+        ))}
+      </Grid>
     </EnergyComparisonAllStatesDashboardWidgetCard>
   );
 };

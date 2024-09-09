@@ -101,6 +101,57 @@ const LightThemeColors = [
       },
     },
   },
+  {
+    name: 'DARK_GREEN_THEME',
+    palette: {
+      primary: {
+        main: '#005440',
+        light: '#007056',
+        dark: '#003D32',
+        contrastText: '#ffffff',
+      },
+      secondary: {
+        main: '#FFAE1F',
+        light: '#FEF5E5',
+        dark: '#ae8e59',
+        contrastText: '#ffffff',
+      },
+    },
+  },
+  {
+    name: 'LIGHT_GREEN_THEME',
+    palette: {
+      primary: {
+        main: '#8BC34A',
+        light: '#C5E1A5',
+        dark: '#689F38',
+        contrastText: '#ffffff',
+      },
+      secondary: {
+        main: '#FFD54F',
+        light: '#FFE082',
+        dark: '#FFB300',
+        contrastText: '#ffffff',
+      },
+    },
+  },
+  {
+    name: 'BURNT_ORANGE_THEME',
+    palette: {
+      primary: {
+        main: '#FF9800',
+        light: '#C56200',
+        dark: '#F57C00',
+        contrastText: '#ffffff',
+      },
+      secondary: {
+        main: '#6A1B9A',
+        light: '#450065',
+        dark: '#38006B',
+        contrastText: '#ffffff',
+      },
+    },
+  },
 ];
 
 export { LightThemeColors };

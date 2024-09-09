@@ -1,10 +1,9 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { IconArrowUpRight } from '@tabler/icons';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { IconArrowUpRight, IconGridDots } from '@tabler/icons';
+import { Avatar, Stack, Typography, Box } from '@mui/material';
+
 
 import CommercialDashboardWidgetCard from '../../shared/CommercialDashboardWidgetCard';
 
@@ -79,6 +78,12 @@ const CollectionEfficiencyStates = () => {
   };
 
   const seriesGaugeChart = [58];
+  const monthData = [
+    { month: 'March', value: '56%', color: 'primary' },
+    { month: 'April', value: '50%', color: 'secondary' },
+    { month: 'May', value: '48%', color: 'warning' },
+    { month: 'June', value: '39%', color: 'success' },
+  ];
 
   return (
     <CommercialDashboardWidgetCard
@@ -96,8 +101,16 @@ const CollectionEfficiencyStates = () => {
           </Typography>
         </Stack>
       )}
-      dataLabel1="Target"
-      dataItem1="100%"
+      action={
+        <Box textAlign="right">
+          <Typography variant="subtitle2" color="textSecondary">
+            Target
+          </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            100%
+          </Typography>
+        </Box>
+      }
     >
       <>
         <Chart 
@@ -106,6 +119,30 @@ const CollectionEfficiencyStates = () => {
           type="radialBar" 
           height="295px" 
         />
+        <Stack direction="row" spacing={2} justifyContent="space-between" mt={2}>
+          {monthData.map((item, index) => (
+            <Stack key={index} direction="row" spacing={1} alignItems="center">
+              <Box
+                width={30}
+                height={30}
+                bgcolor={`${theme.palette[item.color].light}`}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <IconGridDots width={18} color={theme.palette[item.color].main} />
+              </Box>
+              <Box>
+                <Typography variant="h6" fontWeight="600" fontSize="0.875rem">
+                  {item.value}
+                </Typography>
+                <Typography variant="subtitle2" color="textSecondary" fontSize="0.75rem">
+                  {item.month}
+                </Typography>
+              </Box>
+            </Stack>
+          ))}
+        </Stack>
       </>
     </CommercialDashboardWidgetCard>
   );

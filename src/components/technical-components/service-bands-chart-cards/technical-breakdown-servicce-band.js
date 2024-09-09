@@ -1,314 +1,163 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Box, Button, CardContent, Grid, Typography, Stack, Avatar } from '@mui/material';
-import GreyCard from '../../shared/greycard';
-import DashboardWidgetCard from '../../shared/DashboardWidgetCard';
-import CostBreakdownCards from '../../shared/costbreakdowncard';
-import { color, fontSize, fontWeight, padding, width } from '@mui/system';
+import { Box, CardContent, Grid, Typography, Stack, Avatar } from '@mui/material';
 import BlankCard from '../../shared/BlankCard';
 
 const TechBreakdownTechnicalSBT = () => {
-  // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const primarylight = theme.palette.primary.light;
   const secondary = theme.palette.secondary.main;
   const textColor = theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : '#2A3547';
 
-  // chart
-  const feedernumber = {
+  const barColors = ['#3B80B2', '#599BC8', '#77ADD2', '#95BED8', '#B3CEDE'];
+
+  const createChartOptions = (title) => ({
     chart: {
-        type: 'donut',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-  
-        toolbar: {
-          show: false,
-        },
-        height: 275,
-      },
-      labels: ["Band A", "Band B", "Band C", "Band D", "Band E"],
-      colors: [primary, primarylight, secondary,],
-      plotOptions: {
-        pie: {
-          
-          donut: {
-            size: '89%',
-            background: 'transparent',
-  
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: textColor,
-                fontSize: '20px',
-                fontWeight: '600',
-              },
-            },
-          },
-        },
-      },
-      dataLabels: {
-        enabled: false,
-
-      },
-      stroke: {
+      type: 'bar',
+      fontFamily: "'Plus Jakarta Sans', sans-serif;",
+      toolbar: {
         show: false,
       },
-      legend: {
-        show: false,
-      },
-      tooltip: {
-        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-        fillSeriesColor: false,
-      },
-  };
-  
-  const feedernumberseries = [42, 62, 30, 25, 14];
-
-  //   chart 2
-  const loadreading = {
-    chart: {
-        type: 'donut',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-  
-        toolbar: {
-          show: false,
+      height: 275,
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        dataLabels: {
+          position: 'right',
         },
-        height: 275,
+        distributed: true, // This enables different colors for each bar
       },
-      labels: ["Band A", "Band B", "Band C", "Band D", "Band E"],
-      colors: [primary, primarylight, secondary],
-      plotOptions: {
-        pie: {
-          
-          donut: {
-            size: '89%',
-            background: 'transparent',
-  
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: textColor,
-                fontSize: '20px',
-                fontWeight: '600',
-
-              },
-            },
-          },
+    },
+    dataLabels: {
+      enabled: true,
+      textAnchor: 'start',
+      style: {
+        colors: [textColor],
+      },
+      formatter: function (val) {
+        return val;
+      },
+      offsetX: 0,
+    },
+    xaxis: {
+      categories: ["Band A", "Band B", "Band C", "Band D", "Band E"],
+      labels: {
+        style: {
+          colors: textColor,
         },
       },
-      dataLabels: {
-        enabled: false,
-
-      },
-      stroke: {
-        show: false,
-      },
-      legend: {
-        show: false,
-      },
-      tooltip: {
-        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-        fillSeriesColor: false,
-      },
-  };
-  
-  const loadreadingseries = [42, 62, 30, 25, 14];
-  //   chart 3
-  const customernumbers = {
-    chart: {
-        type: 'donut',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-  
-        toolbar: {
-          show: false,
-        },
-        height: 275,
-      },
-      labels: ["Band A", "Band B", "Band C", "Band D", "Band E"],
-      colors: [primary, primarylight, secondary],
-      plotOptions: {
-        pie: {
-          
-          donut: {
-            size: '89%',
-            background: 'transparent',
-  
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                offsetY: 7,
-              },
-              value: {
-                show: false,
-              },
-              total: {
-                show: true,
-                color: textColor,
-                fontSize: '20px',
-                fontWeight: '600',
-
-              },
-            },
-          },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: textColor,
         },
       },
-      dataLabels: {
-        enabled: false,
+    },
+    colors: barColors,
+    tooltip: {
+      theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      y: {
+        formatter: function (val) {
+          return val;
+        },
+      },
+    },
+    title: {
+      text: title,
+      align: 'center',
+      style: {
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: theme.palette.mode === 'dark' ? textColor : '#273E76',
+      },
+    },
+    legend: {
+      show: false, // This will remove the legend
+    },
+  });
 
-      },
-      stroke: {
-        show: false,
-      },
-      legend: {
-        show: false,
-      },
-      tooltip: {
-        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-        fillSeriesColor: false,
-      },
-  };
-  
-  const customernumbersseries = [42, 62, 30, 25, 14];
+  const feederNumbersSeries = [
+    {
+      name: 'Feeder Numbers',
+      data: [42, 62, 30, 25, 14],
+    },
+  ];
+
+  const loadReadingSeries = [
+    {
+      name: 'Load Reading',
+      data: [5.2, 2.7, 3.5, 3.0, 2.9],
+    },
+  ];
+
+  const customerNumbersSeries = [
+    {
+      name: 'Customer Numbers',
+      data: [100, 150, 80, 70, 40],
+    },
+  ];
 
   return (
-    <BlankCard >
+    <BlankCard>
       <CardContent sx={{ p: '30px' }}>
-        
-      <Stack direction="row" spacing={2} justifyContent="space-between">
+        <Stack direction="row" spacing={2} justifyContent="space-between">
           <Typography variant="h5">Tariff Metrics By Service Band</Typography>
           <Stack direction="row" spacing={2} mt={5} justifyContent="center">
-          <Stack direction="row" spacing={3}>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              sx={{ width: 9, height: 9, bgcolor: '#3B80B2', svg: { display: 'none' } }}
-            ></Avatar>
-            <Box>
-              <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
-                Band A
-              </Typography>
-            </Box>
+            {["Band A", "Band B", "Band C", "Band D", "Band E"].map((band, index) => (
+              <Stack key={band} direction="row" alignItems="center" spacing={1}>
+                <Avatar sx={{ width: 9, height: 9, bgcolor: barColors[index], svg: { display: 'none' } }}></Avatar>
+                <Box>
+                  <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
+                    {band}
+                  </Typography>
+                </Box>
+              </Stack>
+            ))}
           </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              sx={{ width: 9, height: 9, bgcolor: '#599BC8', svg: { display: 'none' } }}
-            ></Avatar>
-            <Box>
-              <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
-                Band B
-              </Typography>
-            </Box>
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              sx={{ width: 9, height: 9, bgcolor: '#599BC8', svg: { display: 'none' } }}
-            ></Avatar>
-            <Box>
-              <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
-                Band C
-              </Typography>
-            </Box>
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              sx={{ width: 9, height: 9, bgcolor: '#599BC8', svg: { display: 'none' } }}
-            ></Avatar>
-            <Box>
-              <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
-                Band D
-              </Typography>
-            </Box>
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              sx={{ width: 9, height: 9, bgcolor: '#77ADD2', svg: { display: 'none' } }}
-            ></Avatar>
-            <Box>
-              <Typography variant="subtitle2" fontSize="12px" fontWeight={700} color="textSecondary">
-                Band E
-              </Typography>
-            </Box>
-          </Stack>
-        </Stack>
-        </Stack>
         </Stack>
 
         <Grid container spacing={3} mt={2}>
-          {/* 1 */}
           <Grid item xs={12} sm={4}>
             <BlankCard>
               <CardContent sx={{ p: '20px' }}>
-              <Box justifyContent="center" textAlign="center" mt={1} mb={3}>
-                  <Typography variant="h6" fontWeight={800} color='#273E76'>
-                    Feeder Numbers
-                  </Typography>
-                </Box>
-
                 <Box>
-                  <Chart
-                    options={feedernumber}
-                    series={feedernumberseries}
-                    type="donut"
-                    height="275px"   
-                  />
-                </Box>
-                
-              </CardContent>
-            </BlankCard>
-          </Grid>
-          {/* 2 */}
-          <Grid item xs={12} sm={4}>
-            <BlankCard>
-              <CardContent sx={{ p: '20px' }}>
-              <Box justifyContent="center" textAlign="center" mt={1} mb={3}>
-                  <Typography variant="h6" fontWeight={800} color='#273E76'>
-                    Load Reading
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <Chart
-                    options={loadreading}
-                    series={loadreadingseries}
-                    type="donut"
-                    height="275px"
+                  <Chart 
+                    options={createChartOptions('Feeder Numbers')} 
+                    series={feederNumbersSeries} 
+                    type="bar" 
+                    height="275px" 
                   />
                 </Box>
               </CardContent>
             </BlankCard>
           </Grid>
-          {/* 3 */}
           <Grid item xs={12} sm={4}>
             <BlankCard>
               <CardContent sx={{ p: '20px' }}>
-              <Box justifyContent="center" textAlign="center" mt={1} mb={3}>
-                  <Typography variant="h6" fontWeight={800} color='#273E76'>
-                    Customer Numbers
-                  </Typography>
-                </Box>
                 <Box>
-                  <Chart
-                    options={customernumbers}
-                    series={customernumbersseries}
-                    type="donut"
-                    height="275px"
+                  <Chart 
+                    options={createChartOptions('Load Reading')} 
+                    series={loadReadingSeries} 
+                    type="bar" 
+                    height="275px" 
+                  />
+                </Box>
+              </CardContent>
+            </BlankCard>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <BlankCard>
+              <CardContent sx={{ p: '20px' }}>
+                <Box>
+                  <Chart 
+                    options={createChartOptions('Customer Numbers')} 
+                    series={customerNumbersSeries} 
+                    type="bar" 
+                    height="275px" 
                   />
                 </Box>
               </CardContent>

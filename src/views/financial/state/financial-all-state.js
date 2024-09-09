@@ -18,6 +18,11 @@ import Earned from '../../../components/widgets/charts/Earned';
 import CurrentValue from '../../../components/widgets/charts/CurrentValue';
 import RevenueCostFinancialAS from '../../../components/financial-components/all-state-chart-cards/revenue-cost-as';
 import TariffFinancialAS from '../../../components/financial-components/all-state-chart-cards/tariff-as';
+import FinancialTariffAllStates from  '../../../components/financial-components/all-state-chart-cards/FinancialTariffAllStates';
+import MYTOALLOWEDTARIFF from '../../../components/financial-components/all-state-chart-cards/MYTOAllowedTariffWidget';
+import CollectionTariif from '../../../components/financial-components/all-state-chart-cards/CollectionTariffWidget';
+import TariffLoss from '../../../components/financial-components/all-state-chart-cards/TariffLossWidget';
+
 const BCrumb = [
   {
     to: '/',
@@ -32,19 +37,36 @@ const BCrumb = [
 ];
 
 const FinancialAllState = () => {
-  
   return (
-    <PageContainer title="Financial All State" description="this is Charts page">
+    <PageContainer title="Financial All State" description="this is Financial All State page">
       {/* breadcrumb */}
       <Breadcrumb title="Financial All State" items={BCrumb} />
       {/* end breadcrumb */}
-      <Grid container spacing={5}>
-        
-        <Grid item xs={12}>
-          <RevenueCostFinancialAS />
-        </Grid>
-        <Grid item xs={12}>
-          <TariffFinancialAS />
+      <Grid container spacing={3}>
+        <Grid item xs={12} lg={12}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={8}>
+              <Grid container spacing={3} direction="column">
+                <Grid item style={{ height: '500px' }}>
+                  <FinancialTariffAllStates />
+                </Grid>
+               
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <Grid container spacing={3}>
+              <Grid item xs={12}>
+                  <MYTOALLOWEDTARIFF />
+                </Grid>
+                <Grid item xs={12}>
+                  <CollectionTariif />
+                </Grid>
+                <Grid item xs={12}>
+                  <TariffLoss />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </PageContainer>

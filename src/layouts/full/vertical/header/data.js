@@ -132,7 +132,7 @@ const appsLink = [
     avatar: ddIcon7,
   },
   {
-    href: '/dashboards/commercial-overview',
+    href: '/dashboards/GenerationData',
     title: 'Ecom Dashboard ',
     subtext: 'Data-genic Dashbaords',
     avatar: ddIcon8,

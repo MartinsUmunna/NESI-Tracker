@@ -61,7 +61,7 @@ const demos = [
     title: 'Main',
   },
   {
-    link: 'https://modernize-react-dark.netlify.app/dashboards/commercial-overview',
+    link: 'https://modernize-react-dark.netlify.app/dashboards/GenerationData',
     img: darkDemo,
     title: 'Dark',
   },

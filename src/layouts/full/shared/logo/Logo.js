@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { ReactComponent as LogoDark } from 'src/assets/images/logos/the raven-dfull.svg'; 
-import { ReactComponent as LogoDarkRTL } from 'src/assets/images/logos/dark-rtl-logo.svg';
-import { ReactComponent as LogoLight } from 'src/assets/images/logos/the raven-dfull.svg';
-import { ReactComponent as LogoLightRTL } from 'src/assets/images/logos/the raven-dfull.svg';
+import { ReactComponent as LogoDark } from 'src/assets/images/logos/Nesi_Logo.svg'; 
+import { ReactComponent as LogoDarkRTL } from 'src/assets/images/logos/Nesi_Logo.svg';
+import { ReactComponent as LogoLight } from 'src/assets/images/logos/Nesi_Logo.svg';
+import { ReactComponent as LogoLightRTL } from 'src/assets/images/logos/Nesi_Logo.svg';
 import { styled } from '@mui/material';
 
 

@@ -34,7 +34,7 @@ const Menuitems = [
         id: uniqueId(),
         title: 'eCommerce',
         icon: IconPoint,
-        href: '/dashboards/commercial-overview',
+        href: '/dashboards/GenerationData',
       },
     ],
   },
