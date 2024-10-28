@@ -1,14 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Box, Typography, Tooltip, IconButton } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import DashboardCard from 'src/components/shared/DashboardCard'; 
+import { Box } from '@mui/material';
+import DashboardCard from 'src/components/shared/DashboardCard'; // Adjust import path as needed
 
 const SystemCollapses = () => {
   const theme = useTheme();
   const textColor = theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : '#2A3547';
   const borderColor = theme.palette.grey[100];
+
+  const [data, setData] = useState({ total: [], partial: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/system-Collapses');
+        const total = [];
+        const partial = [];
+        response.data.forEach(item => {
+          if (item.CollapseType === 'No. of Total System Collapse') {
+            total.push(item.TotalCollapse);
+          } else if (item.CollapseType === 'No. of Partial System Collapse') {
+            partial.push(item.TotalCollapse);
+          }
+        });
+        setData({ total, partial });
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const optionsColumnChart = {
     chart: {
@@ -36,10 +60,10 @@ const SystemCollapses = () => {
         colors: [textColor],
         fontSize: '16px',
       },
-      formatter: (val) => `${val}`,  
+      formatter: (val) => `${val}`,
     },
     xaxis: {
-      categories: [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+      categories: [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019, 2020, 2021, 2022, 2023],
       labels: {
         style: {
           colors: textColor,
@@ -59,17 +83,17 @@ const SystemCollapses = () => {
     grid: {
       borderColor: borderColor,
     },
-    colors: [theme.palette.primary.main, theme.palette.secondary.main]  
+    colors: [theme.palette.primary.main, theme.palette.secondary.main]
   };
 
   const seriesColumnChart = [
     {
       name: 'Total System Collapses',
-      data: [1, 2, 6, 3, 4, 2, 5, 3],
+      data: data.total,
     },
     {
       name: 'Partial System Collapses',
-      data: [3, 1, 0, 1, 2, 0, 2, 1],
+      data: data.partial,
     },
   ];
 

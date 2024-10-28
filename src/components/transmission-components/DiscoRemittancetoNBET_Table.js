@@ -283,7 +283,7 @@ const DiscoInvoicetoNBET_Table = () => {
           <Box>
             <FormControlLabel
               control={<Switch checked={compareMode} onChange={handleCompareToggle} />}
-              label="Compare Mode"
+              label="Chart"
             />
             <IconButton>
               <IconFilter size="1.2rem" />

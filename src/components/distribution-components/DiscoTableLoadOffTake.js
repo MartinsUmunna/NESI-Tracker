@@ -39,21 +39,19 @@ import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
 import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
-const initialData = [
-  { genco: 'Abuja', "2023_MYTO": 45, "2023_Actual": 30, "2022_MYTO": 30, "2022_Actual": 25, "2021_MYTO": 25, "2021_Actual": 50, "2020_MYTO": 50, "2020_Actual": 40, "2019_MYTO": 40, "2019_Actual": 35, "2018_MYTO": 35, "2018_Actual": 30, "2017_MYTO": 30, "2017_Actual": 25, img: AbujaLogo },
-  { genco: 'Benin', "2023_MYTO": 50, "2023_Actual": 40, "2022_MYTO": 40, "2022_Actual": 30, "2021_MYTO": 30, "2021_Actual": 45, "2020_MYTO": 45, "2020_Actual": 35, "2019_MYTO": 35, "2019_Actual": 30, "2018_MYTO": 30, "2018_Actual": 25, "2017_MYTO": 25, "2017_Actual": 25, img: BeninLogo },
-  { genco: 'Eko', "2023_MYTO": 22, "2023_Actual": 26, "2022_MYTO": 26, "2022_Actual": 24, "2021_MYTO": 24, "2021_Actual": 32, "2020_MYTO": 32, "2020_Actual": 38, "2019_MYTO": 38, "2019_Actual": 30, "2018_MYTO": 30, "2018_Actual": 29, "2017_MYTO": 29, "2017_Actual": 29, img: EkoLogo },
-  { genco: 'Enugu', "2023_MYTO": 47, "2023_Actual": 31, "2022_MYTO": 31, "2022_Actual": 22, "2021_MYTO": 22, "2021_Actual": 41, "2020_MYTO": 41, "2020_Actual": 28, "2019_MYTO": 28, "2019_Actual": 25, "2018_MYTO": 25, "2018_Actual": 39, "2017_MYTO": 39, "2017_Actual": 39, img: EnuguLogo },
-  { genco: 'Ibadan', "2023_MYTO": 36, "2023_Actual": 47, "2022_MYTO": 47, "2022_Actual": 49, "2021_MYTO": 49, "2021_Actual": 38, "2020_MYTO": 38, "2020_Actual": 33, "2019_MYTO": 33, "2019_Actual": 41, "2018_MYTO": 41, "2018_Actual": 29, "2017_MYTO": 29, "2017_Actual": 29, img: IbadanLogo },
-  { genco: 'Ikeja', "2023_MYTO": 34, "2023_Actual": 47, "2022_MYTO": 47, "2022_Actual": 39, "2021_MYTO": 39, "2021_Actual": 30, "2020_MYTO": 30, "2020_Actual": 44, "2019_MYTO": 44, "2019_Actual": 35, "2018_MYTO": 35, "2018_Actual": 32, "2017_MYTO": 32, "2017_Actual": 32, img: IkejaLogo },
-  { genco: 'Jos', "2023_MYTO": 48, "2023_Actual": 33, "2022_MYTO": 33, "2022_Actual": 40, "2021_MYTO": 40, "2021_Actual": 29, "2020_MYTO": 29, "2020_Actual": 38, "2019_MYTO": 38, "2019_Actual": 37, "2018_MYTO": 37, "2018_Actual": 28, "2017_MYTO": 28, "2017_Actual": 28, img: JosLogo },
-  { genco: 'Kaduna', "2023_MYTO": 39, "2023_Actual": 41, "2022_MYTO": 41, "2022_Actual": 45, "2021_MYTO": 45, "2021_Actual": 47, "2020_MYTO": 47, "2020_Actual": 30, "2019_MYTO": 30, "2019_Actual": 33, "2018_MYTO": 33, "2018_Actual": 35, "2017_MYTO": 35, "2017_Actual": 35, img: KadunaLogo },
-  { genco: 'Kano', "2023_MYTO": 41, "2023_Actual": 37, "2022_MYTO": 37, "2022_Actual": 32, "2021_MYTO": 32, "2021_Actual": 49, "2020_MYTO": 49, "2020_Actual": 27, "2019_MYTO": 27, "2019_Actual": 29, "2018_MYTO": 29, "2018_Actual": 42, "2017_MYTO": 42, "2017_Actual": 42, img: KanoLogo },
-  { genco: 'Portharcourt', "2023_MYTO": 34, "2023_Actual": 45, "2022_MYTO": 45, "2022_Actual": 38, "2021_MYTO": 38, "2021_Actual": 41, "2020_MYTO": 41, "2020_Actual": 47, "2019_MYTO": 47, "2019_Actual": 36, "2018_MYTO": 36, "2018_Actual": 30, "2017_MYTO": 30, "2017_Actual": 30, img: PortharcourtLogo },
-  { genco: 'Yola', "2023_MYTO": 38, "2023_Actual": 33, "2022_MYTO": 33, "2022_Actual": 41, "2021_MYTO": 41, "2021_Actual": 42, "2020_MYTO": 42, "2020_Actual": 37, "2019_MYTO": 37, "2019_Actual": 28, "2018_MYTO": 28, "2018_Actual": 29, "2017_MYTO": 29, "2017_Actual": 29, img: YolaLogo },
-];
-
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+const logoMap = {
+  'Abuja': AbujaLogo,
+  'Benin': BeninLogo,
+  'Eko': EkoLogo,
+  'Enugu': EnuguLogo,
+  'Ibadan': IbadanLogo,
+  'Ikeja': IkejaLogo,
+  'Jos': JosLogo,
+  'Kaduna': KadunaLogo,
+  'Kano': KanoLogo,
+  'Portharcourt': PortharcourtLogo,
+  'Yola': YolaLogo
+};
 
 function descendingComparator(a, b, orderBy) {
   const MYTOKey = `${orderBy.split('_')[0]}_MYTO`;
@@ -90,7 +88,7 @@ function stableSort(array, comparator) {
 }
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, years } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -113,16 +111,16 @@ const EnhancedTableHead = (props) => {
             ) : null}
           </TableSortLabel>
         </TableCell>
-        <TableCell align="right">Total</TableCell>
-        {fields.map((field) => (
-          <TableCell key={field} align="right">
+        <TableCell align="right">Avg Actual Offtake</TableCell>
+        {years.map((year) => (
+          <TableCell key={year} align="right">
             <TableSortLabel
-              active={orderBy === `${field}_MYTO` || orderBy === `${field}_Actual`}
-              direction={orderBy === `${field}_MYTO` || orderBy === `${field}_Actual` ? order : 'asc'}
-              onClick={createSortHandler(`${field}_MYTO`)}
+              active={orderBy === `${year}_MYTO` || orderBy === `${year}_Actual`}
+              direction={orderBy === `${year}_MYTO` || orderBy === `${year}_Actual` ? order : 'asc'}
+              onClick={createSortHandler(`${year}_MYTO`)}
             >
-              {field}
-              {orderBy === `${field}_MYTO` || orderBy === `${field}_Actual` ? (
+              {year}
+              {orderBy === `${year}_MYTO` || orderBy === `${year}_Actual` ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
@@ -139,19 +137,64 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   onRequestSort: PropTypes.func.isRequired,
+  years: PropTypes.array.isRequired
 };
 
 const DiscoTableLoadOffTake = () => {
   const theme = useTheme();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('2023_MYTO');
-  const [rows, setRows] = React.useState(initialData);
+  const [orderBy, setOrderBy] = React.useState('');
+  const [rows, setRows] = React.useState([]);
+  const [years, setYears] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [dense, setDense] = React.useState(false);
   const [compareMode, setCompareMode] = React.useState(false);
-  const [selectedYear, setSelectedYear] = React.useState('2023');
+  const [selectedYear, setSelectedYear] = React.useState('');
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/Disco-Load-Offtake');
+        const data = await response.json();
+
+        // Extract unique years and sort them
+        const uniqueYears = [...new Set(data.map(item => item.Years))].sort((a, b) => b - a);
+        setYears(uniqueYears);
+        setSelectedYear(uniqueYears[0].toString());
+
+        // Transform data into required format
+        const transformedData = data.reduce((acc, item) => {
+          const disco = item.Discos;
+          const year = item.Years;
+          const value = parseFloat(item.Load_Offtake.replace('%', ''));
+          const type = item.Offtake_Type;
+
+          if (!acc[disco]) {
+            acc[disco] = {
+              genco: disco,
+              img: logoMap[disco]
+            };
+          }
+
+          acc[disco][`${year}_${type === 'MYTO' ? 'MYTO' : 'Actual'}`] = value;
+
+          return acc;
+        }, {});
+
+        setRows(Object.values(transformedData).sort((a, b) => a.genco.localeCompare(b.genco)));
+        setOrderBy(`${uniqueYears[0]}_MYTO`);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -161,10 +204,10 @@ const DiscoTableLoadOffTake = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
-    const filteredRows = initialData.filter(row => 
+    setSearch(value);
+    const filteredRows = rows.filter(row => 
       row.genco.toLowerCase().includes(value)
     );
-    setSearch(value);
     setRows(filteredRows);
   };
 
@@ -175,6 +218,7 @@ const DiscoTableLoadOffTake = () => {
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -184,11 +228,16 @@ const DiscoTableLoadOffTake = () => {
     setPage(0);
   };
 
+  const calculateActualAverage = (row) => {
+    const actualValues = years.map(year => row[`${year}_Actual`] || 0);
+    return actualValues.reduce((sum, value) => sum + value, 0) / actualValues.length;
+  };
+
   const chartData = React.useMemo(() => {
     return rows.map(row => ({
       disco: row.genco,
-      'MYTO Allocation (%)': row[`${selectedYear}_MYTO`],
-      'Actual Load Allocation (%)': row[`${selectedYear}_Actual`]
+      'MYTO Allocation (%)': row[`${selectedYear}_MYTO`] || 0,
+      'Actual Load Allocation (%)': row[`${selectedYear}_Actual`] || 0
     }))
     .sort((a, b) => b['MYTO Allocation (%)'] - a['MYTO Allocation (%)']);
   }, [rows, selectedYear]);
@@ -200,24 +249,24 @@ const DiscoTableLoadOffTake = () => {
       toolbar: {
         show: false
       },
-      background: 'transparent', // Ensure background matches theme
+      background: 'transparent',
     },
     plotOptions: {
       bar: {
         borderRadius: 4,
         horizontal: true,
-        distributed: false, // Use different colors for each bar
+        distributed: false,
         dataLabels: {
           position: 'right'
         },
         barHeight: '70%',
       },
     },
-    colors: [theme.palette.primary.main, theme.palette.secondary.main], // Use primary and secondary colors
+    colors: [theme.palette.primary.main, theme.palette.secondary.main],
     dataLabels: {
       enabled: true,
       textAnchor: 'start',
-      formatter: function (val, opt) {
+      formatter: function (val) {
         return `${val.toFixed(1)}%`;
       },
       offsetX: 5,
@@ -225,22 +274,22 @@ const DiscoTableLoadOffTake = () => {
         enabled: false
       },
       style: {
-        colors: [theme.palette.text.primary] // Ensure data labels are visible
+        colors: [theme.palette.text.primary]
       }
     },
     xaxis: {
       categories: chartData.map(item => item.disco),
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure x-axis labels are visible
+          colors: [theme.palette.text.primary],
         },
-        formatter: (val) => `${val}%` // Show percentage on x-axis labels
+        formatter: (val) => `${val}%`
       }
     },
     yaxis: {
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure y-axis labels are visible
+          colors: [theme.palette.text.primary],
         }
       }
     },
@@ -248,20 +297,16 @@ const DiscoTableLoadOffTake = () => {
       text: `MYTO Allocation vs Actual Load Allocation - ${selectedYear}`,
       align: 'center',
       style: {
-        color: theme.palette.text.primary // Ensure title is visible
+        color: theme.palette.text.primary
       }
     },
     tooltip: {
-      theme: 'dark', // Ensure tooltip is styled for dark mode
+      theme: theme.palette.mode,
       y: {
         formatter: function (val) {
           return `${val.toFixed(1)}%`;
         }
-      },
-      style: {
-        color: theme.palette.text.primary, // Tooltip text color
-      },
-      background: theme.palette.background.paper, // Tooltip background color
+      }
     },
     legend: {
       show: true,
@@ -290,14 +335,17 @@ const DiscoTableLoadOffTake = () => {
     }
   ];
 
-  // Compute Average for each column
-  const averages = fields.reduce((acc, field) => {
-    acc[`${field}_MYTO`] = (rows.reduce((sum, row) => sum + (row[`${field}_MYTO`] || 0), 0) / rows.length).toFixed(1);
-    acc[`${field}_Actual`] = (rows.reduce((sum, row) => sum + (row[`${field}_Actual`] || 0), 0) / rows.length).toFixed(1);
+  // Compute Average for Actuals only
+  const averages = years.reduce((acc, year) => {
+    acc[`${year}_Actual`] = (rows.reduce((sum, row) => sum + (row[`${year}_Actual`] || 0), 0) / rows.length).toFixed(1);
     return acc;
   }, {});
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -307,7 +355,7 @@ const DiscoTableLoadOffTake = () => {
           <Box>
             <FormControlLabel
               control={<Switch checked={compareMode} onChange={handleCompareToggle} />}
-              label="Compare Mode"
+              label="Chart"
             />
             <IconButton>
               <IconFilter size="1.2rem" />
@@ -337,8 +385,8 @@ const DiscoTableLoadOffTake = () => {
               onChange={handleYearChange}
               sx={{ mb: 2 }}
             >
-              {fields.map((year) => (
-                <MenuItem key={year} value={year}>
+              {years.map((year) => (
+                <MenuItem key={year} value={year.toString()}>
                   {year}
                 </MenuItem>
               ))}
@@ -357,6 +405,7 @@ const DiscoTableLoadOffTake = () => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                 <Box sx={{ width: 16, height: 16, bgcolor: theme.palette.primary.main, mr: 1 }} />
+                
                 <Typography variant="body2">MYTO</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -369,6 +418,7 @@ const DiscoTableLoadOffTake = () => {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
+                years={years}
               />
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
@@ -380,19 +430,17 @@ const DiscoTableLoadOffTake = () => {
                       </TableCell>
                       <TableCell>{row.genco}</TableCell>
                       <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                        {(
-                          fields.reduce((sum, year) => sum + (row[`${year}_MYTO`] || 0) + (row[`${year}_Actual`] || 0), 0) / (fields.length * 2)
-                        ).toFixed(1)}%
+                        {calculateActualAverage(row).toFixed(1)}%
                       </TableCell>
-                      {fields.map(year => (
+                      {years.map(year => (
                         <TableCell align="right" key={year} sx={{ p: 1 }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>
-                              {row[`${year}_MYTO`].toFixed(1)}%
+                              {(row[`${year}_MYTO`] || 0).toFixed(1)}%
                             </Typography>
                             <Box sx={{ height: 1, bgcolor: 'divider', my: 0.5 }} />
                             <Typography sx={{ color: theme.palette.secondary.main, fontWeight: 'bold' }}>
-                              {row[`${year}_Actual`].toFixed(1)}%
+                              {(row[`${year}_Actual`] || 0).toFixed(1)}%
                             </Typography>
                           </Box>
                         </TableCell>
@@ -401,7 +449,7 @@ const DiscoTableLoadOffTake = () => {
                   ))}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={fields.length + 3} />
+                    <TableCell colSpan={years.length + 3} />
                   </TableRow>
                 )}
               </TableBody>
@@ -409,13 +457,13 @@ const DiscoTableLoadOffTake = () => {
                 <TableRow>
                   <TableCell colSpan={2} align="right">Average</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                    {(Object.values(averages).reduce((sum, value) => sum + parseFloat(value), 0) / (fields.length * 2)).toFixed(1)}%
+                    {(Object.values(averages).reduce((sum, value) => sum + parseFloat(value), 0) / years.length).toFixed(1)}%
                   </TableCell>
-                  {fields.map(year => (
+                  {years.map(year => (
                     <TableCell align="right" key={year} sx={{ p: 1 }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>
-                          {averages[`${year}_MYTO`]}%
+                          {(rows.reduce((sum, row) => sum + (row[`${year}_MYTO`] || 0), 0) / rows.length).toFixed(1)}%
                         </Typography>
                         <Box sx={{ height: 1, bgcolor: 'divider', my: 0.5 }} />
                         <Typography sx={{ color: theme.palette.secondary.main, fontWeight: 'bold' }}>
@@ -450,3 +498,4 @@ const DiscoTableLoadOffTake = () => {
 };
 
 export default DiscoTableLoadOffTake;
+               

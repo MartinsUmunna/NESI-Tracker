@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
@@ -6,28 +6,42 @@ import BlankCard from 'src/components/shared/BlankCard';
 
 const LowCarbonShareEnergy = () => {
   const theme = useTheme();
-  const [yearRange, setYearRange] = useState([2013, 2023]);
-  
-  const allLocations = [
-    'Africa', 'Africa (EI)', 'Algeria', 'Argentina', 'Asia', 'Asia Pacific (EI)', 'Australia', 'Austria',
-    'Azerbaijan', 'Bangladesh', 'Belarus', 'Belgium', 'Brazil', 'Bulgaria', 'CIS (EI)', 'Canada',
-    'Central America (EI)', 'Chile', 'China', 'Colombia', 'Croatia', 'Czechia', 'Denmark', 'Eastern Africa (EI)',
-    'Ecuador', 'Egypt', 'Estonia', 'Europe', 'Europe (EI)', 'European Union (27)', 'Finland', 'France',
-    'Germany', 'Greece', 'High-income countries', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia',
-    'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Latvia', 'Lithuania',
-    'Lower-middle-income countries', 'Luxembourg', 'Malaysia', 'Mexico', 'Middle Africa (EI)', 'Middle East (EI)',
-    'Morocco', 'Netherlands', 'New Zealand', 'Non-OECD (EI)', 'North America', 'North America (EI)',
-    'North Macedonia', 'Norway', 'OECD (EI)', 'Oceania', 'Oman', 'Pakistan', 'Peru', 'Philippines', 'Poland',
-    'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa',
-    'South America', 'South Korea', 'South and Central America (EI)', 'Spain', 'Sri Lanka', 'Sweden',
-    'Switzerland', 'Taiwan', 'Thailand', 'Trinidad and Tobago', 'Turkey', 'Turkmenistan', 'USSR', 'Ukraine',
-    'United Kingdom', 'United States', 'Upper-middle-income countries', 'Uzbekistan', 'Venezuela', 'Vietnam',
-    'Western Africa (EI)', 'World'
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [yearRange, setYearRange] = useState([0, 0]);
 
+  const allLocations = useMemo(() => [...new Set(data.map(item => item.Entity))], [data]);
   const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'World'];
   const defaultSelectedContinents = ['Africa', 'Asia', 'Europe', 'North America', 'South America'];
   const [selectedLocations, setSelectedLocations] = useState(defaultSelectedContinents);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/Low-Carbon-Share');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+
+        // Set the initial year range to the last 5 years
+        const years = [...new Set(jsonData.map(item => item.Year))];
+        const sortedYears = years.sort((a, b) => b - a);
+        const latestYear = sortedYears[0];
+        const startYear = sortedYears[4] || sortedYears[sortedYears.length - 1]; 
+        setYearRange([startYear, latestYear]);
+
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangeYearRange = (event, newValue) => {
     setYearRange(newValue);
@@ -37,26 +51,12 @@ const LowCarbonShareEnergy = () => {
     setSelectedLocations(event.target.value);
   };
 
-  // Modified mock data generation function
-  const generateMockData = () => {
-    return Array.from({ length: 2023 - 1965 + 1 }, (_, index) => {
-      const year = 1965 + index;
-      return allLocations.map(location => ({
-        location,
-        value: parseFloat((Math.random() * 33 + 2).toFixed(2)), 
-        year
-      }));
-    }).flat();
-  };
-
-  const mockData = useMemo(() => generateMockData(), []);
-
   const filteredData = useMemo(() => {
-    return mockData.filter(d => 
-      d.year >= yearRange[0] && d.year <= yearRange[1] &&
-      selectedLocations.includes(d.location)
+    return data.filter(d => 
+      d.Year >= yearRange[0] && d.Year <= yearRange[1] &&
+      selectedLocations.includes(d.Entity)
     );
-  }, [yearRange, selectedLocations, mockData]);
+  }, [yearRange, selectedLocations, data]);
 
   const chartData = useMemo(() => {
     return selectedLocations.map(location => ({
@@ -64,8 +64,8 @@ const LowCarbonShareEnergy = () => {
       data: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, index) => {
         const year = yearRange[0] + index;
         const value = filteredData
-          .find(d => d.year === year && d.location === location)?.value || 0;
-        return { x: year, y: parseFloat(value.toFixed(2)) };
+          .find(d => d.Year === year && d.Entity === location)?.Low_carbon_energy_equivalent_primary_energy || 0;
+        return { x: year, y: Math.round(value * 100) / 100 };
       })
     }));
   }, [filteredData, yearRange, selectedLocations]);
@@ -183,6 +183,9 @@ const LowCarbonShareEnergy = () => {
     ? `Low Carbon Share by Location in ${yearRange[0]}`
     : `Low Carbon Share by Location from ${yearRange[0]} to ${yearRange[1]}`;
 
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error}</Typography>;
+
   return (
     <BlankCard>
       <CardContent sx={{ p: '25px', textAlign: 'left' }}>
@@ -217,8 +220,8 @@ const LowCarbonShareEnergy = () => {
           value={yearRange}
           onChange={handleChangeYearRange}
           valueLabelDisplay="auto"
-          min={1965}
-          max={2023}
+          min={Math.min(...data.map(item => item.Year))}
+          max={Math.max(...data.map(item => item.Year))}
           sx={{ mb: 4 }}
         />
 

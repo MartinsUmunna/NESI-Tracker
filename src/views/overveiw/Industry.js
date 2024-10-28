@@ -21,8 +21,10 @@ import TCNWheelingCapacity from 'src/components/industry-components/TCNWheelingC
 import GlobalEnergyTrends from 'src/components/industry-components/GlobalEnergyTrends';
 import TATWidgetOverview from '../../components/dashboards/modern/TATWidgetOverview';
 import WelcomeCard from 'src/components/dashboards/ecommerce/IndustryWelcomeCard'
+import ShareofAvailableCapacity from 'src/components/industry-components/ShareofAvailableCapacity';
 
 import Welcome from 'src/layouts/full/shared/welcome/Welcome';
+
 
 
 const Industry = () => {
@@ -35,6 +37,9 @@ const Industry = () => {
             <WelcomeCard />
           </Grid>
         {/* column */}
+        <Grid item xs={12} lg={12}>
+          <ShareofAvailableCapacity />
+        </Grid> 
         <Grid item xs={12} lg={12}>
           <IndustryEnergy />
         </Grid> 

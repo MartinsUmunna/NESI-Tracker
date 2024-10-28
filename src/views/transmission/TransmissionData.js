@@ -22,14 +22,15 @@ const Industry = () => {
           </Grid>
         {/* column */}
         <Grid item xs={12}>
+            <YearlyTransmissionLossFactor />
+          </Grid>
+        <Grid item xs={12}>
             <EnergyInjectedandDelivered />
           </Grid>
         <Grid item xs={12}>
             <SystemCollapses />
           </Grid>
-        <Grid item xs={12}>
-            <YearlyTransmissionLossFactor />
-          </Grid>
+        
           <Grid item xs={12}>
             <DiscoInvoicefromNBET_Table />
           </Grid>

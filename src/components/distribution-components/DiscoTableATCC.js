@@ -20,7 +20,8 @@ import {
   InputAdornment,
   Switch,
   FormControlLabel,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
@@ -39,21 +40,22 @@ import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
 import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
-const initialData = [
-  { genco: 'Abuja', "2023": 45, "2022": 30, "2021": 25, "2020": 50, "2019": 40, "2018": 35, "2017": 30, img: AbujaLogo },
-  { genco: 'Benin', "2023": 50, "2022": 40, "2021": 30, "2020": 45, "2019": 35, "2018": 30, "2017": 25, img: BeninLogo },
-  { genco: 'Eko', "2023": 22, "2022": 26, "2021": 24, "2020": 32, "2019": 38, "2018": 30, "2017": 29, img: EkoLogo },
-  { genco: 'Enugu', "2023": 47, "2022": 31, "2021": 22, "2020": 41, "2019": 28, "2018": 25, "2017": 39, img: EnuguLogo },
-  { genco: 'Ibadan', "2023": 36, "2022": 47, "2021": 49, "2020": 38, "2019": 33, "2018": 41, "2017": 29, img: IbadanLogo },
-  { genco: 'Ikeja', "2023": 34, "2022": 47, "2021": 39, "2020": 30, "2019": 44, "2018": 35, "2017": 32, img: IkejaLogo },
-  { genco: 'Jos', "2023": 48, "2022": 33, "2021": 40, "2020": 29, "2019": 38, "2018": 37, "2017": 28, img: JosLogo },
-  { genco: 'Kaduna', "2023": 39, "2022": 41, "2021": 45, "2020": 47, "2019": 30, "2018": 33, "2017": 35, img: KadunaLogo },
-  { genco: 'Kano', "2023": 41, "2022": 37, "2021": 32, "2020": 49, "2019": 27, "2018": 29, "2017": 42, img: KanoLogo },
-  { genco: 'Portharcourt', "2023": 34, "2022": 45, "2021": 38, "2020": 41, "2019": 47, "2018": 36, "2017": 30, img: PortharcourtLogo },
-  { genco: 'Yola', "2023": 38, "2022": 33, "2021": 41, "2020": 42, "2019": 37, "2018": 28, "2017": 29, img: YolaLogo },
-];
+const logoMap = {
+  'Abuja': AbujaLogo,
+  'Benin': BeninLogo,
+  'Eko': EkoLogo,
+  'Enugu': EnuguLogo,
+  'Ibadan': IbadanLogo,
+  'Ikeja': IkejaLogo,
+  'Jos': JosLogo,
+  'Kaduna': KadunaLogo,
+  'Kano': KanoLogo,
+  'Port Harcourt': PortharcourtLogo,
+  'Yola': YolaLogo
+};
 
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+// Updated fields array to include all years from 2015-2023
+const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015"];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -91,7 +93,6 @@ const EnhancedTableHead = (props) => {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          
         </TableCell>
         <TableCell>
           <TableSortLabel
@@ -139,13 +140,50 @@ const DiscoTableATCC = () => {
   const theme = useTheme();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('total');
-  const [rows, setRows] = React.useState(initialData);
+  const [rows, setRows] = React.useState([]);
+  const [initialRows, setInitialRows] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [dense, setDense] = React.useState(false);
   const [compareMode, setCompareMode] = React.useState(false);
   const [selectedYear, setSelectedYear] = React.useState('2023');
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/DisCo-Atcc');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Transform API data into required format
+        const transformedData = Object.values(data.reduce((acc, item) => {
+          if (!acc[item.Disco]) {
+            acc[item.Disco] = {
+              genco: item.Disco,
+              img: logoMap[item.Disco] || '',
+            };
+          }
+          acc[item.Disco][item.Year.toString()] = item.ATCC;
+          return acc;
+        }, {}));
+
+        setRows(transformedData);
+        setInitialRows(transformedData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -155,7 +193,7 @@ const DiscoTableATCC = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
-    const filteredRows = initialData.filter(row => 
+    const filteredRows = initialRows.filter(row => 
       row.genco.toLowerCase().includes(value)
     );
     setSearch(value);
@@ -169,6 +207,7 @@ const DiscoTableATCC = () => {
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -182,7 +221,7 @@ const DiscoTableATCC = () => {
     return rows
       .map(row => ({
         disco: row.genco,
-        value: row[selectedYear]
+        value: row[selectedYear] || 0
       }))
       .sort((a, b) => b.value - a.value);
   }, [rows, selectedYear]);
@@ -194,20 +233,20 @@ const DiscoTableATCC = () => {
       toolbar: {
         show: false
       },
-      background: 'transparent', // Ensure background matches theme
+      background: 'transparent',
     },
     plotOptions: {
       bar: {
         borderRadius: 4,
         horizontal: true,
-        distributed: false, // Use single color for all bars
+        distributed: false,
         dataLabels: {
           position: 'right'
         },
         barHeight: '70%',
       },
     },
-    colors: [theme.palette.primary.main], // Single color for bars
+    colors: [theme.palette.primary.main],
     dataLabels: {
       enabled: true,
       textAnchor: 'start',
@@ -219,22 +258,22 @@ const DiscoTableATCC = () => {
         enabled: false
       },
       style: {
-        colors: [theme.palette.text.primary] // Ensure data labels are visible
+        colors: [theme.palette.text.primary]
       }
     },
     xaxis: {
       categories: chartData.map(item => item.disco),
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure x-axis labels are visible
+          colors: [theme.palette.text.primary],
         },
-        formatter: (val) => `${val}%` // Show percentage on x-axis labels
+        formatter: (val) => `${val}%`
       }
     },
     yaxis: {
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure y-axis labels are visible
+          colors: [theme.palette.text.primary],
         }
       }
     },
@@ -242,20 +281,20 @@ const DiscoTableATCC = () => {
       text: `DisCo ATCC - ${selectedYear}`,
       align: 'center',
       style: {
-        color: theme.palette.text.primary // Ensure title is visible
+        color: theme.palette.text.primary
       }
     },
     tooltip: {
-      theme: 'dark', // Ensure tooltip is styled for dark mode
+      theme: 'dark',
       y: {
         formatter: function (val) {
           return `${val.toFixed(1)}%`;
         }
       },
       style: {
-        color: theme.palette.text.primary, // Tooltip text color
+        color: theme.palette.text.primary,
       },
-      background: theme.palette.background.paper, // Tooltip background color
+      background: theme.palette.background.paper,
     },
     legend: {
       show: false
@@ -280,6 +319,22 @@ const DiscoTableATCC = () => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Typography color="error">Error loading data: {error}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
@@ -288,13 +343,14 @@ const DiscoTableATCC = () => {
           <Box>
             <FormControlLabel
               control={<Switch checked={compareMode} onChange={handleCompareToggle} />}
-              label="Compare Mode"
+              label="Chart"
             />
             <IconButton>
               <IconFilter size="1.2rem" />
             </IconButton>
           </Box>
         </Box>
+        
         <TextField
           value={search}
           onChange={handleSearch}
@@ -309,6 +365,7 @@ const DiscoTableATCC = () => {
             ),
           }}
         />
+
         {compareMode ? (
           <Box sx={{ mt: 2 }}>
             <TextField
@@ -356,7 +413,9 @@ const DiscoTableATCC = () => {
                         ).toFixed(1)}%
                       </TableCell>
                       {fields.map(year => (
-                        <TableCell align="right" key={year}>{row[year].toFixed(1)}%</TableCell>
+                        <TableCell align="right" key={year}>
+                          {row[year] ? `${row[year].toFixed(1)}%` : '-'}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}

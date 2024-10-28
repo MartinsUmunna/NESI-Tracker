@@ -64,6 +64,13 @@ const Menuitems = [
     chipColor: 'secondary',
   },
   {
+    id: uniqueId(),
+    title: 'Economy',
+    icon: IconAperture,
+    href: '/econometrics/EconomicData',
+    
+  },
+  {
     navlabel: true,
     subheader: 'World',
   },
@@ -75,13 +82,19 @@ const Menuitems = [
   }, 
   {
     navlabel: true,
-    subheader: 'Africa / West Africa',
+    subheader: 'Africa',
   },
   {
     id: uniqueId(),
-    title: 'Africa West Africa Report',
+    title: 'Africa',
     icon: IconChartDonut3,
-    href: '/AfricaWestafrica/AfricaWestAfricaData',
+    href: '/Africa/AfricaData',
+  }, 
+  {
+    id: uniqueId(),
+    title: 'West Africa',
+    icon: IconChartDonut3,
+    href: '/Africa/WestAfricaData',
   }, 
   {
     navlabel: true,
@@ -91,7 +104,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Generation',
     icon: IconChartDonut3,
-    href: '/commercial/GenerationData',
+    href: '/On-Grid/GenerationData',
   }, 
   
   {
@@ -111,7 +124,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Distribution',
     icon: IconChartDonut3,
-    href: '/financial/Disco',
+    href: '/distribution/Disco',
   },
 
   
@@ -119,7 +132,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Customer',
     icon: IconChartDonut3,
-    href: '/technical/CustomerData',
+    href: '/customer/CustomerData',
   }, 
   
       
@@ -134,7 +147,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Mini Grids',
     icon: IconChartDonut3,
-    href: '/staff/MiniGridsData',
+    href: '/off-grid/MiniGridsData',
   }, 
   {
     navlabel: true,
@@ -144,14 +157,9 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Reports',
     icon: IconChartDonut3,
-    href: '/staff/EnergyReportData',
+    href: '/off-grid/EnergyReportData',
   }, 
-  {
-    id: uniqueId(),
-    title: 'Shortposts',
-    icon: IconChartDonut3,
-    href: '/staff/EnergyInsightsData',
-  }, 
+  
   {
     navlabel: true,
     subheader: 'Datasets',
@@ -160,7 +168,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Datasets',
     icon: IconChartDonut3,
-    href: '/technical/CustomerData',
+    href: '/dataset/Dataset_Data',
   }, 
   
   

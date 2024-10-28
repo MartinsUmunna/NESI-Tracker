@@ -1,5 +1,5 @@
 const typography = {
-  fontFamily: "'Inter, Arial, sans-serif', sans-serif;",
+  fontFamily: "'Plus Jakarta Sans', sans-serif;",
   h1: {
     fontWeight: 600,
     fontSize: '2.25rem',
@@ -54,5 +54,5 @@ const typography = {
     fontWeight: 400,
   },
 };
-
+ 
 export default typography;

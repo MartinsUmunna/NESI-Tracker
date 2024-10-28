@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box } from '@mui/material';
@@ -6,40 +6,48 @@ import BlankCard from 'src/components/shared/BlankCard';
 
 const WorldEnergyMix = () => {
   const theme = useTheme();
-  const [yearRange, setYearRange] = useState([2013, 2023]); // Updated year range
+  const [data, setData] = useState([]);
+  const [yearRange, setYearRange] = useState([0, 0]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/World-Energy-Mix');
+        const jsonData = await response.json();
+        setData(jsonData);
+
+        // Set initial year range to last 5 years
+        const years = [...new Set(jsonData.map(item => item.Year))].sort((a, b) => a - b);
+        const lastYear = years[years.length - 1];
+        setYearRange([lastYear - 4, lastYear]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangeYearRange = (event, newValue) => {
     setYearRange(newValue);
   };
 
-  const mockData = Array.from({ length: 224 }, (_, i) => ({
-    year: 1800 + i,
-    biofuels: Math.round(Math.random() * 1000),
-    solar: Math.round(Math.random() * 1000),
-    wind: Math.round(Math.random() * 1000),
-    hydropower: Math.round(Math.random() * 1000),
-    nuclear: Math.round(Math.random() * 1000),
-    gas: Math.round(Math.random() * 1000),
-    oil: Math.round(Math.random() * 1000),
-    coal: Math.round(Math.random() * 1000),
-    traditionalBiomass: Math.round(Math.random() * 1000),
-  }));
-
   const filteredData = useMemo(() => {
-    return mockData.filter(({ year }) => year >= yearRange[0] && year <= yearRange[1]);
-  }, [yearRange]);
+    return data.filter(({ Year }) => Year >= yearRange[0] && Year <= yearRange[1]);
+  }, [data, yearRange]);
 
-  const seriesBarChart = [
-    { name: 'Biofuels', data: filteredData.map(({ year, biofuels }) => [year, biofuels]) },
-    { name: 'Solar', data: filteredData.map(({ year, solar }) => [year, solar]) },
-    { name: 'Wind', data: filteredData.map(({ year, wind }) => [year, wind]) },
-    { name: 'Hydropower', data: filteredData.map(({ year, hydropower }) => [year, hydropower]) },
-    { name: 'Nuclear', data: filteredData.map(({ year, nuclear }) => [year, nuclear]) },
-    { name: 'Gas', data: filteredData.map(({ year, gas }) => [year, gas]) },
-    { name: 'Oil', data: filteredData.map(({ year, oil }) => [year, oil]) },
-    { name: 'Coal', data: filteredData.map(({ year, coal }) => [year, coal]) },
-    { name: 'Traditional biomass', data: filteredData.map(({ year, traditionalBiomass }) => [year, traditionalBiomass]) },
-  ];
+  const energySources = useMemo(() => {
+    return [...new Set(data.map(item => item.Energy_Source))];
+  }, [data]);
+
+  const seriesBarChart = useMemo(() => {
+    return energySources.map(source => ({
+      name: source,
+      data: filteredData
+        .filter(item => item.Energy_Source === source)
+        .map(({ Year, Energy_TWh }) => [Year, Math.round(Energy_TWh)])
+    }));
+  }, [filteredData, energySources]);
 
   const optionsBarChart = {
     chart: {
@@ -63,7 +71,7 @@ const WorldEnergyMix = () => {
     ],
     plotOptions: {
       bar: {
-        borderRadius: 4, // Rounded corners for bars
+        borderRadius: 4,
         horizontal: false,
         columnWidth: '55%',
       },
@@ -84,10 +92,10 @@ const WorldEnergyMix = () => {
     },
     xaxis: {
       type: 'numeric',
-      categories: filteredData.map(data => data.year),
+      categories: [...new Set(filteredData.map(item => item.Year))],
       labels: {
         formatter: function (val) {
-          return `${parseInt(val)}`
+          return `${parseInt(val)}`;
         },
       },
     },
@@ -96,14 +104,14 @@ const WorldEnergyMix = () => {
         text: 'Energy (TWh)',
       },
       labels: {
-        formatter: val => `${Math.round(val)}`, // No decimals
+        formatter: val => `${Math.round(val)}`,
       },
     },
     tooltip: {
       theme: 'dark',
       y: {
         formatter: function (val) {
-          return `${val} TWh`;
+          return `${Math.round(val)} TWh`;
         },
       },
     },
@@ -116,13 +124,22 @@ const WorldEnergyMix = () => {
           <Typography variant="h5">
             Energy Mix around the world from {yearRange[0]} to {yearRange[1]}
           </Typography>
-          <Slider
-            value={yearRange}
-            onChange={handleChangeYearRange}
-            valueLabelDisplay="auto"
-            min={1800}
-            max={2023}
-          />
+          <Box width="100%">
+            <Typography variant="subtitle1" gutterBottom>
+              Select Year Range: {yearRange[0]} - {yearRange[1]}
+            </Typography>
+            <Slider
+              value={yearRange}
+              onChange={handleChangeYearRange}
+              valueLabelDisplay="auto"
+              min={Math.min(...data.map(item => item.Year))}
+              max={Math.max(...data.map(item => item.Year))}
+              marks={[
+                { value: Math.min(...data.map(item => item.Year)), label: Math.min(...data.map(item => item.Year)) },
+                { value: Math.max(...data.map(item => item.Year)), label: Math.max(...data.map(item => item.Year)) },
+              ]}
+            />
+          </Box>
         </Stack>
         <Grid container spacing={0} mt={2}>
           <Grid item xs={12}>

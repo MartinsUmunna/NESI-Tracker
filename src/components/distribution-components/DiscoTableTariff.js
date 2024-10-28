@@ -21,7 +21,8 @@ import {
   InputAdornment,
   Switch,
   FormControlLabel,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { IconSearch, IconFilter } from '@tabler/icons';
@@ -41,21 +42,20 @@ import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
 import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
-const initialData = [
-  { genco: 'Abuja', "2023": 55, "2022": 53, "2021": 51, "2020": 49, "2019": 47, "2018": 45, "2017": 43, img: AbujaLogo },
-  { genco: 'Benin', "2023": 54, "2022": 52, "2021": 50, "2020": 48, "2019": 46, "2018": 44, "2017": 42, img: BeninLogo },
-  { genco: 'Eko', "2023": 53, "2022": 51, "2021": 49, "2020": 47, "2019": 45, "2018": 43, "2017": 41, img: EkoLogo },
-  { genco: 'Enugu', "2023": 52, "2022": 50, "2021": 48, "2020": 46, "2019": 44, "2018": 42, "2017": 40, img: EnuguLogo },
-  { genco: 'Ibadan', "2023": 51, "2022": 49, "2021": 47, "2020": 45, "2019": 43, "2018": 41, "2017": 39, img: IbadanLogo },
-  { genco: 'Ikeja', "2023": 55, "2022": 53, "2021": 51, "2020": 49, "2019": 47, "2018": 45, "2017": 43, img: IkejaLogo },
-  { genco: 'Jos', "2023": 54, "2022": 52, "2021": 50, "2020": 48, "2019": 46, "2018": 44, "2017": 42, img: JosLogo },
-  { genco: 'Kaduna', "2023": 53, "2022": 51, "2021": 49, "2020": 47, "2019": 45, "2018": 43, "2017": 41, img: KadunaLogo },
-  { genco: 'Kano', "2023": 52, "2022": 50, "2021": 48, "2020": 46, "2019": 44, "2018": 42, "2017": 40, img: KanoLogo },
-  { genco: 'Portharcourt', "2023": 51, "2022": 49, "2021": 47, "2020": 45, "2019": 43, "2018": 41, "2017": 39, img: PortharcourtLogo },
-  { genco: 'Yola', "2023": 50, "2022": 48, "2021": 46, "2020": 44, "2019": 42, "2018": 40, "2017": 38, img: YolaLogo },
-];
-
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+const discoLogos = {
+  Abuja: AbujaLogo,
+  Benin: BeninLogo,
+  Ph: PhLogo,
+  Eko: EkoLogo,
+  Enugu: EnuguLogo,
+  Ibadan: IbadanLogo,
+  Ikeja: IkejaLogo,
+  Jos: JosLogo,
+  Kaduna: KadunaLogo,
+  Kano: KanoLogo,
+  Portharcourt: PortharcourtLogo,
+  Yola: YolaLogo,
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -84,7 +84,7 @@ function stableSort(array, comparator) {
 }
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, years } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -96,20 +96,20 @@ const EnhancedTableHead = (props) => {
           {/* Checkbox removed */}
         </TableCell>
         <TableCell>DisCo</TableCell>
-        <TableCell align="right">Total</TableCell>
-        {fields.map((headCell) => (
+        <TableCell align="right">Average</TableCell>
+        {years.map((year) => (
           <TableCell
-            key={headCell}
+            key={year}
             align="right"
-            sortDirection={orderBy === headCell ? order : false}
+            sortDirection={orderBy === year.toString() ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell}
-              direction={orderBy === headCell ? order : 'asc'}
-              onClick={createSortHandler(headCell)}
+              active={orderBy === year.toString()}
+              direction={orderBy === year.toString() ? order : 'asc'}
+              onClick={createSortHandler(year.toString())}
             >
-              {headCell}
-              {orderBy === headCell ? (
+              {year}
+              {orderBy === year.toString() ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
@@ -121,23 +121,75 @@ const EnhancedTableHead = (props) => {
     </TableHead>
   );
 };
+
 EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   onRequestSort: PropTypes.func.isRequired,
+  years: PropTypes.array.isRequired,
 };
 
 const DiscoTableTariff = () => {
   const theme = useTheme();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
-  const [rows, setRows] = React.useState(initialData);
+  const [orderBy, setOrderBy] = React.useState('Average');
+  const [rows, setRows] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [dense, setDense] = React.useState(false);
   const [compareMode, setCompareMode] = React.useState(false);
-  const [selectedYear, setSelectedYear] = React.useState('2023');
+  const [selectedYear, setSelectedYear] = React.useState('');
+  const [years, setYears] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/Yearly-Disco-Tariff');
+      const data = await response.json();
+      
+      // Extract unique years from the data
+      const uniqueYears = [...new Set(data.map(item => item.Year))].sort((a, b) => b - a);
+      setYears(uniqueYears);
+      setSelectedYear(uniqueYears[0].toString());
+      
+      // Process the data
+      const processedData = processApiData(data, uniqueYears);
+      setRows(processedData);
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
+
+  const processApiData = (data, years) => {
+    const discoData = {};
+    data.forEach(item => {
+      if (!discoData[item.Discos]) {
+        discoData[item.Discos] = { genco: item.Discos, img: discoLogos[item.Discos] || '' };
+      }
+      discoData[item.Discos][item.Year] = item.Tariff;
+    });
+
+    return Object.values(discoData).map(disco => {
+      const yearValues = years.map(year => disco[year] || 0);
+      const validValues = yearValues.filter(value => value !== 0);
+      const average = validValues.length > 0 
+        ? validValues.reduce((sum, value) => sum + value, 0) / validValues.length 
+        : 0;
+      return { 
+        ...disco, 
+        Average: Number(average.toFixed(1)),
+        ...Object.fromEntries(years.map(year => [year, Number((disco[year] || 0).toFixed(1))]))
+      };
+    });
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -147,12 +199,13 @@ const DiscoTableTariff = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
-    const filteredRows = initialData.filter(row => 
+    const filteredRows = rows.filter(row => 
       row.genco.toLowerCase().includes(value)
     );
     setSearch(value);
     setRows(filteredRows);
   };
+
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
@@ -169,14 +222,16 @@ const DiscoTableTariff = () => {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+
   const handleCompareToggle = () => {
     setCompareMode(!compareMode);
   };
+
   const chartData = React.useMemo(() => {
     return rows
       .map(row => ({
         disco: row.genco,
-        value: row[selectedYear]
+        value: row[selectedYear] || 0
       }))
       .sort((a, b) => b.value - a.value);
   }, [rows, selectedYear]);
@@ -233,7 +288,7 @@ const DiscoTableTariff = () => {
       }
     },
     title: {
-      text: `DisCo ATCC - ${selectedYear}`,
+      text: `DisCo Tariff - ${selectedYear}`,
       align: 'center',
       style: {
         color: theme.palette.text.primary 
@@ -262,17 +317,29 @@ const DiscoTableTariff = () => {
   }];
 
   // Compute averages for each column
-  const averages = fields.reduce((acc, field) => {
-    acc[field] = (rows.reduce((sum, row) => sum + (row[field] || 0), 0) / rows.length).toFixed(1);
+  const averages = years.reduce((acc, year) => {
+    const validValues = rows.map(row => row[year]).filter(value => value !== 0);
+    acc[year] = (validValues.reduce((sum, current) => sum + current, 0) / validValues.length).toFixed(1);
     return acc;
   }, {});
 
   // Compute total average for the entire period
+  const totalValidValues = rows.flatMap(row => 
+    years.map(year => row[year]).filter(value => value !== 0)
+  );
   averages.total = (
-    Object.values(averages).reduce((sum, current) => sum + parseFloat(current), 0) / fields.length
+    totalValidValues.reduce((sum, current) => sum + current, 0) / totalValidValues.length
   ).toFixed(1);
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -282,7 +349,7 @@ const DiscoTableTariff = () => {
           <Box>
             <FormControlLabel
               control={<Switch checked={compareMode} onChange={handleCompareToggle} />}
-              label="Compare Mode"
+              label="Chart"
             />
             <IconButton>
               <IconFilter size="1.2rem" />
@@ -312,8 +379,8 @@ const DiscoTableTariff = () => {
               onChange={handleYearChange}
               sx={{ mb: 2 }}
             >
-              {fields.map((year) => (
-                <MenuItem key={year} value={year}>
+              {years.map((year) => (
+                <MenuItem key={year} value={year.toString()}>
                   {year}
                 </MenuItem>
               ))}
@@ -334,6 +401,7 @@ const DiscoTableTariff = () => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
+              years={years}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
@@ -342,21 +410,19 @@ const DiscoTableTariff = () => {
                   <TableRow hover tabIndex={-1} key={row.genco} sx={{ height: 70 }}>
                     <TableCell padding="checkbox">
                         <Avatar src={row.img} alt={row.genco} />
-                      </TableCell>
-                      <TableCell>{row.genco}</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                      ₦{(
-                        fields.reduce((sum, year) => sum + (row[year] || 0), 0) / fields.length
-                      ).toFixed(1)} KWh
                     </TableCell>
-                    {fields.map(year => (
+                    <TableCell>{row.genco}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor:'primary.light' }}>
+                      ₦{row.Average.toFixed(1)} KWh
+                    </TableCell>
+                    {years.map(year => (
                       <TableCell align="right" key={year}>{`₦${row[year].toFixed(1)} KWh`}</TableCell>
                     ))}
                   </TableRow>
                 ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={10} />
+                  <TableCell colSpan={years.length + 3} />
                 </TableRow>
               )}
             </TableBody>
@@ -367,7 +433,7 @@ const DiscoTableTariff = () => {
                 <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
                   ₦{averages.total} KWh
                 </TableCell>
-                {fields.map(year => (
+                {years.map(year => (
                   <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
                     ₦{averages[year]} KWh
                   </TableCell>
@@ -376,7 +442,8 @@ const DiscoTableTariff = () => {
             </TableFooter>
 
           </Table>
-        </TableContainer>)};
+        </TableContainer>
+        )}
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
           <FormControlLabel

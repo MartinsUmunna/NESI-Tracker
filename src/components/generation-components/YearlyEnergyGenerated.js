@@ -1,19 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { MenuItem, Grid, Stack, Typography, Button, Avatar, Box, FormControlLabel, Switch, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
+import axios from 'axios';
 
 const YearlyEnergyGenerated = () => {
   const [isAnnual, setIsAnnual] = useState(true);
-  const [month, setMonth] = useState('All');
+  const [year, setYear] = useState('');
   const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [energyData, setEnergyData] = useState({});
+  const [yearOptions, setYearOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleChange = (event) => {
-    setMonth(event.target.value);
+  useEffect(() => {
+    fetchData();
+  }, [isAnnual]);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const url = isAnnual
+        ? 'http://localhost:5000/api/yearly-Energy-Sentout'
+        : 'http://localhost:5000/api/Monthly-Energy-Sentout';
+      const response = await axios.get(url);
+      const formattedData = formatData(response.data);
+      setEnergyData(formattedData);
+      const years = Object.keys(formattedData).sort((a, b) => a - b);
+      setYearOptions(years);
+      setYear(prev => prev || years[years.length - 1]);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const formatData = (data) => {
+    const formattedData = {};
+    if (isAnnual) {
+      data.forEach(item => {
+        const year = item.Year.toString();
+        if (!formattedData[year]) {
+          formattedData[year] = { thermal: 0, hydro: 0 };
+        }
+        if (item.Energy_Source === 'THERMAL') {
+          formattedData[year].thermal = item.YearlyAvgEnergy;
+        } else if (item.Energy_Source === 'HYDRO') {
+          formattedData[year].hydro = item.YearlyAvgEnergy;
+        }
+      });
+    } else {
+      data.forEach(item => {
+        const year = item.Year.toString();
+        if (!formattedData[year]) {
+          formattedData[year] = { months: {} };
+        }
+        if (!formattedData[year].months[item.Month_Name]) {
+          formattedData[year].months[item.Month_Name] = { thermal: 0, hydro: 0 };
+        }
+        if (item.Energy_Source === 'THERMAL') {
+          formattedData[year].months[item.Month_Name].thermal = item.Total_Energy;
+        } else if (item.Energy_Source === 'HYDRO') {
+          formattedData[year].months[item.Month_Name].hydro = item.Total_Energy;
+        }
+      });
+    }
+    return formattedData;
+  };
+
+  const handleChangeYear = (event) => {
+    setYear(event.target.value);
   };
 
   const handleToggle = () => {
@@ -21,7 +82,6 @@ const YearlyEnergyGenerated = () => {
       setOpenSubscribeDialog(true);
     } else {
       setIsAnnual(true);
-      setMonth('All');
     }
   };
 
@@ -33,6 +93,7 @@ const YearlyEnergyGenerated = () => {
     setIsSubscribed(true);
     setIsAnnual(false);
     setOpenSubscribeDialog(false);
+    fetchData(); // Fetch monthly data when subscribing
   };
 
   const handleViewFullReport = () => {
@@ -44,20 +105,60 @@ const YearlyEnergyGenerated = () => {
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
 
-  // Energy data for each year
-  const energyData = {
-    '2023': { thermal: 2615, hydro: 1800 },
-    '2022': { thermal: 2500, hydro: 1700 },
-    '2021': { thermal: 2400, hydro: 1600 },
-    '2020': { thermal: 2300, hydro: 1500 },
-    '2019': { thermal: 2200, hydro: 1400 },
-    '2018': { thermal: 2100, hydro: 1300 },
-    '2017': { thermal: 2000, hydro: 1200 },
+  const formatNumber = (num) => {
+    return Math.round(num).toLocaleString();
   };
 
-  const formatNumber = (num) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error: {error}</Typography>;
+  }
+
+  const monthOrder = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const seriescolumnchart = [
+    {
+      name: 'Thermal Energy',
+      data: isAnnual
+        ? yearOptions.map(y => Math.round(energyData[y]?.thermal || 0))
+        : monthOrder.map(m => {
+            const monthData = energyData[year]?.months?.[m];
+            return Math.round(monthData?.thermal || 0);
+          }),
+    },
+    {
+      name: 'Hydro Energy',
+      data: isAnnual
+        ? yearOptions.map(y => Math.round(energyData[y]?.hydro || 0))
+        : monthOrder.map(m => {
+            const monthData = energyData[year]?.months?.[m];
+            return Math.round(monthData?.hydro || 0);
+          }),
+    },
+  ];
+
+  const calculateTotalEnergy = () => {
+    if (isAnnual) {
+      return (energyData[year]?.thermal || 0) + (energyData[year]?.hydro || 0);
+    } else {
+      const monthlyData = energyData[year]?.months || {};
+      return Object.values(monthlyData).reduce((sum, month) => sum + (month.thermal || 0) + (month.hydro || 0), 0) / 12;
+    }
   };
+
+  const totalEnergy = formatNumber(calculateTotalEnergy());
+  const totalThermal = formatNumber(isAnnual 
+    ? energyData[year]?.thermal || 0 
+    : (energyData[year]?.months?.[monthOrder[monthOrder.length - 1]]?.thermal || 0));
+  const totalHydro = formatNumber(isAnnual 
+    ? energyData[year]?.hydro || 0 
+    : (energyData[year]?.months?.[monthOrder[monthOrder.length - 1]]?.hydro || 0));
 
   // chart
   const optionscolumnchart = {
@@ -100,16 +201,16 @@ const YearlyEnergyGenerated = () => {
         },
       },
     },
-    grid: {
-      show: false, 
-    },
     yaxis: {
       title: {
-        text: 'Energy (MW)'
+        text: 'Energy (MWh)',
+      },
+      labels: {
+        formatter: (value) => Math.round(value),
       },
     },
     xaxis: {
-      categories: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+      categories: isAnnual ? yearOptions : monthOrder,
       axisBorder: {
         show: false,
       },
@@ -119,44 +220,29 @@ const YearlyEnergyGenerated = () => {
       fillSeriesColor: false,
       y: {
         formatter: function (val) {
-          return formatNumber(val) + " MW";
-        }
-      }
+          return formatNumber(val) + ' MWh';
+        },
+      },
     },
   };
 
-  const seriescolumnchart = [
-    {
-      name: 'Thermal Energy',
-      data: Object.values(energyData).map(data => data.thermal),
-    },
-    {
-      name: 'Hydro Energy',
-      data: Object.values(energyData).map(data => data.hydro),
-    },
-  ];
-
-  const totalThermal = formatNumber(energyData['2023'].thermal);
-  const totalHydro = formatNumber(energyData['2023'].hydro);
-  const totalEnergy = formatNumber(energyData['2023'].thermal + energyData['2023'].hydro);
-
   return (
     <DashboardCard
-      title="Energy Generated"
-      subtitle="Generation Source"
+      title="Energy Sent Out"
+      subtitle=""
       action={
         <Box display="flex" alignItems="center">
-          {!isAnnual && isSubscribed && (
+          {isSubscribed && (
             <CustomSelect
-              labelId="month-dd"
-              id="month-dd"
+              labelId="year-dd"
+              id="year-dd"
               size="small"
-              value={month}
-              onChange={handleChange}
+              value={year}
+              onChange={handleChangeYear}
+              sx={{ marginRight: 2 }}
             >
-              <MenuItem value="All">All</MenuItem>
-              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month) => (
-                <MenuItem key={month} value={month}>{month}</MenuItem>
+              {yearOptions.map((y) => (
+                <MenuItem key={y} value={y}>{y}</MenuItem>
               ))}
             </CustomSelect>
           )}
@@ -164,7 +250,6 @@ const YearlyEnergyGenerated = () => {
             control={<Switch checked={isAnnual} onChange={handleToggle} name="toggleView" color="primary" />}
             label={isAnnual ? 'Annual' : 'Monthly'}
           />
-
         </Box>
       }
     >
@@ -198,10 +283,10 @@ const YearlyEnergyGenerated = () => {
               </Box>
               <Box>
                 <Typography variant="h3" fontWeight="700">
-                  {totalEnergy} MW
+                  {totalEnergy} MWh
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Total Energy Generated
+                  {isAnnual ? 'Avg Total Energy Sent Out This Year' : 'Average Monthly Energy Sent Out'}
                 </Typography>
               </Box>
             </Stack>
@@ -212,9 +297,9 @@ const YearlyEnergyGenerated = () => {
                 sx={{ width: 9, mt: 1, height: 9, bgcolor: primary, svg: { display: 'none' } }}
               ></Avatar>
               <Box>
-                <Typography variant="h5">{totalThermal} MW</Typography>
+                <Typography variant="h5">{totalThermal} MWh</Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                  Thermal this year
+                  Thermal {isAnnual ? 'this Year' : 'this Month'}
                 </Typography>
               </Box>
             </Stack>
@@ -223,9 +308,9 @@ const YearlyEnergyGenerated = () => {
                 sx={{ width: 9, mt: 1, height: 9, bgcolor: secondary, svg: { display: 'none' } }}
               ></Avatar>
               <Box>
-                <Typography variant="h5">{totalHydro} MW</Typography>
+                <Typography variant="h5">{totalHydro} MWh</Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                  Hydro this year
+                  Hydro {isAnnual ? 'this Year' : 'this Month'}
                 </Typography>
               </Box>
             </Stack>

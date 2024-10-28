@@ -15,13 +15,13 @@ import {
   TablePagination,
   IconButton,
   Tooltip,
-  Checkbox,
   TableFooter,
   Avatar,
   InputAdornment,
   Switch,
   FormControlLabel,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
@@ -30,7 +30,6 @@ import ReactApexChart from 'react-apexcharts';
 
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
-import PhLogo from 'src/assets/images/Genco_Logos/Ph_Logo.jpg';
 import EkoLogo from 'src/assets/images/Genco_Logos/Eko_Logo.jpg';
 import EnuguLogo from 'src/assets/images/Genco_Logos/Enugu_Logo.jpg';
 import IbadanLogo from 'src/assets/images/Genco_Logos/Ibadan_Logo.jpg';
@@ -41,21 +40,19 @@ import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
 import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
-const initialData = [
-  { genco: 'Abuja', "2023": 450, "2022": 300, "2021": 250, "2020": 500, "2019": 400, "2018": 350, "2017": 300, img: AbujaLogo },
-  { genco: 'Benin', "2023": 500, "2022": 400, "2021": 300, "2020": 450, "2019": 350, "2018": 300, "2017": 250, img: BeninLogo },
-  { genco: 'Eko', "2023": 220, "2022": 260, "2021": 240, "2020": 320, "2019": 380, "2018": 300, "2017": 290, img: EkoLogo },
-  { genco: 'Enugu', "2023": 470, "2022": 310, "2021": 220, "2020": 410, "2019": 280, "2018": 250, "2017": 390, img: EnuguLogo },
-  { genco: 'Ibadan', "2023": 360, "2022": 470, "2021": 490, "2020": 380, "2019": 330, "2018": 410, "2017": 290, img: IbadanLogo },
-  { genco: 'Ikeja', "2023": 340, "2022": 470, "2021": 390, "2020": 300, "2019": 440, "2018": 350, "2017": 320, img: IkejaLogo },
-  { genco: 'Jos', "2023": 480, "2022": 330, "2021": 400, "2020": 290, "2019": 380, "2018": 370, "2017": 280, img: JosLogo },
-  { genco: 'Kaduna', "2023": 390, "2022": 410, "2021": 450, "2020": 470, "2019": 300, "2018": 330, "2017": 350, img: KadunaLogo },
-  { genco: 'Kano', "2023": 410, "2022": 370, "2021": 320, "2020": 490, "2019": 270, "2018": 290, "2017": 420, img: KanoLogo },
-  { genco: 'Portharcourt', "2023": 340, "2022": 450, "2021": 380, "2020": 410, "2019": 470, "2018": 360, "2017": 300, img: PortharcourtLogo },
-  { genco: 'Yola', "2023": 380, "2022": 330, "2021": 410, "2020": 420, "2019": 370, "2018": 280, "2017": 290, img: YolaLogo },
-];
-
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+const logoMap = {
+  'Abuja': AbujaLogo,
+  'Benin': BeninLogo,
+  'Eko': EkoLogo,
+  'Enugu': EnuguLogo,
+  'Ibadan': IbadanLogo,
+  'Ikeja': IkejaLogo,
+  'Jos': JosLogo,
+  'Kaduna': KadunaLogo,
+  'Kano': KanoLogo,
+  'Portharcourt': PortharcourtLogo,
+  'Yola': YolaLogo,
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -84,7 +81,7 @@ function stableSort(array, comparator) {
 }
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, years } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -92,17 +89,15 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          
-        </TableCell>
+        <TableCell padding="checkbox"></TableCell>
         <TableCell>
           <TableSortLabel
-            active={orderBy === 'genco'}
-            direction={orderBy === 'genco' ? order : 'asc'}
-            onClick={createSortHandler('genco')}
+            active={orderBy === 'Discos'}
+            direction={orderBy === 'Discos' ? order : 'asc'}
+            onClick={createSortHandler('Discos')}
           >
-            Disco
-            {orderBy === 'genco' ? (
+            DisCo
+            {orderBy === 'Discos' ? (
               <Box component="span" sx={visuallyHidden}>
                 {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
               </Box>
@@ -110,15 +105,15 @@ const EnhancedTableHead = (props) => {
           </TableSortLabel>
         </TableCell>
         <TableCell align="right">Total</TableCell>
-        {fields.map((field) => (
-          <TableCell key={field} align="right">
+        {years.map((year) => (
+          <TableCell key={year} align="right">
             <TableSortLabel
-              active={orderBy === field}
-              direction={orderBy === field ? order : 'asc'}
-              onClick={createSortHandler(field)}
+              active={orderBy === year.toString()}
+              direction={orderBy === year.toString() ? order : 'asc'}
+              onClick={createSortHandler(year.toString())}
             >
-              {field}
-              {orderBy === field ? (
+              {year}
+              {orderBy === year.toString() ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
@@ -135,19 +130,69 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   onRequestSort: PropTypes.func.isRequired,
+  years: PropTypes.array.isRequired,
 };
 
 const DiscoInvoicetoNBET_Table = () => {
   const theme = useTheme();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
-  const [rows, setRows] = React.useState(initialData);
+  const [orderBy, setOrderBy] = React.useState('Discos');
+  const [rows, setRows] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [dense, setDense] = React.useState(false);
   const [compareMode, setCompareMode] = React.useState(false);
-  const [selectedYear, setSelectedYear] = React.useState('2023');
+  const [selectedYear, setSelectedYear] = React.useState('');
+  const [loading, setLoading] = React.useState(true);
+  const [years, setYears] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/MO-Invoice-to-DisCo');
+        const data = await response.json();
+        
+        // Process the data
+        const processedData = processData(data);
+        setRows(processedData.rows);
+        setYears(processedData.years);
+        setSelectedYear(processedData.years[0].toString());
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const processData = (data) => {
+    const yearSet = new Set();
+    const discoMap = new Map();
+
+    data.forEach(item => {
+      yearSet.add(item.Year);
+      if (!discoMap.has(item.Discos)) {
+        discoMap.set(item.Discos, {});
+      }
+      discoMap.get(item.Discos)[item.Year] = item['Invoice (₦ Billion)'];
+    });
+
+    const years = Array.from(yearSet).sort((a, b) => b - a);
+    const rows = Array.from(discoMap, ([disco, yearData]) => {
+      const row = { Discos: disco };
+      years.forEach(year => {
+        row[year] = yearData[year] || 0;
+      });
+      row.total = Object.values(yearData).reduce((sum, value) => sum + value, 0);
+      row.img = logoMap[disco] || '';
+      return row;
+    });
+
+    return { rows, years };
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -157,6 +202,7 @@ const DiscoInvoicetoNBET_Table = () => {
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
+    setPage(0);
   };
 
   const handleCompareToggle = () => {
@@ -167,14 +213,20 @@ const DiscoInvoicetoNBET_Table = () => {
     setSelectedYear(event.target.value);
   };
 
+  const filteredRows = React.useMemo(() => {
+    return rows.filter(row => 
+      row.Discos.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [rows, search]);
+
   const chartData = React.useMemo(() => {
-    return rows
+    return filteredRows
       .map(row => ({
-        disco: row.genco,
-        value: row[selectedYear]
+        disco: row.Discos,
+        value: row[selectedYear] || 0
       }))
       .sort((a, b) => b.value - a.value);
-  }, [rows, selectedYear]);
+  }, [filteredRows, selectedYear]);
 
   const chartOptions = {
     chart: {
@@ -183,24 +235,24 @@ const DiscoInvoicetoNBET_Table = () => {
       toolbar: {
         show: false
       },
-      background: 'transparent', // Ensure background matches theme
+      background: 'transparent',
     },
     plotOptions: {
       bar: {
         borderRadius: 4,
         horizontal: true,
-        distributed: false, // Use single color for all bars
+        distributed: false,
         dataLabels: {
           position: 'right'
         },
         barHeight: '70%',
       },
     },
-    colors: [theme.palette.primary.main], // Single color for bars
+    colors: [theme.palette.primary.main],
     dataLabels: {
       enabled: true,
       textAnchor: 'start',
-      formatter: function (val, opt) {
+      formatter: function (val) {
         return formatValue(val);
       },
       offsetX: 5,
@@ -208,48 +260,47 @@ const DiscoInvoicetoNBET_Table = () => {
         enabled: false
       },
       style: {
-        colors: [theme.palette.text.primary] // Ensure data labels are visible
+        colors: [theme.palette.text.primary]
       }
     },
     xaxis: {
       categories: chartData.map(item => item.disco),
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure x-axis labels are visible
+          colors: [theme.palette.text.primary],
         }
       }
     },
     yaxis: {
       labels: {
         style: {
-          colors: [theme.palette.text.primary], // Ensure y-axis labels are visible
+          colors: [theme.palette.text.primary],
         }
       }
     },
     title: {
-      text: `DisCo Invoice from NBET - ${selectedYear}`,
+      text: `MO Invoice to DisCo - ${selectedYear}`,
       align: 'center',
       style: {
-        color: theme.palette.text.primary // Ensure title is visible
+        color: theme.palette.text.primary
       }
     },
     tooltip: {
-      theme: 'dark', // Ensure tooltip is styled for dark mode
+      theme: 'dark',
       y: {
         formatter: function (val) {
           return formatValue(val);
         }
       },
       style: {
-        color: theme.palette.text.primary, // Tooltip text color
+        color: theme.palette.text.primary,
       },
-      background: theme.palette.background.paper, // Tooltip background color
+      background: theme.palette.background.paper,
     },
     legend: {
       show: false
     }
   };
-  
 
   const series = [{
     name: selectedYear,
@@ -257,33 +308,36 @@ const DiscoInvoicetoNBET_Table = () => {
   }];
 
   const formatValue = (value) => {
-    if (value >= 1000) {
-      return `₦${Math.round(value / 1000)}T`;
-    } else {
-      return `₦${Math.round(value)}B`;
-    }
+    return `₦${value.toFixed(2)}B`;
   };
-  
 
   // Compute totals for each column
-  const totals = fields.reduce((acc, field) => {
-    acc[field] = rows.reduce((sum, row) => sum + (row[field] || 0), 0);
+  const totals = years.reduce((acc, year) => {
+    acc[year] = filteredRows.reduce((sum, row) => sum + (row[year] || 0), 0);
     return acc;
   }, {});
 
   totals.total = Object.values(totals).reduce((sum, current) => sum + current, 0);
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6">MO Invoice to Disco</Typography>
+          <Typography variant="h6">MO Invoice to DisCo</Typography>
           <Box>
             <FormControlLabel
               control={<Switch checked={compareMode} onChange={handleCompareToggle} />}
-              label="Compare Mode"
+              label="Chart"
             />
             <IconButton>
               <IconFilter size="1.2rem" />
@@ -313,8 +367,8 @@ const DiscoInvoicetoNBET_Table = () => {
               onChange={handleYearChange}
               sx={{ mb: 2 }}
             >
-              {fields.map((year) => (
-                <MenuItem key={year} value={year}>
+              {years.map((year) => (
+                <MenuItem key={year} value={year.toString()}>
                   {year}
                 </MenuItem>
               ))}
@@ -335,21 +389,22 @@ const DiscoInvoicetoNBET_Table = () => {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
+                years={years}
               />
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(filteredRows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
-                    <TableRow hover tabIndex={-1} key={row.genco} sx={{ height: 70 }}>
+                    <TableRow hover tabIndex={-1} key={row.Discos} sx={{ height: 70 }}>
                       <TableCell padding="checkbox">
-                        <Avatar src={row.img} alt={row.genco} />
+                        <Avatar src={row.img} alt={row.Discos} />
                       </TableCell>
-                      <TableCell>{row.genco}</TableCell>
+                      <TableCell>{row.Discos}</TableCell>
                       <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                        {formatValue(fields.reduce((sum, year) => sum + (row[year] || 0), 0))}
+                        {formatValue(row.total)}
                       </TableCell>
-                      {fields.map(year => (
-                        <TableCell align="right" key={year}>{formatValue(row[year])}</TableCell>
+                      {years.map(year => (
+                        <TableCell align="right" key={year}>{formatValue(row[year] || 0)}</TableCell>
                       ))}
                     </TableRow>
                   ))}
@@ -358,41 +413,44 @@ const DiscoInvoicetoNBET_Table = () => {
                     <TableCell colSpan={10} />
                   </TableRow>
                 )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={2} align="right">Totals</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                    {formatValue(totals.total)}
-                  </TableCell>
-                  {fields.map(year => (
-                    <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                      {formatValue(totals[year])}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={2} align="right">Totals</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
+                      {formatValue(totals.total)}
                     </TableCell>
-                  ))}
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-          <FormControlLabel
-            control={<Switch checked={dense} onChange={event => setDense(event.target.checked)} />}
-            label="Dense padding"
-          />
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(event, newPage) => setPage(newPage)}
-            onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
-          />
-        </Box>
-      </Paper>
-    </Box>
-  );
-};
-
-export default DiscoInvoicetoNBET_Table;
+                    {years.map(year => (
+                      <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
+                        {formatValue(totals[year])}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+            <FormControlLabel
+              control={<Switch checked={dense} onChange={event => setDense(event.target.checked)} />}
+              label="Dense padding"
+            />
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={(event, newPage) => setPage(newPage)}
+              onRowsPerPageChange={(event) => {
+                setRowsPerPage(parseInt(event.target.value, 10));
+                setPage(0);
+              }}
+            />
+          </Box>
+        </Paper>
+      </Box>
+    );
+  };
+  
+  export default DiscoInvoicetoNBET_Table;

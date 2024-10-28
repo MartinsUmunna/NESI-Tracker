@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
-import { IconArrowUpRight } from '@tabler/icons';
-
+import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 
 const PeopleConnected = () => {
-  // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
-  // chart
+  const [data, setData] = useState([]);
+  const [percentageChange, setPercentageChange] = useState(0);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/Minigrids-People-Connected');
+        const result = await response.json();
+
+        // Sort data by years to ensure the latest year comes last
+        const sortedData = result.sort((a, b) => a.Years - b.Years);
+        setData(sortedData);
+
+        // Calculate percentage change between the last two years
+        if (sortedData.length >= 2) {
+          const latest = parseInt(sortedData[sortedData.length - 1].PeopleConnected, 10);
+          const previous = parseInt(sortedData[sortedData.length - 2].PeopleConnected, 10);
+          const change = ((latest - previous) / previous) * 100;
+          setPercentageChange(change);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Extract years and connected people for the chart
+  const years = data.map((item) => item.Years);
+  const peopleConnected = data.map((item) => parseInt(item.PeopleConnected, 10));
+
   const optionscolumnchart = {
     chart: {
       type: 'bar',
@@ -34,9 +64,7 @@ const PeopleConnected = () => {
     },
     dataLabels: {
       enabled: true,
-      formatter: function (val) {
-        return val ;
-      },
+      formatter: (val) => val,
       style: {
         fontSize: '10px',
         colors: [theme.palette.mode === 'dark' ? '#fff' : '#000'],
@@ -54,7 +82,7 @@ const PeopleConnected = () => {
       },
     },
     xaxis: {
-      categories: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+      categories: years,
       labels: {
         style: {
           fontSize: '9px',
@@ -63,15 +91,13 @@ const PeopleConnected = () => {
       },
     },
     yaxis: {
-      show: false, // Hide y-axis
+      show: false,
     },
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       y: {
-        formatter: function(val) {
-          return  val;
-        }
-      }
+        formatter: (val) => val,
+      },
     },
     title: {
       text: 'Yearly Trend',
@@ -86,10 +112,13 @@ const PeopleConnected = () => {
 
   const seriescolumnchart = [
     {
-      name: 'Capacity',
-      data: [3000,3500,4128,5500, 5900, 4200, 1990, 1200, 4500, 5750, 6000, 6250], 
+      name: 'People Connected',
+      data: peopleConnected,
     },
   ];
+
+  const ArrowIcon = percentageChange >= 0 ? IconArrowUpRight : IconArrowDownRight;
+  const arrowColor = percentageChange >= 0 ? 'success.light' : 'error.light';
 
   return (
     <BlankCard>
@@ -99,32 +128,28 @@ const PeopleConnected = () => {
         </Stack>
 
         <Grid container spacing={0} mt={2}>
-  <Grid item xs={12}>
-    <Typography variant="h4" mt={3} fontWeight={600}>6250</Typography>
-    <Typography variant="subtitle2" fontSize="10px" color="textSecondary">
-      (last year)
-    </Typography>
-    <Stack direction="row" spacing={1} mt={1} alignItems="center">
-      <Avatar sx={{ bgcolor: 'error.light', width: 20, height: 20 }}>
-        <IconArrowUpRight width={16} color="#FA896B" />
-      </Avatar>
-      <Typography variant="subtitle2" color="textSecondary">
-        +4%
-      </Typography>
-    </Stack>
-  </Grid>
-  <Grid item xs={12}> {/* Now using the full width */}
-    <Box mt={2}>
-      <Chart
-        options={optionscolumnchart}
-        series={seriescolumnchart}
-        type="bar"
-        height="125px"
-      />
-    </Box>
-  </Grid>
-</Grid>
-
+          <Grid item xs={12}>
+            <Typography variant="h4" mt={3} fontWeight={600}>
+              {peopleConnected[peopleConnected.length - 1] || 0}
+            </Typography>
+            <Typography variant="subtitle2" fontSize="10px" color="textSecondary">
+              (Last year)
+            </Typography>
+            <Stack direction="row" spacing={1} mt={1} alignItems="center">
+              <Avatar sx={{ bgcolor: arrowColor, width: 20, height: 20 }}>
+                <ArrowIcon width={16} color={arrowColor === 'success.light' ? '#4CAF50' : '#FA896B'} />
+              </Avatar>
+              <Typography variant="subtitle2" color="textSecondary">
+                {percentageChange.toFixed(2)}%
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid item xs={12}>
+            <Box mt={2}>
+              <Chart options={optionscolumnchart} series={seriescolumnchart} type="bar" height="125px" />
+            </Box>
+          </Grid>
+        </Grid>
       </CardContent>
     </BlankCard>
   );

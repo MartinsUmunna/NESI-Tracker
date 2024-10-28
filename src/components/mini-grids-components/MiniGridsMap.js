@@ -27,7 +27,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Yebu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Havenhill Synergy Limited'
       }
     },
     {
@@ -38,7 +38,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '20kW Biogas minigrid in Rije community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Ajima Farms'
       }
     },
     {
@@ -192,7 +192,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '38kW Solar minigrid in Bisanti community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2015 by GVE'
       }
     },
     {
@@ -577,7 +577,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Eka Awoke community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Cloud Energy'
       }
     },
     {
@@ -588,7 +588,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '33kW Solar Hybrid minigrid in Umuntumuna Obeagu Isu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Zylab Technologies Nigeria Ltd'
       }
     },
     {
@@ -599,7 +599,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '66kW Solar Hybrid minigrid in Orie Obeagu Isu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Zylab Technologies Nigeria Ltd'
       }
     },
     {
@@ -610,7 +610,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '50kW Solar minigrid in Umon Island community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Nayo Technologies Ltd'
       }
     },
     {
@@ -632,7 +632,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar Hybrid minigrid in Akpabom community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by GVE'
       }
     },
     {
@@ -676,7 +676,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '52kW Solar minigrid in Egbeke (Upgraded) community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2012 by GVE'
       }
     },
     {
@@ -687,7 +687,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '67kW Solar Hybrid minigrid in Akipelai community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Renewvia Energy'
       }
     },
     {
@@ -698,7 +698,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '67kW Solar Hybrid minigrid in Oloibri community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Renewvia Energy'
       }
     }
     

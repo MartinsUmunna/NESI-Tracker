@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Chip, Button } from '@mui/material';
@@ -6,9 +6,38 @@ import BlankCard from 'src/components/shared/BlankCard';
 
 const GHGByContinentAndSector = () => {
   const theme = useTheme();
-  const [yearRange, setYearRange] = useState([2013, 2022]);
+  const [data, setData] = useState([]);
+  const [yearRange, setYearRange] = useState([]);
   const [selectedContinents, setSelectedContinents] = useState([]);
-  const [selectedEmissionType, setSelectedEmissionType] = useState('GWP_100_AR5_CO2');
+  const [selectedEmissionType, setSelectedEmissionType] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/GHG-by-Continent-and-Sector');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setData(result);
+        
+        // Set default values
+        const years = [...new Set(result.map(item => item.Years))].sort((a, b) => b - a);
+        const latestYear = years[0];
+        setYearRange([latestYear - 4, latestYear]);
+        setSelectedEmissionType(result[0].EmissionType);
+        
+        setIsLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangeYearRange = (event, newValue) => {
     setYearRange(newValue);
@@ -22,41 +51,18 @@ const GHGByContinentAndSector = () => {
     setSelectedEmissionType(type);
   };
 
-  const sectors = ['Deforestation', 'Fires', 'Forest Land', 'Other Land', 'Organic Soil'];
-  const continents = [
-    'Africa', 'Asia-Pacific Developed', 'Eastern Asia', 'Eurasia', 'Europe',
-    'Latin America and Caribbean', 'Middle East', 'North America',
-    'South-East Asia and developing Pacific', 'Southern Asia'
-  ];
-  const emissionTypes = ['GWP_100_AR5_CO2', 'GWP_100_AR5_CH4', 'GWP_100_AR5_N2O'];
-
-  // Modified mock data generation function to include emission types
-  const generateMockData = () => {
-    return Array.from({ length: 2022 - 1990 + 1 }, (_, index) => {
-      const year = 1990 + index;
-      return continents.flatMap(continent =>
-        sectors.flatMap(sector =>
-          emissionTypes.map(emissionType => ({
-            continent,
-            sector,
-            emissionType,
-            value: Math.random() * 5541.726505 - 2311.035736,
-            year
-          }))
-        )
-      );
-    }).flat();
-  };
-
-  const mockData = useMemo(() => generateMockData(), []);
+  const sectors = useMemo(() => [...new Set(data.map(item => item.Sector))], [data]);
+  const continents = useMemo(() => [...new Set(data.map(item => item.Continent))], [data]);
+  const emissionTypes = useMemo(() => [...new Set(data.map(item => item.EmissionType))], [data]);
+  const years = useMemo(() => [...new Set(data.map(item => item.Years))].sort((a, b) => a - b), [data]);
 
   const filteredData = useMemo(() => {
-    return mockData.filter(d => 
-      d.year >= yearRange[0] && d.year <= yearRange[1] &&
-      (selectedContinents.length === 0 || selectedContinents.includes(d.continent)) &&
-      d.emissionType === selectedEmissionType
+    return data.filter(d => 
+      d.Years >= yearRange[0] && d.Years <= yearRange[1] &&
+      (selectedContinents.length === 0 || selectedContinents.includes(d.Continent)) &&
+      d.EmissionType === selectedEmissionType
     );
-  }, [yearRange, selectedContinents, selectedEmissionType, mockData]);
+  }, [data, yearRange, selectedContinents, selectedEmissionType]);
 
   const chartData = useMemo(() => {
     return sectors.map(sector => ({
@@ -64,9 +70,9 @@ const GHGByContinentAndSector = () => {
       data: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, index) => {
         const year = yearRange[0] + index;
         const value = filteredData
-          .filter(d => d.year === year && d.sector === sector)
-          .reduce((sum, d) => sum + d.value, 0);
-        return { x: year, y: parseFloat(value.toFixed(2)) };
+          .filter(d => d.Years === year && d.Sector === sector)
+          .reduce((sum, d) => sum + d.GHG, 0);
+        return parseFloat(value.toFixed(2));
       })
     }));
   }, [filteredData, yearRange, sectors]);
@@ -75,96 +81,11 @@ const GHGByContinentAndSector = () => {
     chart: {
       type: 'bar',
       stacked: true,
+      fontFamily: "'Plus Jakarta Sans', sans-serif;",
+      foreColor: theme.palette.text.primary,
       toolbar: {
-        show: false 
+        show: false,
       },
-      foreColor: theme.palette.text.primary 
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded',
-        borderRadius: 10,
-      },
-    },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
-    xaxis: {
-      type: 'category',
-      categories: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i),
-      title: {
-        text: 'Year',
-        style: {
-          color: theme.palette.text.primary 
-        }
-      },
-      labels: {
-        style: {
-          colors: theme.palette.text.primary 
-        }
-      },
-      axisBorder: {
-        color: theme.palette.divider 
-      },
-      axisTicks: {
-        color: theme.palette.divider 
-      }
-    },
-    yaxis: {
-      title: {
-        text: 'GHG Emissions',
-        style: {
-          color: theme.palette.text.primary
-        }
-      },
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-        style: {
-          colors: theme.palette.text.primary 
-        }
-      }
-    },
-    grid: {
-      show: true,
-      borderColor: theme.palette.divider,
-      xaxis: {
-        lines: {
-          show: true
-        }
-      },
-      yaxis: {
-        lines: {
-          show: false 
-        }
-      }
-    },
-    fill: {
-      opacity: 1
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        }
-      },
-      theme: theme.palette.mode 
-    },
-    legend: {
-      position: 'bottom',
-      horizontalAlign: 'center',
-      offsetX: 40,
-      labels: {
-        colors: theme.palette.text.primary 
-      }
     },
     colors: [
       theme.palette.primary.main,
@@ -173,15 +94,78 @@ const GHGByContinentAndSector = () => {
       theme.palette.warning.main,
       theme.palette.info.main,
     ],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '50%',
+        borderRadius: [6],
+        borderRadiusApplication: 'end',
+        borderRadiusWhenStacked: 'all',
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    legend: {
+      show: true,
+      position: 'bottom',
+      labels: {
+        colors: theme.palette.text.primary,
+      },
+    },
+    grid: {
+      show: false,
+    },
+    xaxis: {
+      categories: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i),
+      labels: {
+        style: {
+          colors: theme.palette.text.primary,
+        },
+      },
+      title: {
+        text: 'Year',
+        style: {
+          color: theme.palette.text.primary,
+        },
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'GHG Emissions',
+        style: {
+          color: theme.palette.text.primary,
+        },
+      },
+      labels: {
+        formatter: function(val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: theme.palette.text.primary,
+        },
+      },
+    },
+    tooltip: {
+      theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      y: {
+        formatter: function(val) {
+          return val.toFixed(2);
+        },
+      },
+    },
   };
 
   const chartTitle = yearRange[0] === yearRange[1]
     ? `GHG by Continent and Sector in ${yearRange[0]}`
     : `GHG by Continent and Sector from ${yearRange[0]} to ${yearRange[1]}`;
 
+  if (isLoading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error}</Typography>;
+
   return (
     <BlankCard>
-      <CardContent sx={{ p: '25px', textAlign: 'left' }}>
+      <CardContent sx={{ p: '25px' }}>
         <Typography variant="h5" gutterBottom>
           {chartTitle}
         </Typography>
@@ -226,8 +210,8 @@ const GHGByContinentAndSector = () => {
           value={yearRange}
           onChange={handleChangeYearRange}
           valueLabelDisplay="auto"
-          min={1990}
-          max={2022}
+          min={years[0]}
+          max={years[years.length - 1]}
           sx={{ mb: 4 }}
         />
 

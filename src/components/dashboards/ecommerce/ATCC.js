@@ -19,7 +19,7 @@ const ATCC = ({ selectedYear, selectedMonth }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/commercial/overview`, {
+        const response = await axios.get(`http://localhost:5000/api/On-Grid/overview`, {
           params: {
             year: selectedYear,
             month: selectedMonth

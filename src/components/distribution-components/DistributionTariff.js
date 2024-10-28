@@ -1,13 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import { Grid } from '@mui/material';
+import { Grid, Typography, CircularProgress } from '@mui/material';
 
 const DistributionTariff = () => {
   const theme = useTheme();
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const averageTariff = [35, 40, 47, 45, 60, 60, 65]; 
+  useEffect(() => {
+    const fetchTariffData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/Yearly-Avg-Tariff');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setChartData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching tariff data:', error);
+        setError('Failed to load tariff data. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchTariffData();
+  }, []);
+
+  if (loading) {
+    return (
+      <EnergyComparisonAllStatesDashboardWidgetCard title="Average Tariff">
+        <Grid container justifyContent="center" alignItems="center" style={{ height: '275px' }}>
+          <CircularProgress />
+        </Grid>
+      </EnergyComparisonAllStatesDashboardWidgetCard>
+    );
+  }
+
+  if (error) {
+    return (
+      <EnergyComparisonAllStatesDashboardWidgetCard title="Average Tariff">
+        <Grid container justifyContent="center" alignItems="center" style={{ height: '275px' }}>
+          <Typography color="error">{error}</Typography>
+        </Grid>
+      </EnergyComparisonAllStatesDashboardWidgetCard>
+    );
+  }
 
   const chartOptions = {
     chart: {
@@ -45,7 +86,7 @@ const DistributionTariff = () => {
     colors: [theme.palette.primary.main],
     
     xaxis: {
-      categories: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+      categories: chartData.map(item => item.Year.toString()),
       axisBorder: {
         show: false,
       },
@@ -73,13 +114,18 @@ const DistributionTariff = () => {
     },
   };
 
+  const series = [{
+    name: 'Average Tariff',
+    data: chartData.map(item => item.AVGTariff)
+  }];
+
   return (
     <EnergyComparisonAllStatesDashboardWidgetCard title="Average Tariff">
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Chart
             options={chartOptions}
-            series={[{ name: 'Average Tariff', data: averageTariff }]}
+            series={series}
             type="bar"
             height="275px"
           />

@@ -1,126 +1,209 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Stack, Typography, Button, Avatar, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Grid, Stack, Typography, Button, Box, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, Switch } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import axios from 'axios';
 
 const CustomerPopulationbyServiceBand = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-  const secondary = theme.palette.secondary.main;
 
-  const [selectedYear, setSelectedYear] = useState('2023');
-  const [selectedDisco, setSelectedDisco] = useState('All');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedDisco, setSelectedDisco] = useState('AEDC');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [customerData, setCustomerData] = useState([]);
+  const [years, setYears] = useState([]);
+  const [discos, setDiscos] = useState([]);
+  const [months, setMonths] = useState([]);
+  const [notations, setNotations] = useState([]);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(true);
 
-  const discos = ['All', 'AEDC', 'BEDC', 'EEDC', 'EKEDC', 'IBEDC', 'IEDC', 'JEDC', 'KDEDC', 'KEDC', 'PEDC', 'YEDC'];
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // Customer Population data
-  const customerDataByYear = {
-    '2017': { metered: [80, 70, 75, 73, 68], unmetered: [60, 65, 70, 75, 65] },
-    '2018': { metered: [85, 75, 80, 78, 73], unmetered: [65, 70, 75, 80, 70] },
-    '2019': { metered: [90, 80, 85, 83, 78], unmetered: [70, 75, 80, 85, 75] },
-    '2020': { metered: [95, 85, 90, 88, 83], unmetered: [75, 80, 85, 90, 80] },
-    '2021': { metered: [100, 90, 95, 93, 88], unmetered: [80, 85, 90, 95, 85] },
-    '2022': { metered: [105, 95, 100, 98, 93], unmetered: [85, 90, 95, 100, 90] },
-    '2023': { metered: [110, 100, 105, 103, 98], unmetered: [90, 95, 100, 105, 95] },
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/customerpopulationby-service-bands');
+      const data = response.data;
+      setCustomerData(data);
+
+      const uniqueYears = [...new Set(data.map(item => item.YEAR))].sort((a, b) => b - a);
+      const uniqueDiscos = [...new Set(data.map(item => item.Disco))];
+      const uniqueMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const uniqueNotations = [...new Set(data.map(item => item.Notation))];
+
+      setYears(uniqueYears);
+      setDiscos(uniqueDiscos);
+      setMonths(uniqueMonths);
+      setNotations(uniqueNotations);
+      setSelectedYear(uniqueYears[0].toString());
+      setSelectedMonth(getLatestAvailableMonth(data, uniqueYears[0], 'AEDC'));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
-  // Filter data by disco (this is a placeholder)
-  const filteredData = (year, disco) => {
-    const data = customerDataByYear[year];
-    if (disco === 'All') return data;
-    // Add actual filtering logic based on disco here
-    return {
-      metered: data.metered.map(val => Math.round(val * Math.random())),
-      unmetered: data.unmetered.map(val => Math.round(val * Math.random())),
-    };
+  const getLatestAvailableMonth = (data, year, disco) => {
+    const yearData = data.filter(item => item.YEAR.toString() === year.toString() && item.Disco === disco);
+    const availableMonths = [...new Set(yearData.map(item => item.MonthName))];
+    return months.filter(month => availableMonths.includes(month)).pop() || 'December';
   };
 
-  const customerData = filteredData(selectedYear, selectedDisco);
+  const filterData = () => {
+    let filteredData = customerData.filter(item => item.YEAR.toString() === selectedYear && item.Disco === selectedDisco);
+
+    if (!isAnnual && isSubscribed) {
+      filteredData = filteredData.filter(item => item.MonthName === selectedMonth);
+    }
+
+    return filteredData;
+  };
+
+  const processChartData = () => {
+    const filteredData = filterData();
+    let chartData;
+
+    if (isAnnual) {
+      const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
+      chartData = [{
+        name: selectedDisco,
+        data: notations.map(notation => {
+          const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === latestMonth);
+          return notationData ? notationData['Total Customers'] : 0;
+        })
+      }];
+    } else {
+      chartData = [{
+        name: selectedDisco,
+        data: notations.map(notation => {
+          const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === selectedMonth);
+          return notationData ? notationData['Total Customers'] : 0;
+        })
+      }];
+    }
+
+    return chartData;
+  };
 
   const optionscolumnchart = {
-  chart: {
-    type: 'bar',
-    fontFamily: "'Plus Jakarta Sans', sans-serif;",
-    foreColor: '#adb0bb',
-    toolbar: { show: true },
-    height: 370,
-    stacked: true,
-  },
-  colors: [primary, secondary],
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      barHeight: '60%',
-      columnWidth: '20%',
-      borderRadius: [6],
-      borderRadiusApplication: 'end',
-      borderRadiusWhenStacked: 'all',
+    chart: {
+      type: 'bar',
+      fontFamily: "'Plus Jakarta Sans', sans-serif;",
+      foreColor: '#adb0bb',
+      toolbar: { show: true },
+      height: 370,
     },
-  },
-  stroke: { show: false },
-  dataLabels: {
-    enabled: false,
-    formatter: (value) => value.toLocaleString(), 
-  },
-  legend: { show: true },
-  grid: {
-    borderColor: 'rgba(0,0,0,0.1)',
-    strokeDashArray: 3,
-    xaxis: { lines: { show: false } },
-    show: false,
-  },
-  yaxis: { title: { text: 'Customers' } },
-  xaxis: {
-    categories: ['Band A', 'Band B', 'Band C', 'Band D', 'Band E'],
-    axisBorder: { show: false },
-  },
-  tooltip: {
-    theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-    fillSeriesColor: false,
-    y: {
-      formatter: (value) => value.toLocaleString(), 
+    colors: [primary],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '50%',
+        borderRadius: 6,
+      },
     },
-  },
-};
-  const seriescolumnchart = [
-    { name: 'Metered', data: customerData.metered },
-    { name: 'Unmetered', data: customerData.unmetered },
-  ];
+    stroke: { show: false },
+    dataLabels: {
+      enabled: false,
+    },
+    legend: { show: false },
+    grid: {
+      show: false,
+    },
+    yaxis: { 
+      title: { text: 'Customers' },
+      labels: {
+        formatter: (value) => value.toLocaleString()
+      }
+    },
+    xaxis: {
+      categories: notations,
+      axisBorder: { show: false },
+    },
+    tooltip: {
+      theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      fillSeriesColor: false,
+      y: {
+        formatter: (value) => value.toLocaleString(),
+      },
+    },
+  };
 
-  const totalMetered = customerData.metered.reduce((a, b) => a + b, 0);
-  const totalUnmetered = customerData.unmetered.reduce((a, b) => a + b, 0);
-  const totalCustomers = totalMetered + totalUnmetered;
+  const seriescolumnchart = processChartData();
+
+  const getTotalCustomers = () => {
+    const filteredData = filterData();
+    if (isAnnual) {
+      const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
+      const latestMonthData = filteredData.filter(item => item.MonthName === latestMonth);
+      return latestMonthData.reduce((sum, item) => sum + item['Total Customers'], 0);
+    } else {
+      return filteredData.reduce((sum, item) => sum + item['Total Customers'], 0);
+    }
+  };
+
+  const totalCustomers = getTotalCustomers();
+
+  const handleViewFullReport = () => {
+    setOpenSubscribeDialog(true);
+  };
+
+  const handleCloseSubscribeDialog = () => {
+    setOpenSubscribeDialog(false);
+  };
+
+  const handleSubscribe = () => {
+    setIsSubscribed(true);
+    setIsAnnual(false);
+    setOpenSubscribeDialog(false);
+  };
+
+  const handleToggle = () => {
+    if (isAnnual) {
+      setOpenSubscribeDialog(true);
+    } else {
+      setIsAnnual(true);
+    }
+  };
 
   return (
     <DashboardCard title="">
       <Grid container spacing={2}>
         <Grid item xs={12} sm={8}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <FormControl fullWidth sx={{ width: '80%' }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={3}>
+              <FormControl fullWidth>
                 <InputLabel id="year-select-label">Year</InputLabel>
                 <Select
                   labelId="year-select-label"
                   value={selectedYear}
                   label="Year"
-                  onChange={(e) => setSelectedYear(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedYear(e.target.value);
+                    setSelectedMonth(getLatestAvailableMonth(customerData, e.target.value, selectedDisco));
+                  }}
                 >
-                  {Object.keys(customerDataByYear).map((year) => (
-                    <MenuItem key={year} value={year}>{year}</MenuItem>
+                  {years.map((year) => (
+                    <MenuItem key={year} value={year.toString()}>{year}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth sx={{ width: '80%' }}>
-                <InputLabel id="disco-select-label">Select Disco</InputLabel>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id="disco-select-label">Disco</InputLabel>
                 <Select
                   labelId="disco-select-label"
                   value={selectedDisco}
-                  label="Select Disco"
-                  onChange={(e) => setSelectedDisco(e.target.value)}
+                  label="Disco"
+                  onChange={(e) => {
+                    setSelectedDisco(e.target.value);
+                    setSelectedMonth(getLatestAvailableMonth(customerData, selectedYear, e.target.value));
+                  }}
                 >
                   {discos.map((disco) => (
                     <MenuItem key={disco} value={disco}>{disco}</MenuItem>
@@ -128,8 +211,31 @@ const CustomerPopulationbyServiceBand = () => {
                 </Select>
               </FormControl>
             </Grid>
+            {isSubscribed && !isAnnual && (
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="month-select-label">Month</InputLabel>
+                  <Select
+                    labelId="month-select-label"
+                    value={selectedMonth}
+                    label="Month"
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                  >
+                    {months.map((month) => (
+                      <MenuItem key={month} value={month}>{month}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            )}
+            <Grid item xs={3}>
+              <FormControlLabel
+                control={<Switch checked={isAnnual} onChange={handleToggle} name="toggleView" color="primary" />}
+                label={isAnnual ? 'Annual' : 'Monthly'}
+              />
+            </Grid>
           </Grid>
-          <Box className="rounded-bars">
+          <Box className="rounded-bars" mt={2}>
             <Chart
               options={optionscolumnchart}
               series={seriescolumnchart}
@@ -153,47 +259,15 @@ const CustomerPopulationbyServiceBand = () => {
               </Box>
               <Box>
                 <Typography variant="h3" fontWeight="700">
-                  {totalCustomers.toLocaleString()} {/* Format with thousand separators */}
+                  {totalCustomers.toLocaleString()}
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Total Customers
-                </Typography>
-              </Box>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Avatar
-                sx={{ width: 9, mt: 1, height: 9, bgcolor: primary, svg: { display: 'none' } }}
-              ></Avatar>
-              <Box>
-                <Typography variant="h5">
-                  {totalMetered.toLocaleString()} {/* Format with thousand separators */}
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Total Metered
-                </Typography>
-              </Box>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Avatar
-                sx={{ width: 9, mt: 1, height: 9, bgcolor: secondary, svg: { display: 'none' } }}
-              ></Avatar>
-              <Box>
-                <Typography variant="h5">
-                  {totalUnmetered.toLocaleString()} {/* Format with thousand separators */}
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Total Unmetered
+                  Total Customers for {selectedDisco} in {isAnnual ? `${selectedYear} (${getLatestAvailableMonth(customerData, selectedYear, selectedDisco)})` : `${selectedMonth} ${selectedYear}`}
                 </Typography>
               </Box>
             </Stack>
           </Stack>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-            <Button color="primary" variant="contained" sx={{ width: '200px' }}>
-              View Full Report
-            </Button>
-          </Box>
         </Grid>
-        {/* Text column */}
         <Grid item xs={12} sm={4}>
           <Typography variant="h4" gutterBottom>
             Customer Population by Service Band
@@ -204,11 +278,29 @@ const CustomerPopulationbyServiceBand = () => {
           <Typography variant="body1" paragraph>
             By analyzing these metrics, utilities can better manage resources and improve service quality. This information is crucial for optimizing energy distribution and enhancing overall operational efficiency.
           </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <Button color="primary" variant="contained" sx={{ width: '200px' }} onClick={handleViewFullReport}>
+              View Full Report
+            </Button>
+          </Box>
         </Grid>
       </Grid>
+      <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
+        <DialogTitle>Subscribe to EMRC Services</DialogTitle>
+        <DialogContent>
+          <Typography>
+            To access detailed monthly data, please subscribe to EMRC services.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseSubscribeDialog}>Cancel</Button>
+          <Button onClick={handleSubscribe} color="primary">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardCard>
   );
-  
 };
 
 export default CustomerPopulationbyServiceBand;

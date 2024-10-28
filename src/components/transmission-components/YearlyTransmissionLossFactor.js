@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, FormControlLabel, Switch, MenuItem, Select, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import DashboardCard from 'src/components/shared/DashboardCard';  // Make sure the import path matches your project structure
+import DashboardCard from 'src/components/shared/DashboardCard';
 
 const YearlyTransmissionLossFactor = () => {
   const theme = useTheme();
   const textColor = theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : '#2A3547';
-  const borderColor = theme.palette.grey[100];
 
   const [isAnnual, setIsAnnual] = useState(true);
-  const [selectedYear, setSelectedYear] = useState(2023);
+  const [selectedYear, setSelectedYear] = useState(null);
   const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
+  const [data, setData] = useState([]);
+  const [years, setYears] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/Transmission-Loss-Factor');
+      const sortedData = response.data.sort((a, b) => {
+        if (a.YEAR !== b.YEAR) return b.YEAR - a.YEAR;
+        const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return monthOrder.indexOf(a.Month_Name) - monthOrder.indexOf(b.Month_Name);
+      });
+      setData(sortedData);
+      const uniqueYears = [...new Set(sortedData.map(item => item.YEAR))].sort((a, b) => a - b);
+      setYears(uniqueYears.slice(-5));
+      setSelectedYear(uniqueYears[uniqueYears.length - 1]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleToggle = () => {
     if (isAnnual) {
@@ -27,6 +50,31 @@ const YearlyTransmissionLossFactor = () => {
 
   const handleCloseSubscribeDialog = () => {
     setOpenSubscribeDialog(false);
+  };
+
+  const handleSubscribe = () => {
+    setIsAnnual(false);
+    setOpenSubscribeDialog(false);
+  };
+
+  const getMonthlyData = (year, dataType) => {
+    const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const yearData = data.filter(item => item.YEAR === year);
+    return monthOrder.map(month => {
+      const monthData = yearData.find(item => item.Month_Name === month);
+      return monthData ? monthData[dataType] : null;
+    });
+  };
+
+  const getAnnualData = (dataType) => {
+    return years.map(year => {
+      const yearData = data.filter(item => item.YEAR === year);
+      if (yearData.length > 0) {
+        const sum = yearData.reduce((acc, curr) => acc + curr[dataType], 0);
+        return parseFloat((sum / yearData.length).toFixed(2));
+      }
+      return null;
+    });
   };
 
   const optionsLineChart = {
@@ -49,8 +97,8 @@ const YearlyTransmissionLossFactor = () => {
     },
     xaxis: {
       categories: isAnnual
-        ? [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
-        : ['Dec', 'Nov', 'Oct', 'Sep', 'Aug', 'Jul', 'Jun', 'May', 'Apr', 'Mar', 'Feb', 'Jan'],
+        ? years
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       labels: {
         style: {
           colors: textColor,
@@ -81,7 +129,7 @@ const YearlyTransmissionLossFactor = () => {
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       y: {
-        formatter: (val) => `${val}%`,
+        formatter: (val) => val !== null ? `${val}%` : 'No data',
       },
     },
     legend: {
@@ -97,38 +145,20 @@ const YearlyTransmissionLossFactor = () => {
     {
       name: 'Transmission Loss Factor',
       data: isAnnual
-        ? [9, 12, 7, 9, 6, 14, 18, 7]
-        : {
-            2016: [0.6, 0.7, 0.8, 0.7, 0.6, 0.5, 0.6, 0.7, 0.8, 0.7, 0.6, 0.5],
-            2017: [0.7, 0.8, 0.9, 0.8, 0.7, 0.6, 0.7, 0.8, 0.9, 0.8, 0.7, 0.6],
-            2018: [0.8, 0.9, 1.0, 0.9, 0.8, 0.7, 0.8, 0.9, 1.0, 0.9, 0.8, 0.7],
-            2019: [0.9, 1.0, 1.1, 1.0, 0.9, 0.8, 0.9, 1.0, 1.1, 1.0, 0.9, 0.8],
-            2020: [1.0, 1.1, 1.2, 1.1, 1.0, 0.9, 1.0, 1.1, 1.2, 1.1, 1.0, 0.9],
-            2021: [1.1, 1.2, 1.3, 1.2, 1.1, 1.0, 1.1, 1.2, 1.3, 1.2, 1.1, 1.0],
-            2022: [1.2, 1.3, 1.4, 1.3, 1.2, 1.1, 1.2, 1.3, 1.4, 1.3, 1.2, 1.1],
-            2023: [1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2],
-          }[selectedYear],
+        ? getAnnualData('TransmissionLossFactor')
+        : getMonthlyData(selectedYear, 'TransmissionLossFactor'),
     },
     {
       name: 'MYTO Assumed TLF %',
       data: isAnnual
-        ? [10.2, 10.5, 10.8, 11.0, 11.2, 11.5, 11.8, 12.0]
-        : {
-            2016: [10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2],
-            2017: [10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5],
-            2018: [10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8, 10.8],
-            2019: [11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0],
-            2020: [11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2, 11.2],
-            2021: [11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5],
-            2022: [11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8, 11.8],
-            2023: [12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0],
-          }[selectedYear],
+        ? getAnnualData('MYTOAssumedTLF')
+        : getMonthlyData(selectedYear, 'MYTOAssumedTLF'),
     },
   ];
 
   return (
     <DashboardCard
-      title="Yearly Transmission Loss Factor"
+      title="Transmission Loss Factor"
       subtitle="Assessment of transmission loss rates and MYTO assumptions"
       action={
         <Box display="flex" alignItems="center">
@@ -141,7 +171,7 @@ const YearlyTransmissionLossFactor = () => {
                 onChange={handleYearChange}
                 label="Year"
               >
-                {[2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016].map((year) => (
+                {years.map((year) => (
                   <MenuItem key={year} value={year}>
                     {year}
                   </MenuItem>
@@ -156,22 +186,8 @@ const YearlyTransmissionLossFactor = () => {
         </Box>
       }
     >
-      <Box mt={4} sx={{ position: 'relative' }}>
+      <Box mt={4}>
         <Chart options={optionsLineChart} series={seriesLineChart} type="line" height="350" />
-        {!isAnnual && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(255, 255, 255, 0.7)',
-              filter: 'blur(5px)',
-              pointerEvents: 'none',
-            }}
-          />
-        )}
       </Box>
       <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
         <DialogTitle>Subscribe to EMRC</DialogTitle>
@@ -182,7 +198,7 @@ const YearlyTransmissionLossFactor = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseSubscribeDialog}>Cancel</Button>
-          <Button onClick={handleCloseSubscribeDialog} color="primary">
+          <Button onClick={handleSubscribe} color="primary">
             Subscribe
           </Button>
         </DialogActions>

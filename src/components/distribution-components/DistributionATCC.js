@@ -1,22 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
+import axios from 'axios'; // Import axios for API calls
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Box } from '@mui/material';
 
 const DistributionATCC = () => {
   const theme = useTheme();
 
-  const averageATCC = [52.2, 48.8, 60.5, 39.9, 62.7, 50.8, 67.1]; 
+  const [averageATCC, setAverageATCC] = useState([]); // State for ATCC values
+  const [years, setYears] = useState([]); // State for years
+
+  useEffect(() => {
+    // Fetch data from the API
+    const fetchATCCData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/Yearly-AVG-ATCC');
+        const data = response.data;
+
+        // Extract years and ATCC values from the response
+        const fetchedYears = data.map(item => item.Year);
+        const fetchedATCC = data.map(item => item.ATCC);
+
+        setYears(fetchedYears); // Set the x-axis categories (years)
+        setAverageATCC(fetchedATCC); // Set the ATCC data
+      } catch (error) {
+        console.error('Error fetching ATCC data:', error);
+      }
+    };
+
+    fetchATCCData(); 
+  }, []); 
 
   const chartOptions = {
     chart: {
       type: 'area',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
       foreColor: '#adb0bb',
-      toolbar: {
-        show: false,
-      },
+      toolbar: { show: false },
       height: 370,
     },
     fill: {
@@ -44,7 +65,7 @@ const DistributionATCC = () => {
     stroke: {
       curve: 'smooth',
       width: 2,
-      colors: ['#FF0000'],  // Set the stroke color to red
+      colors: ['#FF0000'],  
     },
     dataLabels: {
       enabled: true,
@@ -75,7 +96,7 @@ const DistributionATCC = () => {
       },
     },
     xaxis: {
-      categories: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+      categories: years, 
       labels: { rotate: 0 },
       axisBorder: { show: false },
     },
@@ -95,7 +116,7 @@ const DistributionATCC = () => {
           <Box className="rounded-bars">
             <Chart
               options={chartOptions}
-              series={[{ name: 'ATCC', data: averageATCC }]}
+              series={[{ name: 'ATCC', data: averageATCC }]} 
               type="area"
               height="275"
             />

@@ -1,116 +1,12 @@
-import * as React from 'react';
-import { Box, TextField, Typography, Paper, Switch, Tooltip, IconButton, FormControlLabel, MenuItem, Button, Stack } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Box, TextField, Typography, Paper, Switch, Tooltip, IconButton, 
+  FormControlLabel, MenuItem, Button, Stack, Dialog, DialogTitle, 
+  DialogContent, DialogActions, FormControl, InputLabel, Select } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
-import InfoIcon from '@mui/icons-material/Info';
 
-
-import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
-import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
-import EkoLogo from 'src/assets/images/Genco_Logos/Eko_Logo.jpg';
-import EnuguLogo from 'src/assets/images/Genco_Logos/Enugu_Logo.jpg';
-import IbadanLogo from 'src/assets/images/Genco_Logos/Ibadan_Logo.jpg';
-import IkejaLogo from 'src/assets/images/Genco_Logos/Ikeja_Logo.jpg';
-import JosLogo from 'src/assets/images/Genco_Logos/Jos_Logo.jpg';
-import KadunaLogo from 'src/assets/images/Genco_Logos/Kaduna_Logo.jpg';
-import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
-import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
-import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
-
-const initialData = [
-  { genco: 'Abuja', "2023 Invoice": 450, "2023 Remittance": 400, "2023 Shortfall": 50, img: AbujaLogo },
-  { genco: 'Benin', "2023 Invoice": 500, "2023 Remittance": 450, "2023 Shortfall": 50, img: BeninLogo },
-  { genco: 'Eko', "2023 Invoice": 220, "2023 Remittance": 180, "2023 Shortfall": 40, img: EkoLogo },
-  { genco: 'Enugu', "2023 Invoice": 470, "2023 Remittance": 410, "2023 Shortfall": 60, img: EnuguLogo },
-  { genco: 'Ibadan', "2023 Invoice": 360, "2023 Remittance": 320, "2023 Shortfall": 40, img: IbadanLogo },
-  { genco: 'Ikeja', "2023 Invoice": 340, "2023 Remittance": 300, "2023 Shortfall": 40, img: IkejaLogo },
-  { genco: 'Jos', "2023 Invoice": 480, "2023 Remittance": 430, "2023 Shortfall": 50, img: JosLogo },
-  { genco: 'Kaduna', "2023 Invoice": 390, "2023 Remittance": 340, "2023 Shortfall": 50, img: KadunaLogo },
-  { genco: 'Kano', "2023 Invoice": 410, "2023 Remittance": 360, "2023 Shortfall": 50, img: KanoLogo },
-  { genco: 'Portharcourt', "2023 Invoice": 340, "2023 Remittance": 300, "2023 Shortfall": 40, img: PortharcourtLogo },
-  { genco: 'Yola', "2023 Invoice": 380, "2023 Remittance": 340, "2023 Shortfall": 40, img: YolaLogo },
-
-  //2022
-  { genco: 'Abuja', "2022 Invoice": 430, "2022 Remittance": 380, "2022 Shortfall": 50, img: AbujaLogo },
-  { genco: 'Benin', "2022 Invoice": 490, "2022 Remittance": 440, "2022 Shortfall": 50, img: BeninLogo },
-  { genco: 'Eko', "2022 Invoice": 210, "2022 Remittance": 170, "2022 Shortfall": 40, img: EkoLogo },
-  { genco: 'Enugu', "2022 Invoice": 450, "2022 Remittance": 400, "2022 Shortfall": 50, img: EnuguLogo },
-  { genco: 'Ibadan', "2022 Invoice": 350, "2022 Remittance": 310, "2022 Shortfall": 40, img: IbadanLogo },
-  { genco: 'Ikeja', "2022 Invoice": 330, "2022 Remittance": 290, "2022 Shortfall": 40, img: IkejaLogo },
-  { genco: 'Jos', "2022 Invoice": 460, "2022 Remittance": 410, "2022 Shortfall": 50, img: JosLogo },
-  { genco: 'Kaduna', "2022 Invoice": 370, "2022 Remittance": 320, "2022 Shortfall": 50, img: KadunaLogo },
-  { genco: 'Kano', "2022 Invoice": 400, "2022 Remittance": 350, "2022 Shortfall": 50, img: KanoLogo },
-  { genco: 'Portharcourt', "2022 Invoice": 330, "2022 Remittance": 290, "2022 Shortfall": 40, img: PortharcourtLogo },
-  { genco: 'Yola', "2022 Invoice": 370, "2022 Remittance": 330, "2022 Shortfall": 40, img: YolaLogo },
-
-  //2021 Data
-  { genco: 'Abuja', "2021 Invoice": 420, "2021 Remittance": 370, "2021 Shortfall": 50, img: AbujaLogo },
-  { genco: 'Benin', "2021 Invoice": 480, "2021 Remittance": 430, "2021 Shortfall": 50, img: BeninLogo },
-  { genco: 'Eko', "2021 Invoice": 200, "2021 Remittance": 160, "2021 Shortfall": 40, img: EkoLogo },
-  { genco: 'Enugu', "2021 Invoice": 440, "2021 Remittance": 390, "2021 Shortfall": 50, img: EnuguLogo },
-  { genco: 'Ibadan', "2021 Invoice": 340, "2021 Remittance": 300, "2021 Shortfall": 40, img: IbadanLogo },
-  { genco: 'Ikeja', "2021 Invoice": 320, "2021 Remittance": 280, "2021 Shortfall": 40, img: IkejaLogo },
-  { genco: 'Jos', "2021 Invoice": 450, "2021 Remittance": 400, "2021 Shortfall": 50, img: JosLogo },
-  { genco: 'Kaduna', "2021 Invoice": 360, "2021 Remittance": 310, "2021 Shortfall": 50, img: KadunaLogo },
-  { genco: 'Kano', "2021 Invoice": 390, "2021 Remittance": 340, "2021 Shortfall": 50, img: KanoLogo },
-  { genco: 'Portharcourt', "2021 Invoice": 320, "2021 Remittance": 280, "2021 Shortfall": 40, img: PortharcourtLogo },
-  { genco: 'Yola', "2021 Invoice": 360, "2021 Remittance": 320, "2021 Shortfall": 40, img: YolaLogo },
-
-  // 2020 Data
-  { genco: 'Abuja', "2020 Invoice": 410, "2020 Remittance": 360, "2020 Shortfall": 50, img: AbujaLogo },
-  { genco: 'Benin', "2020 Invoice": 470, "2020 Remittance": 420, "2020 Shortfall": 50, img: BeninLogo },
-  { genco: 'Eko', "2020 Invoice": 190, "2020 Remittance": 150, "2020 Shortfall": 40, img: EkoLogo },
-  { genco: 'Enugu', "2020 Invoice": 430, "2020 Remittance": 380, "2020 Shortfall": 50, img: EnuguLogo },
-  { genco: 'Ibadan', "2020 Invoice": 330, "2020 Remittance": 290, "2020 Shortfall": 40, img: IbadanLogo },
-  { genco: 'Ikeja', "2020 Invoice": 310, "2020 Remittance": 270, "2020 Shortfall": 40, img: IkejaLogo },
-  { genco: 'Jos', "2020 Invoice": 440, "2020 Remittance": 390, "2020 Shortfall": 50, img: JosLogo },
-  { genco: 'Kaduna', "2020 Invoice": 350, "2020 Remittance": 300, "2020 Shortfall": 50, img: KadunaLogo },
-  { genco: 'Kano', "2020 Invoice": 380, "2020 Remittance": 330, "2020 Shortfall": 50, img: KanoLogo },
-  { genco: 'Portharcourt', "2020 Invoice": 310, "2020 Remittance": 270, "2020 Shortfall": 40, img: PortharcourtLogo },
-  { genco: 'Yola', "2020 Invoice": 350, "2020 Remittance": 310, "2020 Shortfall": 40, img: YolaLogo },
-
-  // 2019 Data
-  { genco: 'Abuja', "2019 Invoice": 400, "2019 Remittance": 350, "2019 Shortfall": 50, img: AbujaLogo },
-  { genco: 'Benin', "2019 Invoice": 460, "2019 Remittance": 410, "2019 Shortfall": 50, img: BeninLogo },
-  { genco: 'Eko', "2019 Invoice": 180, "2019 Remittance": 140, "2019 Shortfall": 40, img: EkoLogo },
-  { genco: 'Enugu', "2019 Invoice": 420, "2019 Remittance": 370, "2019 Shortfall": 50, img: EnuguLogo },
-  { genco: 'Ibadan', "2019 Invoice": 320, "2019 Remittance": 280, "2019 Shortfall": 40, img: IbadanLogo },
-  { genco: 'Ikeja', "2019 Invoice": 300, "2019 Remittance": 260, "2019 Shortfall": 40, img: IkejaLogo },
-  { genco: 'Jos', "2019 Invoice": 430, "2019 Remittance": 380, "2019 Shortfall": 50, img: JosLogo },
-  { genco: 'Kaduna', "2019 Invoice": 340, "2019 Remittance": 290, "2019 Shortfall": 50, img: KadunaLogo },
-  { genco: 'Kano', "2019 Invoice": 370, "2019 Remittance": 320, "2019 Shortfall": 50, img: KanoLogo },
-  { genco: 'Portharcourt', "2019 Invoice": 300, "2019 Remittance": 260, "2019 Shortfall": 40, img: PortharcourtLogo },
-  { genco: 'Yola', "2019 Invoice": 340, "2019 Remittance": 300, "2019 Shortfall": 40, img: YolaLogo },
-
-   // 2018 Data
-   { genco: 'Abuja', "2018 Invoice": 390, "2018 Remittance": 340, "2018 Shortfall": 50, img: AbujaLogo },
-   { genco: 'Benin', "2018 Invoice": 450, "2018 Remittance": 400, "2018 Shortfall": 50, img: BeninLogo },
-   { genco: 'Eko', "2018 Invoice": 170, "2018 Remittance": 130, "2018 Shortfall": 40, img: EkoLogo },
-   { genco: 'Enugu', "2018 Invoice": 410, "2018 Remittance": 360, "2018 Shortfall": 50, img: EnuguLogo },
-   { genco: 'Ibadan', "2018 Invoice": 310,   "2018 Remittance": 270, "2018 Shortfall": 40, img: IbadanLogo },
-   { genco: 'Ikeja', "2018 Invoice": 290, "2018 Remittance": 250, "2018 Shortfall": 40, img: IkejaLogo },
-   { genco: 'Jos', "2018 Invoice": 420, "2018 Remittance": 370, "2018 Shortfall": 50, img: JosLogo },
-   { genco: 'Kaduna', "2018 Invoice": 330, "2018 Remittance": 280, "2018 Shortfall": 50, img: KadunaLogo },
-   { genco: 'Kano', "2018 Invoice": 360, "2018 Remittance": 310, "2018 Shortfall": 50, img: KanoLogo },
-   { genco: 'Portharcourt', "2018 Invoice": 290, "2018 Remittance": 250, "2018 Shortfall": 40, img: PortharcourtLogo },
-   { genco: 'Yola', "2018 Invoice": 330, "2018 Remittance": 290, "2018 Shortfall": 40, img: YolaLogo },
- 
-   // 2017 Data
-   { genco: 'Abuja', "2017 Invoice": 380, "2017 Remittance": 330, "2017 Shortfall": 50, img: AbujaLogo },
-   { genco: 'Benin', "2017 Invoice": 440, "2017 Remittance": 390, "2017 Shortfall": 50, img: BeninLogo },
-   { genco: 'Eko', "2017 Invoice": 160, "2017 Remittance": 120, "2017 Shortfall": 40, img: EkoLogo },
-   { genco: 'Enugu', "2017 Invoice": 400, "2017 Remittance": 350, "2017 Shortfall": 50, img: EnuguLogo },
-   { genco: 'Ibadan', "2017 Invoice": 300, "2017 Remittance": 260, "2017 Shortfall": 40, img: IbadanLogo },
-   { genco: 'Ikeja', "2017 Invoice": 280, "2017 Remittance": 240, "2017 Shortfall": 40, img: IkejaLogo },
-   { genco: 'Jos', "2017 Invoice": 410, "2017 Remittance": 360, "2017 Shortfall": 50, img: JosLogo },
-   { genco: 'Kaduna', "2017 Invoice": 320, "2017 Remittance": 270, "2017 Shortfall": 50, img: KadunaLogo },
-   { genco: 'Kano', "2017 Invoice": 350, "2017 Remittance": 300, "2017 Shortfall": 50, img: KanoLogo },
-   { genco: 'Portharcourt', "2017 Invoice": 280, "2017 Remittance": 240, "2017 Shortfall": 40, img: PortharcourtLogo },
-   { genco: 'Yola', "2017 Invoice": 320, "2017 Remittance": 280, "2017 Shortfall": 40, img: YolaLogo },
- ];
-
- // Styled button component
- const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,
   '&:first-of-type': {
     borderTopLeftRadius: theme.shape.borderRadius,
@@ -123,29 +19,153 @@ const initialData = [
   '&:not(:first-of-type)': {
     marginLeft: '-1px',
   },
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.getContrastText(theme.palette.secondary.main),
+    '&:hover': {
+      backgroundColor: theme.palette.secondary.dark,
+    },
+  },
 }));
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
 const DiscoTableMarketInvoice = () => {
   const theme = useTheme();
-  const [selectedYear, setSelectedYear] = React.useState('2023');
-  const [view, setView] = React.useState('invoice'); // To toggle between charts
-  const [compare, setCompare] = React.useState(false); // For the compare toggle switch
+  const [data, setData] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState('January');
+  const [view, setView] = useState('invoice');
+  const [compare, setCompare] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(true);
+  const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
 
-  const chartData = React.useMemo(() => {
-    return initialData.filter(item => {
-      return (
-        item[`${selectedYear} Invoice`] !== undefined &&
-        item[`${selectedYear} Remittance`] !== undefined
-      );
-    }).map(item => ({
-      disco: item.genco,
-      invoice: item[`${selectedYear} Invoice`],
-      remittance: item[`${selectedYear} Remittance`],
-    }));
-  }, [selectedYear]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const getChartOptions = (title) => ({
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/Disco-MO-Remmitances-Invoice');
+      const sortedData = response.data.sort((a, b) => {
+        if (a.Year !== b.Year) return b.Year - a.Year;
+        return months.indexOf(a.Month_Name) - months.indexOf(b.Month_Name);
+      });
+      setData(sortedData);
+      const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => b - a);
+      setYears(uniqueYears);
+      setSelectedYear(uniqueYears[0]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const processData = () => {
+    if (!data.length) return { categories: [], series: [] };
+
+    if (isAnnual) {
+      // Process annual data
+      const annualData = {};
+      data.forEach(item => {
+        if (!annualData[item.Discos]) {
+          annualData[item.Discos] = {
+            invoice: 0,
+            remittance: 0
+          };
+        }
+        if (item.Year === selectedYear) {
+          annualData[item.Discos].invoice += item.InvoicefromMO_Bn;
+          annualData[item.Discos].remittance += item.RemittancetoMO_Bn;
+        }
+      });
+
+      const discos = Object.keys(annualData);
+      return {
+        categories: discos,
+        series: getSeriesData(discos.map(disco => ({
+          invoice: Math.round(annualData[disco].invoice * 100) / 100,
+          remittance: Math.round(annualData[disco].remittance * 100) / 100
+        })))
+      };
+    } else {
+      // Process monthly data
+      const monthlyData = {};
+      data.forEach(item => {
+        if (item.Year === selectedYear && item.Month_Name === selectedMonth) {
+          monthlyData[item.Discos] = {
+            invoice: item.InvoicefromMO_Bn,
+            remittance: item.RemittancetoMO_Bn
+          };
+        }
+      });
+
+      const discos = Object.keys(monthlyData);
+      return {
+        categories: discos,
+        series: getSeriesData(discos.map(disco => ({
+          invoice: Math.round(monthlyData[disco].invoice * 100) / 100,
+          remittance: Math.round(monthlyData[disco].remittance * 100) / 100
+        })))
+      };
+    }
+  };
+
+  const getSeriesData = (data) => {
+    if (compare) {
+      return [
+        {
+          name: 'Invoice',
+          data: data.map(item => item.invoice)
+        },
+        {
+          name: 'Remittance',
+          data: data.map(item => item.remittance)
+        }
+      ];
+    } else {
+      return [{
+        name: view === 'invoice' ? 'Invoice' : 'Remittance',
+        data: data.map(item => view === 'invoice' ? item.invoice : item.remittance)
+      }];
+    }
+  };
+
+  const handleYearChange = (event) => {
+    setSelectedYear(Number(event.target.value));
+  };
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const handleToggleCompare = () => {
+    setCompare(prev => !prev);
+  };
+
+  const handleToggleView = () => {
+    if (isAnnual) {
+      setOpenSubscribeDialog(true);
+    } else {
+      setIsAnnual(true);
+    }
+  };
+
+  const handleCloseSubscribeDialog = () => {
+    setOpenSubscribeDialog(false);
+  };
+
+  const handleSubscribe = () => {
+    setIsAnnual(false);
+    setOpenSubscribeDialog(false);
+  };
+
+  const chartData = processData();
+
+  const getChartOptions = () => ({
     chart: {
       type: 'bar',
       height: 350,
@@ -175,10 +195,10 @@ const DiscoTableMarketInvoice = () => {
       formatter: (val) => `₦${val}b`,
     },
     xaxis: {
-      categories: chartData.map(item => item.disco),
+      categories: chartData.categories,
       labels: {
         style: {
-          colors: [theme.palette.text.primary],
+          colors: Array(chartData.categories.length).fill(theme.palette.text.primary),
         },
       },
     },
@@ -195,58 +215,97 @@ const DiscoTableMarketInvoice = () => {
     },
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      y: {
+        formatter: (val) => `₦${val}b`
+      }
     },
-    colors: compare ? [theme.palette.primary.main, theme.palette.secondary.main] : [theme.palette.primary.main],
+    colors: compare ? 
+      [theme.palette.primary.main, theme.palette.secondary.main] : 
+      [view === 'invoice' ? theme.palette.primary.main : theme.palette.secondary.main],
     legend: {
-      show: compare, // Show legend only when comparing
+      show: compare,
     },
   });
-
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
-  };
-
-  const handleToggleCompare = () => {
-    setCompare((prev) => !prev);
-    setView('compare');
-  };
 
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-      <Typography variant="h6" align="center" gutterBottom>
-        Disco MO Remittances and Invoice
-      </Typography>
+        <Typography variant="h6" align="center" gutterBottom>
+          Disco MO Remittances and Invoice
+        </Typography>
         <Stack direction="row">
           <StyledButton
-            variant={view === 'invoice' && !compare ? 'contained' : 'outlined'}
-            onClick={() => setView('invoice')}
+            variant={view === 'invoice' ? 'contained' : 'outlined'}
+            onClick={() => {
+              setView('invoice');
+              setCompare(false);
+            }}
+            sx={{
+              backgroundColor: view === 'invoice' ? theme.palette.primary.main : 'transparent',
+              color: view === 'invoice' ? 'white' : theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: view === 'invoice' ? theme.palette.primary.dark : 'transparent',
+              }
+            }}
           >
             Disco Invoice
           </StyledButton>
           <StyledButton
-            variant={view === 'remittance' && !compare ? 'contained' : 'outlined'}
-            onClick={() => setView('remittance')}
+            variant={view === 'remittance' ? 'contained' : 'outlined'}
+            onClick={() => {
+              setView('remittance');
+              setCompare(false);
+            }}
+            sx={{
+              backgroundColor: view === 'remittance' ? theme.palette.secondary.main : 'transparent',
+              color: view === 'remittance' ? 'white' : theme.palette.secondary.main,
+              '&:hover': {
+                backgroundColor: view === 'remittance' ? theme.palette.secondary.dark : 'transparent',
+              }
+            }}
           >
             Disco Remittance
           </StyledButton>
         </Stack>
-        <Stack direction="row" alignItems="center">
-          <TextField
-            select
-            value={selectedYear}
-            onChange={handleYearChange}
-            label="Select Year"
-            variant="outlined"
-            size="small"
-            sx={{ marginRight: theme.spacing(2) }}
-          >
-            {fields.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </TextField>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <FormControl variant="outlined" size="small">
+            <InputLabel>Year</InputLabel>
+            <Select
+              value={selectedYear || ''}
+              onChange={handleYearChange}
+              label="Year"
+              sx={{ minWidth: 100 }}
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>{year}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {!isAnnual && (
+            <FormControl variant="outlined" size="small">
+              <InputLabel>Month</InputLabel>
+              <Select
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                label="Month"
+                sx={{ minWidth: 120 }}
+              >
+                {months.map((month) => (
+                  <MenuItem key={month} value={month}>{month}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isAnnual}
+                onChange={handleToggleView}
+                name="viewToggle"
+              />
+            }
+            label={isAnnual ? 'Annual' : 'Monthly'}
+          />
           <FormControlLabel
             control={
               <Switch
@@ -256,26 +315,31 @@ const DiscoTableMarketInvoice = () => {
               />
             }
             label="Compare"
-            sx={{ marginRight: theme.spacing(2) }}
           />
         </Stack>
       </Stack>
 
       <ReactApexChart
-        options={getChartOptions(view === 'compare' ? 'Compare' : view === 'invoice' ? 'Invoice' : 'Remittance')}
-        series={[
-          {
-            name: view === 'invoice' || view === 'compare' ? 'Invoice' : 'Remittance',
-            data: chartData.map(item => view === 'invoice' || view === 'compare' ? item.invoice : item.remittance),
-          },
-          ...(compare ? [{
-            name: 'Remittance',
-            data: chartData.map(item => item.remittance),
-          }] : [])
-        ]}
+        options={getChartOptions()}
+        series={chartData.series}
         type="bar"
         height={350}
       />
+
+      <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
+        <DialogTitle>Subscribe to EMRC</DialogTitle>
+        <DialogContent>
+          <Typography>
+            To access monthly data, please subscribe or sign up for EMRC services.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseSubscribeDialog}>Cancel</Button>
+          <Button onClick={handleSubscribe} color="primary">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

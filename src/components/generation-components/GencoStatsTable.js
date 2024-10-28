@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -14,8 +15,6 @@ import {
   Paper,
   TablePagination,
   IconButton,
-  Tooltip,
-  Checkbox,
   TableFooter,
   Avatar,
   InputAdornment,
@@ -38,40 +37,47 @@ import OlorunsogoLogo from 'src/assets/images/Genco_Logos/Olorunsogo_Logo.jpg';
 import ParasLogo from 'src/assets/images/Genco_Logos/Paras_logo.jpg';
 import RiversLogo from 'src/assets/images/Genco_Logos/Rivers_logo.jpg';
 import SapeleLogo from 'src/assets/images/Genco_Logos/sapele_logo.jpg';
+import DefaultLogo from 'src/assets/images/Genco_Logos/Default_logo.jpg';
 
-const initialData = [
-  { genco: 'AFAM IV&V (GAS)', "2023": 64.3, "2022": 67.5, "2021": 45.9, "2020": 560, "2019": 209, "2018": 350, "2017": 305, img: AfamLogo },
-  { genco: 'AFAM VI (GAS/STEAM)', "2023": 305.8, "2022": 400, "2021": 209, "2020": 398, "2019": 355, "2018": 599, "2017": 776, img: AfamLogo },
-  { genco: 'ALAOJI NIPP (GAS)',"2023":	161,"2022":	235,"2021":	130,"2020":	443,"2019":	790,"2018":	214,"2017":	780, img: AlaojiLogo },
-  { genco:'AZURA-EDO IPP (GAS)',"2023": 299,"2022":	456,"2021":	200,"2020":	224,"2019":	445, "2018":	3450, "2017":	45.9, img: AzuraLogo },
-  { genco: 'DADINKOWA G.S (HYDRO)',"2023": 115,"2022":	780,"2021":	350, "2020":	214, "2019":	330, "2018":	776, "2017":	350, img: DadinkowaLogo },
-  { genco: 'DELTA (GAS)',"2023": 380, "2022":	599, "2021":	3450, "2020":	2387, "2019":	1002, "2018":	305, "2017":	45.9, img: DeltaGasLogo},
-  { genco: 'EGBIN (STEAM)', "2023": 538, "2022": 455, "2021": 6780, "2020": 980, "2019": 776, "2018": 3450, "2017": 400, img: EgbinLogo },
-  { genco: 'KAINJI POWER', "2023": 1200, "2022": 1000, "2021": 2389, "2020": 489, "2019": 888, "2018": 909, "2017": 305, img: KainjiLogo },
-  { genco: 'GEREGU (GAS)', "2023": 161, "2022": 235, "2021": 130, "2020": 443, "2019": 790, "2018": 214, "2017": 780, img: GereguLogo },
-  { genco: 'GEREGU NIPP (GAS)', "2023": 299, "2022": 456, "2021": 200, "2020": 224, "2019": 445, "2018": 3450, "2017": 45.9, img: GereguLogo },
-  { genco: 'IBOM POWER (GAS)', "2023": 115, "2022": 780, "2021": 350, "2020": 214, "2019": 330, "2018": 776, "2017": 350, img: IbomLogo },
-  { genco: 'IHOVBOR NIPP (GAS)', "2023": 380, "2022": 599, "2021": 3450, "2020": 2387, "2019": 1002, "2018": 305, "2017": 45.9, img: AlaojiLogo },
-  { genco: 'KAINJI (HYDRO)', "2023": 538, "2022": 455, "2021": 6780, "2020": 980, "2019": 776, "2018": 3450, "2017": 400, img: KainjiLogo },
-  { genco: 'ODUKPANI NIPP (GAS)', "2023": 1200, "2022": 1000, "2021": 2389, "2020": 489, "2019": 888, "2018": 909, "2017": 305, img: AlaojiLogo },
-  { genco: 'OKPAI (GAS/STEAM)', "2023": 64.3, "2022": 67.5, "2021": 45.9, "2020": 560, "2019": 209, "2018": 350, "2017": 305, img: AlaojiLogo },
-  { genco: 'OLORUNSOGO (GAS)', "2023": 305.8, "2022": 400, "2021": 209, "2020": 398, "2019": 355, "2018": 599, "2017": 776, img: OlorunsogoLogo },
-  { genco: 'OLORUNSOGO NIPP (GAS)', "2023": 161, "2022": 235, "2021": 130, "2020": 443, "2019": 790, "2018": 214, "2017": 780, img: OlorunsogoLogo },
-  { genco: 'OMOKU (GAS)', "2023": 299, "2022": 456, "2021": 200, "2020": 224, "2019": 445, "2018": 3450, "2017": 45.9, img: AlaojiLogo },
-  { genco: 'OMOTOSHO (GAS)', "2023": 115, "2022": 780, "2021": 350, "2020": 214, "2019": 330, "2018": 776, "2017": 350, img: AlaojiLogo },
-  { genco: 'OMOTOSHO NIPP (GAS)', "2023": 380, "2022": 599, "2021": 3450, "2020": 2387, "2019": 1002, "2018": 305, "2017": 45.9, img: AlaojiLogo },
-  { genco: 'PARAS ENERGY (GAS)', "2023": 538, "2022": 455, "2021": 6780, "2020": 980, "2019": 776, "2018": 3450, "2017": 400, img: ParasLogo },
-  { genco: 'RIVERS IPP (GAS)', "2023": 1200, "2022": 1000, "2021": 2389, "2020": 489, "2019": 888, "2018": 909, "2017": 305, img: RiversLogo },
-  { genco: 'SAPELE (STEAM)', "2023": 161, "2022": 235, "2021": 130, "2020": 443, "2019": 790, "2018": 214, "2017": 780, img: SapeleLogo },
-  { genco: 'SAPELE NIPP (GAS)', "2023": 299, "2022": 456, "2021": 200, "2020": 224, "2019": 445, "2018": 3450, "2017": 45.9, img: SapeleLogo },
-  { genco: 'SHIRORO (HYDRO)', "2023": 115, "2022": 780, "2021": 350, "2020": 214, "2019": 330, "2018": 776, "2017": 350, img: AlaojiLogo },
-  { genco: 'TRANS-AMADI (GAS)', "2023": 380, "2022": 599, "2021": 3450, "2020": 2387, "2019": 1002, "2018": 305, "2017": 45.9, img: AlaojiLogo }
-  // Include other gencos here...
-];
+const logoMapping = {
+  "AFAM IV": AfamLogo,
+  "AFAM VI": AfamLogo,
+  "AFAM IVV": AfamLogo,
+  "ALAOJI NIPP": AlaojiLogo,
+  "AZURAEDO": AzuraLogo,
+  "ASCO": DefaultLogo,
+  "DADIN KOWA": DadinkowaLogo,
+  "DELTA": DeltaGasLogo,
+  "EGBIN": EgbinLogo,
+  "GBARAIN": DefaultLogo,
+  "GEREGU": GereguLogo,
+  "GEREGU NIPP": GereguLogo,
+  "IBOM POWER": IbomLogo,
+  "IHOVBOR NIPP": AlaojiLogo,
+  "JEBBA": DefaultLogo,
+  "KAINJI": KainjiLogo,
+  "ODUKPANI": AlaojiLogo,
+  "OKPAI": DefaultLogo,
+  "OLORUNSOGO": OlorunsogoLogo,
+  "OLORUNSOGO NIPP": OlorunsogoLogo,
+  "OMOKU": DefaultLogo,
+  "OMOTOSHO": DefaultLogo,
+  "OMOTOSHO NIPP": DefaultLogo,
+  "PARAS ENERGY": ParasLogo,
+  "RIVERS IPP": RiversLogo,
+  "SAPELE": SapeleLogo,
+  "SAPELE NIPP": SapeleLogo,
+  "SHIRORO": DefaultLogo,
+  "TRANS AMADI": DefaultLogo,
+};
 
-const fields = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
+
 
 function descendingComparator(a, b, orderBy) {
+  if (!isNaN(orderBy)) { // If the orderBy is a number (a year)
+    return b[orderBy] - a[orderBy]; // Numerical comparison
+  }
+
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -98,7 +104,7 @@ function stableSort(array, comparator) {
 }
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, fields } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -136,14 +142,53 @@ const EnhancedTableHead = (props) => {
   );
 };
 
+EnhancedTableHead.propTypes = {
+  order: PropTypes.string.isRequired,
+  orderBy: PropTypes.string.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  fields: PropTypes.array.isRequired,
+};
+
 const GencoStatsTable = () => {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
-  const [rows, setRows] = React.useState(initialData);
-  const [search, setSearch] = React.useState('');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [dense, setDense] = React.useState(false);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('total'); 
+  const [rows, setRows] = useState([]);
+  const [fields, setFields] = useState([]); 
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [dense, setDense] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/genco-energy-generated');
+        
+        // Process data to get unique years
+        const yearsSet = new Set();
+        const processedData = response.data.reduce((acc, item) => {
+          const genco = item.Genco;
+          const year = item.Year.toString();
+          const energyGenerated = item.EnergyGenerated;
+
+          yearsSet.add(year);
+
+          if (!acc[genco]) {
+            acc[genco] = { genco, img: logoMapping[genco] || DefaultLogo };
+          }
+          acc[genco][year] = energyGenerated;
+          return acc;
+        }, {});
+
+        setRows(Object.values(processedData));
+        setFields(Array.from(yearsSet).sort((a, b) => b - a)); 
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -153,7 +198,7 @@ const GencoStatsTable = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
-    const filteredRows = initialData.filter(row => 
+    const filteredRows = rows.filter(row => 
       row.genco.toLowerCase().includes(value)
     );
     setSearch(value);
@@ -172,10 +217,10 @@ const GencoStatsTable = () => {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+
   const formatNumber = (num) => {
     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-  
 
   // Compute totals for each column
   const totals = fields.reduce((acc, field) => {
@@ -189,86 +234,87 @@ const GencoStatsTable = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-    <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Genco Energy Generated</Typography>
-        <IconButton>
-          <IconFilter size="1.2rem" />
-        </IconButton>
-      </Box>
-      <TextField
-        value={search}
-        onChange={handleSearch}
-        placeholder="Search Gencos"
-        fullWidth
-        margin="normal"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <IconSearch />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <TableContainer>
-        <Table aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-          <EnhancedTableHead
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-          />
-          <TableBody>
-            {stableSort(rows, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <TableRow hover tabIndex={-1} key={row.genco} sx={{ height: 70 }}>
-                  <TableCell padding="checkbox">
-                        <Avatar src={row.img} alt={row.genco} />
-                      </TableCell>
-                      <TableCell>{row.genco}</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
-                    {formatNumber(fields.reduce((sum, year) => sum + (row[year] || 0), 0).toFixed(1))}
-                  </TableCell>
-                  {fields.map(year => (
-                    <TableCell align="right" key={year}>{formatNumber(row[year])}</TableCell>
-                  ))}
+      <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">Genco Energy Generated (GWh)</Typography>
+          <IconButton>
+            <IconFilter size="1.2rem" />
+          </IconButton>
+        </Box>
+        <TextField
+          value={search}
+          onChange={handleSearch}
+          placeholder="Search Gencos"
+          fullWidth
+          margin="normal"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconSearch />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TableContainer>
+          <Table aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+            <EnhancedTableHead
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              fields={fields} // Pass dynamic fields to EnhancedTableHead
+            />
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => (
+                  <TableRow hover tabIndex={-1} key={row.genco} sx={{ height: 70 }}>
+                    <TableCell padding="checkbox">
+                      <Avatar src={row.img} alt={row.genco} />
+                    </TableCell>
+                    <TableCell>{row.genco}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
+                      {formatNumber(fields.reduce((sum, year) => sum + (row[year] || 0), 0).toFixed(1))}
+                    </TableCell>
+                    {fields.map(year => (
+                      <TableCell align="right" key={year}>{formatNumber(row[year] || 0)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={10} />
                 </TableRow>
-              ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={10} />
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={2} align="right">Totals</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>{formatNumber(totals.total.toFixed(1))}</TableCell>
+                {fields.map(year => (
+                  <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>{formatNumber(totals[year].toFixed(1))}</TableCell>
+                ))}
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={2} align="right">Totals</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>{formatNumber(totals.total.toFixed(1))}</TableCell>
-              {fields.map(year => (
-                <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>{formatNumber(totals[year].toFixed(1))}</TableCell>
-              ))}
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        />
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Box>
-    </Paper>
-  </Box>
-);
+            </TableFooter>
+          </Table>
+        </TableContainer>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+          <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+          />
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
+      </Paper>
+    </Box>
+  );
 };
 
 export default GencoStatsTable;

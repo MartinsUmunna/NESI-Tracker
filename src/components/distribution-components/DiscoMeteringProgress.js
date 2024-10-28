@@ -1,42 +1,50 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Box, Typography, Paper, IconButton, Tooltip, TextField, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import InfoIcon from '@mui/icons-material/Info';
 
-const initialData = [
-  { genco: 'Abuja', metering: 75, metered: 65 },
-  { genco: 'Benin', metering: 80, metered: 70 },
-  { genco: 'Eko', metering: 90, metered: 85 },
-  { genco: 'Enugu', metering: 78, metered: 72 },
-  { genco: 'Ibadan', metering: 84, metered: 76 },
-  { genco: 'Ikeja', metering: 91, metered: 87 },
-  { genco: 'Jos', metering: 70, metered: 63 },
-  { genco: 'Kaduna', metering: 75, metered: 68 },
-  { genco: 'Kano', metering: 80, metered: 74 },
-  { genco: 'Portharcourt', metering: 85, metered: 80 },
-  { genco: 'Yola', metering: 65, metered: 60 },
-  // Add other gencos with similar data format
-];
-
-const years = ["2023", "2022", "2021", "2020", "2019", "2018", "2017"];
-
 const DiscoMeteringProgress = () => {
   const theme = useTheme();
-  const [selectedYear, setSelectedYear] = React.useState('2023');
+  const [data, setData] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/Disco-Metering-Status');
+      const sortedData = response.data.sort((a, b) => b.Years - a.Years);
+      setData(sortedData);
+      const uniqueYears = [...new Set(sortedData.map(item => item.Years))].sort((a, b) => b - a);
+      setYears(uniqueYears);
+      setSelectedYear(uniqueYears[0]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const chartData = React.useMemo(() => {
-    return initialData.map(item => ({
-      disco: item.genco,
-      metering: item.metering,
-      metered: item.metered,
-    }));
-  }, []);
+    return data
+      .filter(item => item.Years === selectedYear)
+      .map(item => ({
+        disco: item.Discos,
+        meteredCustomers: item.MeteredCustomers,
+        meteringGap: item.MeteringGap
+      }))
+      .sort((a, b) => b.meteredCustomers - a.meteredCustomers);
+  }, [data, selectedYear]);
 
   const getChartOptions = () => ({
     chart: {
       type: 'bar',
-      height: 350,
+      height: 500, // Increased height
+      stacked: true,
+      stackType: '100%',
       toolbar: {
         show: false
       },
@@ -44,90 +52,122 @@ const DiscoMeteringProgress = () => {
     },
     plotOptions: {
       bar: {
-        borderRadius: 4,
-        horizontal: false,
-        columnWidth: '40%',
+        horizontal: true,
+        borderRadius: 6, // Slightly rounded bars
         dataLabels: {
-          position: 'top',
+          total: {
+            enabled: false // Removed total sum
+          }
         },
+        barHeight: '70%', // Adjust this value to control the width of the bars
       },
     },
     dataLabels: {
       enabled: true,
-      offsetX: 0,
-      offsetY: -20,
+      formatter: (val) => `${val.toFixed(1)}%`,
       style: {
-        fontSize: '10px',
-        colors: [theme.palette.text.primary]
-      },
-      formatter: (val) => `${val}%`,
+        fontSize: '12px',
+        fontWeight: 600,
+        colors: [theme.palette.getContrastText(theme.palette.primary.main)]
+      }
     },
     xaxis: {
       categories: chartData.map(item => item.disco),
       labels: {
         style: {
-          colors: [theme.palette.text.primary],
+          colors: Array(chartData.length).fill(theme.palette.text.primary),
+          fontSize: '13px'
         }
       }
     },
     yaxis: {
-      tickAmount: 5,
       labels: {
         style: {
           colors: [theme.palette.text.primary],
+          fontSize: '13px'
         }
       }
     },
     grid: {
-      show: false
+      xaxis: {
+        lines: {
+          show: false
+        }
+      },
+      yaxis: {
+        lines: {
+          show: false
+        }
+      }
     },
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      y: {
+        formatter: (val) => `${val.toFixed(1)}%`
+      }
     },
-    colors: [theme.palette.primary.main, '#0E8A2C'], 
+    colors: [theme.palette.primary.main, theme.palette.secondary.main],
     legend: {
-      show: true,
       position: 'bottom',
-      horizontalAlign: 'center'
-    }
+      horizontalAlign: 'center',
+      fontSize: '14px',
+      markers: {
+        radius: 12,
+      },
+      itemMargin: {
+        horizontal: 10
+      }
+    },
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        legend: {
+          position: 'bottom',
+          offsetY: 0
+        }
+      }
+    }]
   });
 
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    setSelectedYear(Number(event.target.value));
   };
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>Disco Metering Status</Typography>
-          <TextField
-            select
-            label="Select Year"
-            value={selectedYear}
-            onChange={handleYearChange}
-            sx={{ marginRight: 2 }}
-          >
-            {years.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Tooltip title="Select a color to view specific data for Metering and Metered Customers.">
-            <IconButton>
-              <InfoIcon color="primary" />
-            </IconButton>
-          </Tooltip>
+      <Paper sx={{ width: '100%', mb: 2, p: 3, borderRadius: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Disco Metering Status</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              select
+              label="Select Year"
+              value={selectedYear || ''}
+              onChange={handleYearChange}
+              sx={{ marginRight: 2, minWidth: 120 }}
+              size="small"
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Tooltip title="View the distribution of metered customers and metering gap for each Disco.">
+              <IconButton>
+                <InfoIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
         <ReactApexChart
           options={getChartOptions()}
           series={[
-            { name: 'Metered Customers (%)', data: chartData.map(item => item.metering) },
-            { name: 'UnMetered Customers (%)', data: chartData.map(item => item.metered) }
+            { name: 'Metered Customers (%)', data: chartData.map(item => item.meteredCustomers) },
+            { name: 'Metering Gap (%)', data: chartData.map(item => item.meteringGap) }
           ]}
           type="bar"
-          height={350}
+          height={500} // Increased height
         />
       </Paper>
     </Box>
