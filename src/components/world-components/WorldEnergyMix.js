@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
+import API_URL from 'src/config/apiconfig';
 
 const WorldEnergyMix = () => {
   const theme = useTheme();
@@ -12,7 +13,7 @@ const WorldEnergyMix = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/World-Energy-Mix');
+        const response = await fetch(`${API_URL}/api/World-Energy-Mix`);
         const jsonData = await response.json();
         setData(jsonData);
 

@@ -5,6 +5,7 @@ import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight, IconMinus } from '@tabler/icons';
 import axios from 'axios'; // Ensure axios is installed: npm install axios
+import API_URL from 'src/config/apiconfig';
 
 const TotalInvestment = () => {
   const theme = useTheme();
@@ -18,7 +19,7 @@ const TotalInvestment = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/Minigrids-Total-Investment');
+        const response = await axios.get(`${API_URL}/api/Minigrids-Total-Investment`);
         const fetchedData = response.data;
 
         // Sort data by year to ensure the latest year is correctly identified

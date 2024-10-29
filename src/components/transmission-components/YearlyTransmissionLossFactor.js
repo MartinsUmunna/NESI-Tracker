@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, FormControlLabel, Switch, MenuItem, Select, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import API_URL from 'src/config/apiconfig';
 
 const YearlyTransmissionLossFactor = () => {
   const theme = useTheme();
@@ -21,7 +22,7 @@ const YearlyTransmissionLossFactor = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/Transmission-Loss-Factor');
+      const response = await axios.get(`${API_URL}/api/Transmission-Loss-Factor`);
       const sortedData = response.data.sort((a, b) => {
         if (a.YEAR !== b.YEAR) return b.YEAR - a.YEAR;
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

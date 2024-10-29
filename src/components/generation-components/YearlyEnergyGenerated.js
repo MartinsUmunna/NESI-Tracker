@@ -6,6 +6,7 @@ import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
 import axios from 'axios';
+import API_URL from 'src/config/apiconfig';
 
 const YearlyEnergyGenerated = () => {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -25,8 +26,8 @@ const YearlyEnergyGenerated = () => {
     setLoading(true);
     try {
       const url = isAnnual
-        ? 'http://localhost:5000/api/yearly-Energy-Sentout'
-        : 'http://localhost:5000/api/Monthly-Energy-Sentout';
+        ? `${API_URL}/api/yearly-Energy-Sentout`
+        : `${API_URL}/api/Monthly-Energy-Sentout`;
       const response = await axios.get(url);
       const formattedData = formatData(response.data);
       setEnergyData(formattedData);

@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Box, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 
+
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc2FuYWx5dGljcyIsImEiOiJjbTBwYXQ4c2swMzBiMmtzNjdxZnp4bTY3In0.giNAUdEA7uVxDQW8ir1M9w';
 
 const PetrolPricesMap = () => {

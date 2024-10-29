@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconGridDots } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 const NumOfConnections = () => {
   const theme = useTheme();
@@ -38,7 +39,7 @@ const NumOfConnections = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/MiniGrids-Number-of-Connections');
+        const response = await fetch(`${API_URL}/api/MiniGrids-Number-of-Connections`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

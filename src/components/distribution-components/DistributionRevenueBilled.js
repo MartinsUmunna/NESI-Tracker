@@ -19,6 +19,7 @@ import {
   Grid
 } from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
+import API_URL from 'src/config/apiconfig';
 
 const DistributionRevenueBilled = () => {
   const theme = useTheme();
@@ -47,7 +48,7 @@ const DistributionRevenueBilled = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/Yearly-Revenue-Billed');
+      const response = await axios.get(`${API_URL}/api/Yearly-Revenue-Billed`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

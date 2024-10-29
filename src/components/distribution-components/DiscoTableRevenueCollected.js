@@ -24,6 +24,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { IconSearch, IconFilter } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
+import API_URL from 'src/config/apiconfig';
 
 // Import logos (assuming these imports are correct)
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
@@ -142,7 +143,7 @@ const DiscoTableRevenueCollected = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/Disco-Revenue-Collected');
+        const response = await fetch(`${API_URL}/api/Disco-Revenue-Collected`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

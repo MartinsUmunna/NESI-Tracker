@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { IconSearch, IconFilter } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 import AfamLogo from 'src/assets/images/Genco_Logos/Afam_Logo.png';
 import AlaojiLogo from 'src/assets/images/Genco_Logos/Alaoji_Logo.jpg';
@@ -162,7 +163,7 @@ const GencoStatsTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/genco-energy-generated');
+        const response = await axios.get(`${API_URL}/api/genco-energy-generated`);
         
         // Process data to get unique years
         const yearsSet = new Set();

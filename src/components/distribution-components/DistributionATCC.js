@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import axios from 'axios'; // Import axios for API calls
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Box } from '@mui/material';
+import API_URL from 'src/config/apiconfig';
 
 const DistributionATCC = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const DistributionATCC = () => {
     // Fetch data from the API
     const fetchATCCData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/Yearly-AVG-ATCC');
+        const response = await axios.get(`${API_URL}/api/Yearly-AVG-ATCC`);
         const data = response.data;
 
         // Extract years and ATCC values from the response

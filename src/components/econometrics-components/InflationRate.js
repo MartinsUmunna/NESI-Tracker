@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Box, CircularProgress } from '@mui/material';
+import API_URL from 'src/config/apiconfig';
 
 const InflationRate = () => {
   const theme = useTheme();
@@ -13,7 +14,7 @@ const InflationRate = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/Core-Inflation-Rate');
+        const response = await axios.get(`${API_URL}/api/Core-Inflation-Rate`);
         const sortedData = response.data.sort((a, b) => a.YEAR - b.YEAR);
         setInflationData(sortedData);
         setLoading(false);

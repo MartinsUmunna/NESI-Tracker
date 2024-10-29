@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { CardContent, Typography, Avatar, Box, Divider } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 // API URLs
-const TLF_API_URL = 'http://localhost:5000/api/transmission-Loss-Factor';
-const COLLAPSE_API_URL = 'http://localhost:5000/api/system-collapses';
+const TLF_API_URL = `${API_URL}/api/transmission-Loss-Factor`;
+const COLLAPSE_API_URL = `${API_URL}/api/system-collapses`;
 
 const TransmissionLossFactorVsGridCollapse = () => {
   const [tlfData, setTlfData] = useState({ current: 0, previous: 0, year: '' });

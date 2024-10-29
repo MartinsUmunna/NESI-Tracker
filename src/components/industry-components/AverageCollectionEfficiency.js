@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Avatar, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import API_URL from 'src/config/apiConfig';
 
 const AverageCollectionEfficiency = () => {
   const [loading, setLoading] = useState(true);
@@ -20,8 +21,8 @@ const AverageCollectionEfficiency = () => {
         
         // Fetch both datasets
         const [billedResponse, collectedResponse] = await Promise.all([
-          fetch('http://localhost:5000/api/Yearly-Revenue-Billed'),
-          fetch('http://localhost:5000/api/Yearly-Revenue-Collected')
+          fetch(`${API_URL}/api/Yearly-Revenue-Billed`),
+          fetch(`${API_URL}/api/Yearly-Revenue-Collected`)
         ]);
 
         if (!billedResponse.ok || !collectedResponse.ok) {

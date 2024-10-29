@@ -5,6 +5,7 @@ import { Grid, Stack, Typography, Button, Box, Select, MenuItem, FormControl, In
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import axios from 'axios';
+import API_URL from 'src/config/apiconfig';
 
 const CustomerPopulationbyServiceBand = () => {
   const theme = useTheme();
@@ -28,7 +29,7 @@ const CustomerPopulationbyServiceBand = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/customerpopulationby-service-bands');
+      const response = await axios.get(`${API_URL}/api/customerpopulationby-service-bands`);
       const data = response.data;
       setCustomerData(data);
 

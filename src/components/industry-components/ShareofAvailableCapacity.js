@@ -10,6 +10,7 @@ import {
   MenuItem 
 } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import API_URL from 'src/config/apiconfig';
 
 const ShareofAvailableCapacity = () => {
   const theme = useTheme();
@@ -26,7 +27,7 @@ const ShareofAvailableCapacity = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/share-of-generation-Capacity');
+      const response = await axios.get(`${API_URL}/api/share-of-generation-Capacity`);
       const sortedData = response.data.sort((a, b) => b.Year - a.Year);
       setData(sortedData);
       const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => b - a);

@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Stack, Typography, Button, Avatar, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import API_URL from 'src/config/apiconfig';
 
 const CustomerPopulation = () => {
   const theme = useTheme();
@@ -25,7 +26,7 @@ const CustomerPopulation = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/Disco-Customer-Number');
+      const response = await fetch(`${API_URL}/api/Disco-Customer-Number`);
       const data = await response.json();
       processData(data);
     } catch (error) {

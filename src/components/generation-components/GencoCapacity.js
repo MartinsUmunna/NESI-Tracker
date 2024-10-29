@@ -23,6 +23,7 @@ import {
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import axios from 'axios';
+import API_URL from 'src/config/apiconfig';
 
 const GencoCapacity = () => {
   const [sourceFilter, setSourceFilter] = useState('All');
@@ -64,7 +65,7 @@ const GencoCapacity = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/installed-vs-available-capacity');
+      const response = await axios.get(`${API_URL}/api/installed-vs-available-capacity`);
       const data = response.data;
       setFetchedData(data);
       setErrorMessage('');

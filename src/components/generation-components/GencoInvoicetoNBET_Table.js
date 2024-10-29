@@ -27,6 +27,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { IconSearch, IconFilter } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 import AfamLogo from 'src/assets/images/Genco_Logos/Afam_Logo.png';
 import AlaojiLogo from 'src/assets/images/Genco_Logos/Alaoji_Logo.jpg';
@@ -210,7 +211,7 @@ const GencoInvoicetoNBET_Table = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get('http://localhost:5000/api/Genco-Invoice-toNBET');
+        const response = await axios.get(`${API_URL}/api/Genco-Invoice-toNBET`);
         console.log('API Response:', response.data);
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           setRawData(response.data);

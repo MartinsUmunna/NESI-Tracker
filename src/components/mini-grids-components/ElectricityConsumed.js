@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight, IconMinus } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 const ElectricityConsumed = () => {
   const theme = useTheme();
@@ -19,7 +20,7 @@ const ElectricityConsumed = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Minigrids-Electricity-consumed');
+        const response = await fetch(`${API_URL}/api/Minigrids-Electricity-consumed`);
         const result = await response.json();
 
         const consumptionData = result.map((item) => item.ElectricityConsumedMWh);

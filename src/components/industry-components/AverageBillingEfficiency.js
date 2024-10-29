@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Avatar, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 const AverageBillingEfficiency = () => {
   const [loading, setLoading] = useState(true);
@@ -20,8 +21,8 @@ const AverageBillingEfficiency = () => {
         
         // Fetch both datasets
         const [billedResponse, receivedResponse] = await Promise.all([
-          fetch('http://localhost:5000/api/yearly-energy-billed'),
-          fetch('http://localhost:5000/api/Yearly-Energy-Recieved')
+          fetch(`${API_URL}/api/yearly-energy-billed`),
+          fetch(`${API_URL}/api/Yearly-Energy-Recieved`)
         ]);
 
         if (!billedResponse.ok || !receivedResponse.ok) {

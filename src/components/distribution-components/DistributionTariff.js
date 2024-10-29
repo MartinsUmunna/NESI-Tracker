@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Typography, CircularProgress } from '@mui/material';
+import API_URL from 'src/config/apiconfig';
 
 const DistributionTariff = () => {
   const theme = useTheme();
@@ -13,7 +14,7 @@ const DistributionTariff = () => {
   useEffect(() => {
     const fetchTariffData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Yearly-Avg-Tariff');
+        const response = await fetch(`${API_URL}/api/Yearly-Avg-Tariff`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

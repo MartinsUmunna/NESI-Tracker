@@ -18,6 +18,7 @@ import {
   Button
 } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import API_URL from 'src/config/apiconfig';
 
 const EnergyInjectionandDelivered = () => {
   const theme = useTheme();
@@ -41,7 +42,7 @@ const EnergyInjectionandDelivered = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/energy-injected-and-delivered');
+      const response = await axios.get(`${API_URL}/api/energy-injected-and-delivered`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year; // Sort years in descending order for processing
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

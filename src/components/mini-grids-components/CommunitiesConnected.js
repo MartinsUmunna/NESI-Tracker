@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 const CommunitiesConnected = () => {
   const theme = useTheme();
@@ -18,7 +19,7 @@ const CommunitiesConnected = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Minigrids-Communities-connected');
+        const response = await fetch(`${API_URL}/api/Minigrids-Communities-connected`);
         const result = await response.json();
 
         // Sort data by year to ensure the trend is correct

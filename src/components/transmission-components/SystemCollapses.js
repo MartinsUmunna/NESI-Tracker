@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard'; // Adjust import path as needed
+import API_URL from 'src/config/apiconfig';
 
 const SystemCollapses = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const SystemCollapses = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/system-Collapses');
+        const response = await axios.get(`${API_URL}/api/system-Collapses`);
         const total = [];
         const partial = [];
         response.data.forEach(item => {

@@ -27,6 +27,7 @@ import { visuallyHidden } from '@mui/utils';
 import { IconSearch } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
+import API_URL from 'src/config/apiconfig';
 
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
@@ -136,7 +137,7 @@ const DiscoTableCustomerPopulation = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Disco-Customer-Number');
+        const response = await fetch(`${API_URL}/api/Disco-Customer-Number`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

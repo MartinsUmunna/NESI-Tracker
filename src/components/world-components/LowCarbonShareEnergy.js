@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
+import API_URL from 'src/config/apiconfig';
 
 const LowCarbonShareEnergy = () => {
   const theme = useTheme();
@@ -19,7 +20,7 @@ const LowCarbonShareEnergy = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Low-Carbon-Share');
+        const response = await fetch(`${API_URL}/api/Low-Carbon-Share`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

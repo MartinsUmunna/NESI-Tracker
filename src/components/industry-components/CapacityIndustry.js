@@ -11,6 +11,7 @@ import {
   FormControl
 } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard.js';
+import API_URL from 'src/config/apiconfig';
 
 const CapacityIndustry = () => {
   const theme = useTheme();
@@ -35,7 +36,7 @@ const CapacityIndustry = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/Capacity-Industry-Percentage');
+      const response = await fetch(`${API_URL}/api/Capacity-Industry-Percentage`);
       const jsonData = await response.json();
       setData(jsonData);
       

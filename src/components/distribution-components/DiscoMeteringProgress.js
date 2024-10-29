@@ -4,6 +4,7 @@ import { Box, Typography, Paper, IconButton, Tooltip, TextField, MenuItem } from
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import InfoIcon from '@mui/icons-material/Info';
+import API_URL from 'src/config/apiconfig';
 
 const DiscoMeteringProgress = () => {
   const theme = useTheme();
@@ -17,7 +18,7 @@ const DiscoMeteringProgress = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/Disco-Metering-Status');
+      const response = await axios.get(`${API_URL}/api/Disco-Metering-Status`);
       const sortedData = response.data.sort((a, b) => b.Years - a.Years);
       setData(sortedData);
       const uniqueYears = [...new Set(sortedData.map(item => item.Years))].sort((a, b) => b - a);

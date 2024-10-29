@@ -26,6 +26,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { IconSearch, IconFilter } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
+import API_URL from 'src/config/apiconfig';
 
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
@@ -157,7 +158,7 @@ const DiscoTableLoadOffTake = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/Disco-Load-Offtake');
+        const response = await fetch(`${API_URL}/api/Disco-Load-Offtake`);
         const data = await response.json();
 
         // Extract unique years and sort them

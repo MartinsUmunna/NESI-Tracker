@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Avatar, Box, Divider } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
+import API_URL from 'src/config/apiconfig';
 
 const AverageATCC = () => {
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const AverageATCC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/Yearly-AVG-ATCC');
+        const response = await fetch(`${API_URL}/api/Yearly-AVG-ATCC`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

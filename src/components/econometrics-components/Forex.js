@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, styled, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
+import API_URL from 'src/config/apiconfig';
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 120,
@@ -23,7 +24,7 @@ const Forex = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/Foreign-Exchange-Rate');
+      const response = await axios.get(`${API_URL}/api/Foreign-Exchange-Rate`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);

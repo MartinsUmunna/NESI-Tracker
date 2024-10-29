@@ -5,6 +5,7 @@ import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons'; // Imported IconArrowDownRight
 import axios from 'axios'; // Ensure axios is installed: npm install axios
+import API_URL from 'src/config/apiconfig';
 
 const InstalledCapacity = () => {
   const theme = useTheme();
@@ -18,7 +19,7 @@ const InstalledCapacity = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/Minigrids-Installed-Capacity');
+        const response = await axios.get(`${API_URL}/api/Minigrids-Installed-Capacity`);
         const fetchedData = response.data;
 
         const sortedData = fetchedData.sort((a, b) => a.Years - b.Years);

@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Stack, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import API_URL from 'src/config/apiconfig';
 
 const YearlyElectricityConsumption = () => {
   const theme = useTheme();
@@ -26,7 +27,7 @@ const YearlyElectricityConsumption = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/MiniGrids-Yearly-Electricity-Consumption');
+        const response = await fetch(`${API_URL}/api/MiniGrids-Yearly-Electricity-Consumption`);
         const data = await response.json();
 
         // Sort data by year in ascending order

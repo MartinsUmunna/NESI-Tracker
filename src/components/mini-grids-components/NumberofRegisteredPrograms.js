@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
+import API_URL from 'src/config/apiconfig';
 
 const NumberofRegisteredPrograms = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const NumberofRegisteredPrograms = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:5000/api/MiniGrids-Num-of-Communities-ByRegistered-Programs'
+          `${API_URL}/api/MiniGrids-Num-of-Communities-ByRegistered-Programs`
         );
         const result = await response.json();
 

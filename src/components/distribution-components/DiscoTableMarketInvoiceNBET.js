@@ -5,6 +5,7 @@ import { Box, TextField, Typography, Paper, Switch, Tooltip, IconButton,
   DialogContent, DialogActions, FormControl, InputLabel, Select } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
+import API_URL from 'src/config/apiconfig';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,
@@ -50,7 +51,7 @@ const DiscoTableMarketInvoiceNBET = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/Disco-NBET-Remmitances-Invoice');
+      const response = await axios.get(`${API_URL}/api/Disco-NBET-Remmitances-Invoice`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
         return months.indexOf(a.Month_Name) - months.indexOf(b.Month_Name);
