@@ -21,8 +21,8 @@ const AverageBillingEfficiency = () => {
         
         // Fetch both datasets
         const [billedResponse, receivedResponse] = await Promise.all([
-          fetch(`${API_URL}/api/yearly-energy-billed`),
-          fetch(`${API_URL}/api/Yearly-Energy-Recieved`)
+          fetch(`${API_URL}/yearly-energy-billed`),
+          fetch(`${API_URL}/Yearly-Energy-Recieved`)
         ]);
 
         if (!billedResponse.ok || !receivedResponse.ok) {

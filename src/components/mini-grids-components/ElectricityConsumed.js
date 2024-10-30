@@ -20,7 +20,7 @@ const ElectricityConsumed = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Minigrids-Electricity-consumed`);
+        const response = await fetch(`${API_URL}/Minigrids-Electricity-consumed`);
         const result = await response.json();
 
         const consumptionData = result.map((item) => item.ElectricityConsumedMWh);

@@ -42,7 +42,7 @@ const DistributionEnergyBilled = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Yearly-Energy-Billed`);
+      const response = await axios.get(`${API_URL}/Yearly-Energy-Billed`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

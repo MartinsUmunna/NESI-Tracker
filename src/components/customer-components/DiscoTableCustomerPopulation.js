@@ -137,7 +137,7 @@ const DiscoTableCustomerPopulation = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Disco-Customer-Number`);
+        const response = await fetch(`${API_URL}/Disco-Customer-Number`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

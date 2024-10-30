@@ -63,7 +63,7 @@ const IndustryEnergy = () => {
 
   const fetchCapacityData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/installed-vs-available-capacity`);
+      const response = await axios.get(`${API_URL}/installed-vs-available-capacity`);
       setCapacityData(response.data);
     } catch (error) {
       console.error('Error fetching capacity data:', error);
@@ -152,7 +152,7 @@ const IndustryEnergy = () => {
       const startDate = selectedDate.toISOString().split('T')[0];
       const genco = selectedGenco !== 'All' ? selectedGenco : undefined;
   
-      const response = await axios.get(`${API_URL}/api/Hourly-Energy-Generated`, {
+      const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
         params: { startDate, endDate: startDate, genco }
       });
   

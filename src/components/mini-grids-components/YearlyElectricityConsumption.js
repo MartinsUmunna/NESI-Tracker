@@ -27,7 +27,7 @@ const YearlyElectricityConsumption = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/MiniGrids-Yearly-Electricity-Consumption`);
+        const response = await fetch(`${API_URL}/MiniGrids-Yearly-Electricity-Consumption`);
         const data = await response.json();
 
         // Sort data by year in ascending order

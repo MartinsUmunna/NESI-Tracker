@@ -17,7 +17,7 @@ const PeopleConnected = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Minigrids-People-Connected`);
+        const response = await fetch(`${API_URL}/Minigrids-People-Connected`);
         const result = await response.json();
 
         // Sort data by years to ensure the latest year comes last

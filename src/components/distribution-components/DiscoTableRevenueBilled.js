@@ -154,7 +154,7 @@ const DiscoTableRevenueBilled = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/Disco-Revenue-Billed`);
+      const response = await fetch(`${API_URL}/Disco-Revenue-Billed`);
       const data = await response.json();
 
       // Extract unique years and sort them

@@ -42,7 +42,7 @@ const EnergyInjectionandDelivered = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/energy-injected-and-delivered`);
+      const response = await axios.get(`${API_URL}/energy-injected-and-delivered`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year; // Sort years in descending order for processing
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

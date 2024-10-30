@@ -149,7 +149,7 @@ const DiscoStatsTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Disco-Energy-Billed`);
+      const response = await axios.get(`${API_URL}/Disco-Energy-Billed`);
       const data = response.data;
 
       // Extract unique years and discos

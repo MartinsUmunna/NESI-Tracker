@@ -21,8 +21,8 @@ const AverageCollectionEfficiency = () => {
         
         // Fetch both datasets
         const [billedResponse, collectedResponse] = await Promise.all([
-          fetch(`${API_URL}/api/Yearly-Revenue-Billed`),
-          fetch(`${API_URL}/api/Yearly-Revenue-Collected`)
+          fetch(`${API_URL}/Yearly-Revenue-Billed`),
+          fetch(`${API_URL}/Yearly-Revenue-Collected`)
         ]);
 
         if (!billedResponse.ok || !collectedResponse.ok) {

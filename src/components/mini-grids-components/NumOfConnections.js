@@ -39,7 +39,7 @@ const NumOfConnections = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/MiniGrids-Number-of-Connections`);
+        const response = await fetch(`${API_URL}/MiniGrids-Number-of-Connections`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

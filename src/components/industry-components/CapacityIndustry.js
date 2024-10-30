@@ -36,7 +36,7 @@ const CapacityIndustry = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/Capacity-Industry-Percentage`);
+      const response = await fetch(`${API_URL}/Capacity-Industry-Percentage`);
       const jsonData = await response.json();
       setData(jsonData);
       

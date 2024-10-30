@@ -16,7 +16,7 @@ const DistributionATCC = () => {
     // Fetch data from the API
     const fetchATCCData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/Yearly-AVG-ATCC`);
+        const response = await axios.get(`${API_URL}/Yearly-AVG-ATCC`);
         const data = response.data;
 
         // Extract years and ATCC values from the response

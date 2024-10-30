@@ -24,7 +24,7 @@ const Forex = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Foreign-Exchange-Rate`);
+      const response = await axios.get(`${API_URL}/Foreign-Exchange-Rate`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);

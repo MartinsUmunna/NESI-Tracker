@@ -19,7 +19,7 @@ const TotalInvestment = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/Minigrids-Total-Investment`);
+        const response = await axios.get(`${API_URL}/Minigrids-Total-Investment`);
         const fetchedData = response.data;
 
         // Sort data by year to ensure the latest year is correctly identified

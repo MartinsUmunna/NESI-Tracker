@@ -150,7 +150,7 @@ const DiscoTableTariff = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/Yearly-Disco-Tariff`);
+      const response = await fetch(`${API_URL}/Yearly-Disco-Tariff`);
       const data = await response.json();
       
       // Extract unique years from the data

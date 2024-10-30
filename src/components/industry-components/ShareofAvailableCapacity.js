@@ -27,7 +27,7 @@ const ShareofAvailableCapacity = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/share-of-generation-Capacity`);
+      const response = await axios.get(`${API_URL}/share-of-generation-Capacity`);
       const sortedData = response.data.sort((a, b) => b.Year - a.Year);
       setData(sortedData);
       const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => b - a);

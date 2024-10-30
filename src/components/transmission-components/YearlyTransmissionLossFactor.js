@@ -22,7 +22,7 @@ const YearlyTransmissionLossFactor = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Transmission-Loss-Factor`);
+      const response = await axios.get(`${API_URL}/Transmission-Loss-Factor`);
       const sortedData = response.data.sort((a, b) => {
         if (a.YEAR !== b.YEAR) return b.YEAR - a.YEAR;
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

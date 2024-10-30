@@ -5,8 +5,8 @@ import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 import API_URL from 'src/config/apiconfig';
 
 // API URLs
-const TLF_API_URL = `${API_URL}/api/transmission-Loss-Factor`;
-const COLLAPSE_API_URL = `${API_URL}/api/system-collapses`;
+const TLF_API_URL = `${API_URL}/transmission-Loss-Factor`;
+const COLLAPSE_API_URL = `${API_URL}/system-collapses`;
 
 const TransmissionLossFactorVsGridCollapse = () => {
   const [tlfData, setTlfData] = useState({ current: 0, previous: 0, year: '' });

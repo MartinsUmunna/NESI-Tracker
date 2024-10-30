@@ -48,7 +48,7 @@ const DistributionRevenueCollected = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Yearly-Revenue-Collected`);
+      const response = await axios.get(`${API_URL}/Yearly-Revenue-Collected`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
         const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

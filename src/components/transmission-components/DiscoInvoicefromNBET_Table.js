@@ -151,7 +151,7 @@ const DiscoInvoicetoNBET_Table = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/MO-Invoice-to-DisCo`);
+        const response = await fetch(`${API_URL}/MO-Invoice-to-DisCo`);
         const data = await response.json();
         
         // Process the data

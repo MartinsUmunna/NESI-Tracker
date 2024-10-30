@@ -216,7 +216,7 @@ const NBETInvoicetoGencoTable = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${API_URL}/api/NBET-Payment-toGenco`);
+        const response = await axios.get(`${API_URL}/NBET-Payment-toGenco`);
         console.log('API Response:', response.data);
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           setRawData(response.data);

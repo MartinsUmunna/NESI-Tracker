@@ -13,7 +13,7 @@ const WorldEnergyMix = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/World-Energy-Mix`);
+        const response = await fetch(`${API_URL}/World-Energy-Mix`);
         const jsonData = await response.json();
         setData(jsonData);
 

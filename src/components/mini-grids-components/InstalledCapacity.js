@@ -19,7 +19,7 @@ const InstalledCapacity = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/Minigrids-Installed-Capacity`);
+        const response = await axios.get(`${API_URL}/Minigrids-Installed-Capacity`);
         const fetchedData = response.data;
 
         const sortedData = fetchedData.sort((a, b) => a.Years - b.Years);

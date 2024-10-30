@@ -26,7 +26,7 @@ const CustomerPopulation = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/Disco-Customer-Number`);
+      const response = await fetch(`${API_URL}/Disco-Customer-Number`);
       const data = await response.json();
       processData(data);
     } catch (error) {

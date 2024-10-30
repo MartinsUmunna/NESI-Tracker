@@ -158,7 +158,7 @@ const DiscoTableLoadOffTake = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Disco-Load-Offtake`);
+        const response = await fetch(`${API_URL}/Disco-Load-Offtake`);
         const data = await response.json();
 
         // Extract unique years and sort them

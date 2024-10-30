@@ -10,7 +10,7 @@ const AverageDiscoTariff = () => {
   // Fetch Tariff Data
   const fetchTariffData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/Yearly-Avg-Tariff`);
+      const response = await fetch(`${API_URL}/Yearly-Avg-Tariff`);
       const data = await response.json();
 
       // Sort by year to get the latest and previous year's values

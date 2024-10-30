@@ -29,7 +29,7 @@ const CustomerPopulationbyServiceBand = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/customerpopulationby-service-bands`);
+      const response = await axios.get(`${API_URL}/customerpopulationby-service-bands`);
       const data = response.data;
       setCustomerData(data);
 

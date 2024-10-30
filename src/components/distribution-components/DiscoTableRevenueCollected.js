@@ -143,7 +143,7 @@ const DiscoTableRevenueCollected = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/api/Disco-Revenue-Collected`);
+        const response = await fetch(`${API_URL}/Disco-Revenue-Collected`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

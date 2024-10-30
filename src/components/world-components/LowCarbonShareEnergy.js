@@ -20,7 +20,7 @@ const LowCarbonShareEnergy = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Low-Carbon-Share`);
+        const response = await fetch(`${API_URL}/Low-Carbon-Share`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

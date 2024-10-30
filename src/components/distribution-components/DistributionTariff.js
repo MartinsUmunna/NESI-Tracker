@@ -14,7 +14,7 @@ const DistributionTariff = () => {
   useEffect(() => {
     const fetchTariffData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/Yearly-Avg-Tariff`);
+        const response = await fetch(`${API_URL}/Yearly-Avg-Tariff`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

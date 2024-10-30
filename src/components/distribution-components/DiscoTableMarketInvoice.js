@@ -51,7 +51,7 @@ const DiscoTableMarketInvoice = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Disco-MO-Remmitances-Invoice`);
+      const response = await axios.get(`${API_URL}/Disco-MO-Remmitances-Invoice`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
         return months.indexOf(a.Month_Name) - months.indexOf(b.Month_Name);

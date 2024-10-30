@@ -18,7 +18,7 @@ const AverageATCC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/api/Yearly-AVG-ATCC`);
+        const response = await fetch(`${API_URL}/Yearly-AVG-ATCC`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

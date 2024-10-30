@@ -155,7 +155,7 @@ const DiscoTableATCC = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/DisCo-Atcc`);
+        const response = await fetch(`${API_URL}/DisCo-Atcc`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

@@ -163,7 +163,7 @@ const GencoStatsTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/genco-energy-generated`);
+        const response = await axios.get(`${API_URL}/genco-energy-generated`);
         
         // Process data to get unique years
         const yearsSet = new Set();

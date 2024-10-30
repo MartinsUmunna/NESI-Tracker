@@ -65,7 +65,7 @@ const GencoCapacity = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/api/installed-vs-available-capacity`);
+      const response = await axios.get(`${API_URL}/installed-vs-available-capacity`);
       const data = response.data;
       setFetchedData(data);
       setErrorMessage('');

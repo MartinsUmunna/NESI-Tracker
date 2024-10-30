@@ -17,7 +17,7 @@ const GHGByContinentAndSector = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/GHG-by-Continent-and-Sector`);
+        const response = await fetch(`${API_URL}/GHG-by-Continent-and-Sector`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

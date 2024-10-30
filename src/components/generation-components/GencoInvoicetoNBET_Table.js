@@ -211,7 +211,7 @@ const GencoInvoicetoNBET_Table = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${API_URL}/api/Genco-Invoice-toNBET`);
+        const response = await axios.get(`${API_URL}/Genco-Invoice-toNBET`);
         console.log('API Response:', response.data);
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           setRawData(response.data);

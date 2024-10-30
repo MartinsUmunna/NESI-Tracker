@@ -26,8 +26,8 @@ const YearlyEnergyGenerated = () => {
     setLoading(true);
     try {
       const url = isAnnual
-        ? `${API_URL}/api/yearly-Energy-Sentout`
-        : `${API_URL}/api/Monthly-Energy-Sentout`;
+        ? `${API_URL}/yearly-Energy-Sentout`
+        : `${API_URL}/Monthly-Energy-Sentout`;
       const response = await axios.get(url);
       const formattedData = formatData(response.data);
       setEnergyData(formattedData);

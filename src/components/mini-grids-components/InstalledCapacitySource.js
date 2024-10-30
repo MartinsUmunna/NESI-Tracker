@@ -25,7 +25,7 @@ const InstalledCapacitySource = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/MiniGrids-Installed-Capacity-Source`);
+        const response = await fetch(`${API_URL}/MiniGrids-Installed-Capacity-Source`);
         const data = await response.json();
 
         // Get unique years and sources

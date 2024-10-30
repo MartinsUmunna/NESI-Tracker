@@ -18,7 +18,7 @@ const DiscoMeteringProgress = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/Disco-Metering-Status`);
+      const response = await axios.get(`${API_URL}/Disco-Metering-Status`);
       const sortedData = response.data.sort((a, b) => b.Years - a.Years);
       setData(sortedData);
       const uniqueYears = [...new Set(sortedData.map(item => item.Years))].sort((a, b) => b - a);

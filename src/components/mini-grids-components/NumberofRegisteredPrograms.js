@@ -16,7 +16,7 @@ const NumberofRegisteredPrograms = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/MiniGrids-Num-of-Communities-ByRegistered-Programs`
+          `${API_URL}/MiniGrids-Num-of-Communities-ByRegistered-Programs`
         );
         const result = await response.json();
 
