@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Avatar, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const AverageBillingEfficiency = () => {
   const [loading, setLoading] = useState(true);

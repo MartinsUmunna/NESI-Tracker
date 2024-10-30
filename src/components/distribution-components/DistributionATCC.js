@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import axios from 'axios'; // Import axios for API calls
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Box } from '@mui/material';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const DistributionATCC = () => {
   const theme = useTheme();

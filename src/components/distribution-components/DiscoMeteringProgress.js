@@ -4,7 +4,7 @@ import { Box, Typography, Paper, IconButton, Tooltip, TextField, MenuItem } from
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import InfoIcon from '@mui/icons-material/Info';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const DiscoMeteringProgress = () => {
   const theme = useTheme();

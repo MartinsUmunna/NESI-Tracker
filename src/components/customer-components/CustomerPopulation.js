@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Stack, Typography, Button, Avatar, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const CustomerPopulation = () => {
   const theme = useTheme();

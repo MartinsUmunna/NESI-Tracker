@@ -5,7 +5,7 @@ import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons'; // Imported IconArrowDownRight
 import axios from 'axios'; // Ensure axios is installed: npm install axios
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const InstalledCapacity = () => {
   const theme = useTheme();

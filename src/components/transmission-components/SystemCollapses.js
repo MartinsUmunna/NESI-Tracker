@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard'; // Adjust import path as needed
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const SystemCollapses = () => {
   const theme = useTheme();

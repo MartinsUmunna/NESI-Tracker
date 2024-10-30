@@ -23,7 +23,7 @@ import {
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import axios from 'axios';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const GencoCapacity = () => {
   const [sourceFilter, setSourceFilter] = useState('All');

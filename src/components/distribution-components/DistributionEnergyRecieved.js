@@ -18,7 +18,7 @@ import {
   Button
 } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const DistributionEnergyRecieved = () => {
   const theme = useTheme();

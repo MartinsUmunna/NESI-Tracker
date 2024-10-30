@@ -5,7 +5,7 @@ import { Box, TextField, Typography, Paper, Switch, Tooltip, IconButton,
   DialogContent, DialogActions, FormControl, InputLabel, Select } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,

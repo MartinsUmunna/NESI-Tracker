@@ -5,7 +5,7 @@ import { Grid, Stack, Typography, Button, Box, Select, MenuItem, FormControl, In
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import axios from 'axios';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const CustomerPopulationbyServiceBand = () => {
   const theme = useTheme();

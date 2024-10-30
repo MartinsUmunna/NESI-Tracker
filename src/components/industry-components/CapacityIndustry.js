@@ -11,7 +11,7 @@ import {
   FormControl
 } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard.js';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const CapacityIndustry = () => {
   const theme = useTheme();

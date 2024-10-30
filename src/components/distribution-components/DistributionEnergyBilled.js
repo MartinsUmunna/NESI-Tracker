@@ -18,7 +18,7 @@ import {
   Button
 } from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const DistributionEnergyBilled = () => {
   const theme = useTheme();

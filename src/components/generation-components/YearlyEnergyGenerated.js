@@ -6,7 +6,7 @@ import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
 import axios from 'axios';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const YearlyEnergyGenerated = () => {
   const [isAnnual, setIsAnnual] = useState(true);

@@ -27,7 +27,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { IconSearch, IconFilter } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';

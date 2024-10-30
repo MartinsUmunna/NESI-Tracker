@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconGridDots } from '@tabler/icons';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const NumOfConnections = () => {
   const theme = useTheme();

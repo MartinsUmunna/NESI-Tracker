@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, FormControlLabel, Switch, MenuItem, Select, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const YearlyTransmissionLossFactor = () => {
   const theme = useTheme();

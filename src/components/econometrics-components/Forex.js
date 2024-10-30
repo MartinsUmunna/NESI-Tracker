@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, styled, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 120,

@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { IconSearch, IconFilter } from '@tabler/icons';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 import AfamLogo from 'src/assets/images/Genco_Logos/Afam_Logo.png';
 import AlaojiLogo from 'src/assets/images/Genco_Logos/Alaoji_Logo.jpg';

@@ -24,7 +24,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { IconSearch, IconFilter } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 // Import logos (assuming these imports are correct)
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';

@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Stack, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const YearlyElectricityConsumption = () => {
   const theme = useTheme();

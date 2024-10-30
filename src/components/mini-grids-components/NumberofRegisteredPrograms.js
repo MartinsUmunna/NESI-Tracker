@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const NumberofRegisteredPrograms = () => {
   const theme = useTheme();

@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Avatar, Grid, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const PeopleConnected = () => {
   const theme = useTheme();

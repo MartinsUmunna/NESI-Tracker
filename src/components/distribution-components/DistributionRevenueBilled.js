@@ -19,7 +19,7 @@ import {
   Grid
 } from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 const DistributionRevenueBilled = () => {
   const theme = useTheme();

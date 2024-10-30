@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CardContent, Typography, Avatar, Box, Divider } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
-import API_URL from 'src/config/apiconfig';
+import API_URL from '../../config/apiconfig';
 
 // API URLs
 const TLF_API_URL = `${API_URL}/transmission-Loss-Factor`;
