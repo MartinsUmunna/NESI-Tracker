@@ -96,33 +96,37 @@ const GencoCapacity = () => {
 
   const calculateData = (data) => {
     if (data.length === 0) return { installedCapacity: 0, availableCapacity: 0 };
-
+  
     // Group by plant to avoid double counting
     const plantGroups = data.reduce((groups, item) => {
-      if (!groups[item.Plant]) {
-        groups[item.Plant] = [];
+      const plant = item.Plant;
+      if (!groups[plant]) {
+        groups[plant] = [];
       }
-      groups[item.Plant].push(item);
+      groups[plant].push(item);
       return groups;
     }, {});
-
+  
     let totalInstalled = 0;
     let totalAvailable = 0;
-
+  
     Object.values(plantGroups).forEach(plants => {
       // Take the first occurrence for installed capacity as it should be constant
-      totalInstalled += plants[0].InstalledCapacity || 0;
-      
+      // Ensure InstalledCapacity is treated as a number
+      const installedCapacity = Number(plants[0].InstalledCapacity) || 0;
+      totalInstalled += installedCapacity;
+  
       // For available capacity, take the unique values only
-      const uniqueAvailable = [...new Set(plants.map(p => p.TotalAvailableCapacity))];
-      totalAvailable += uniqueAvailable.reduce((sum, val) => sum + (val || 0), 0);
+      const uniqueAvailable = [...new Set(plants.map(p => Number(p.TotalAvailableCapacity)))];
+      totalAvailable += uniqueAvailable.reduce((sum, val) => sum + val, 0);
     });
-
+  
     return {
       installedCapacity: totalInstalled,
       availableCapacity: totalAvailable
     };
   };
+  
 
   const prepareChartData = () => {
     if (!fetchedData) return;

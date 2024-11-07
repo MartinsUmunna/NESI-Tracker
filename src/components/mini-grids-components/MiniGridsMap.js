@@ -104,7 +104,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '30kW Solar minigrid in Bambami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by the IBK Services Limited'
       }
     },
     {
@@ -126,7 +126,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar minigrid in Kurdula community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Go Solar'
       }
     },
     {
@@ -137,7 +137,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '60kW Solar minigrid in Torankawa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by  Protogy Global Services'
       }
     },
     {
@@ -148,7 +148,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '60kW Solar minigrid in Torankawa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by Protogy Global Services'
       }
     },
     {
@@ -159,7 +159,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '64kW Solar Hybrid minigrid in Rokota community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by PowerGen Renewable Energy'
       }
     },
     {
@@ -170,7 +170,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Goton Sarki community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by AY Global Integrated Consult'
       }
     },
     {
@@ -269,7 +269,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '47kW Solar minigrid in Kolaku community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed inin 2017 by the GVE'
       }
     },
     {
@@ -291,7 +291,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '18kW Solar minigrid in Ayaba community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in in 2017 by GVE'
       }
     },
     {
@@ -379,7 +379,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar Hybrid minigrid in Obangede community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by New Moon'
       }
     },
     {
@@ -423,7 +423,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Olooji community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by ACOB'
       }
     },
     {
@@ -434,7 +434,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '85kW Solar Hybrid minigrid in Gbamu Gbamu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Rubitec Sola'
       }
     },
     {
@@ -478,7 +478,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '4kW Solar minigrid in Ofetebe community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2013 by F-SGP;UNDP'
       }
     },
     {
@@ -489,7 +489,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '30kW Solar Hybrid minigrid in Ugbonla community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2021 by A4& T Power Solution'
       }
     },
     {
@@ -500,7 +500,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '15kW Solar minigrid in Gbagira community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by A4 &T Power Solutions'
       }
     },
     {
@@ -511,7 +511,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Adebayo community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2021 by ACOB'
       }
     },
     {
@@ -522,7 +522,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '24kW Solar minigrid in Ogbekpen, Ikpoba community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2016 by the Arnergy Solar'
       }
     },
     {

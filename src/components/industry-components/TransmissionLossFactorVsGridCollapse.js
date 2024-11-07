@@ -41,30 +41,36 @@ const TransmissionLossFactorVsGridCollapse = () => {
   };
 
   // Fetch Grid Collapse Data
-  const fetchCollapseData = async () => {
-    const response = await fetch(COLLAPSE_API_URL);
-    const data = await response.json();
+  // Fetch Grid Collapse Data
+const fetchCollapseData = async () => {
+  const response = await fetch(COLLAPSE_API_URL);
+  const data = await response.json();
 
-    const collapseByYear = data.reduce((acc, item) => {
-      acc[item.Year] = acc[item.Year] || { partial: 0, total: 0 };
-      acc[item.Year][
-        item.CollapseType.includes('Partial') ? 'partial' : 'total'
-      ] += item.TotalCollapse;
-      return acc;
-    }, {});
+  const collapseByYear = data.reduce((acc, item) => {
+    acc[item.Year] = acc[item.Year] || { partial: 0, total: 0 };
 
-    const collapseYears = Object.keys(collapseByYear).map(Number).sort((a, b) => b - a);
-    const latestYear = collapseYears[0];
-    const previousYear = collapseYears[1];
+    // Ensure TotalCollapse is treated as a number
+    const totalCollapseValue = Number(item.TotalCollapse) || 0;
 
-    const latestCollapse = collapseByYear[latestYear];
-    const previousCollapse = collapseByYear[previousYear];
+    acc[item.Year][
+      item.CollapseType.includes('Partial') ? 'partial' : 'total'
+    ] += totalCollapseValue;
 
-    setCollapseData({
-      current: { ...latestCollapse, year: latestYear },
-      previous: previousCollapse,
-    });
-  };
+    return acc;
+  }, {});
+
+  const collapseYears = Object.keys(collapseByYear).map(Number).sort((a, b) => b - a);
+  const latestYear = collapseYears[0];
+  const previousYear = collapseYears[1];
+
+  const latestCollapse = collapseByYear[latestYear];
+  const previousCollapse = collapseByYear[previousYear];
+
+  setCollapseData({
+    current: { ...latestCollapse, year: latestYear },
+    previous: previousCollapse,
+  });
+};
 
   useEffect(() => {
     fetchTLFData();

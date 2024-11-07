@@ -98,13 +98,12 @@ const IndustryEnergy = () => {
     
     if (selectedGenco === 'All') {
       // For ALL Gencos
-      // Get unique TotalInstalledCapacity for the year (should be same for all entries)
-      const installedCapacity = yearData.length > 0 ? yearData[0].TotalInstalledCapacity : 0;
+      const installedCapacity = yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
       
       // Sum unique TotalAvailableCapacity values for the year
       const uniqueAvailableCapacities = new Set();
       yearData.forEach(item => {
-        uniqueAvailableCapacities.add(item.TotalAvailableCapacity);
+        uniqueAvailableCapacities.add(parseFloat(item.TotalAvailableCapacity));
       });
       const availableCapacity = Array.from(uniqueAvailableCapacities)
         .reduce((sum, capacity) => sum + capacity, 0);
@@ -117,17 +116,19 @@ const IndustryEnergy = () => {
       );
     } else {
       // For specific Genco
-      const mappedGencoName = gencoMapping[selectedGenco];
       const gencoData = yearData.find(item => 
         matchGenco(item.Plant, selectedGenco) && 
         item.Month_Name === selectedMonth
       );
 
       if (gencoData) {
+        const installedCapacity = parseFloat(gencoData.InstalledCapacity);
+        const avgAvailableCapacity = parseFloat(gencoData.AvgAvailableCapacity);
+
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {gencoData.InstalledCapacity.toLocaleString()} MW<br />
-            Available Capacity ({selectedMonth} {selectedYear}) - {gencoData.AvgAvailableCapacity.toFixed(2)} MW
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
+            Available Capacity ({selectedMonth} {selectedYear}) - {avgAvailableCapacity.toFixed(2)} MW
           </Typography>
         );
       }
@@ -135,9 +136,11 @@ const IndustryEnergy = () => {
       // If no data found for the specific month, try to find any data for that year
       const anyGencoData = yearData.find(item => matchGenco(item.Plant, selectedGenco));
       if (anyGencoData) {
+        const installedCapacity = parseFloat(anyGencoData.InstalledCapacity);
+
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {anyGencoData.InstalledCapacity.toLocaleString()} MW<br />
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
             Available Capacity ({selectedMonth} {selectedYear}) - Not Available
           </Typography>
         );
@@ -145,6 +148,7 @@ const IndustryEnergy = () => {
     }
     return null;
   };
+
 
   const fetchData = async () => {
     setIsLoading(true);

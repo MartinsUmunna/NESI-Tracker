@@ -61,7 +61,7 @@ const AverageCollectionEfficiency = () => {
         const efficiencies = Object.entries(yearlyTotals)
           .map(([year, data]) => ({
             year: parseInt(year),
-            efficiency: (data.billed / data.collected) * 100
+            efficiency: (data.collected / data.billed) * 100
           }))
           .filter(item => item.year <= 2023) // Exclude 2024
           .sort((a, b) => b.year - a.year);

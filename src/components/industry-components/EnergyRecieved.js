@@ -19,7 +19,7 @@ const EnergyRecieved = () => {
         </Typography>
         
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          7,000 MW
+          21,781 GWh
         </Typography>
         
         
