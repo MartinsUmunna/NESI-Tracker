@@ -15,7 +15,7 @@ const EnergyRecieved = () => {
         height: '100%' 
       }}>
         <Typography variant="h6" gutterBottom textAlign="center">
-          Energy Recieved by DisCos
+          Energy Recieved by DisCos (2023)
         </Typography>
         
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
