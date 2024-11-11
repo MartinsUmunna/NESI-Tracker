@@ -178,7 +178,7 @@ const DiscoInvoicetoNBET_Table = () => {
       if (!discoMap.has(item.Discos)) {
         discoMap.set(item.Discos, {});
       }
-      discoMap.get(item.Discos)[item.Year] = item['Invoice (₦ Billion)'];
+      discoMap.get(item.Discos)[item.Year] = item['Invoice_Billion'];
     });
 
     const years = Array.from(yearSet).sort((a, b) => b - a);
