@@ -53,7 +53,7 @@ const Disco = () => {
   };
 
   return (
-    <PageContainer title="Financial Overview" description="This is Financial Overview Dashboard page">
+    <PageContainer title="Distribution" description="This is the Distribution Dashboard page">
       <Box>
         <Box mt={3} mb={3} display="flex" alignItems="center" flexWrap="wrap">
           <Typography variant="h4" gutterBottom sx={{ marginRight: 2 }}>

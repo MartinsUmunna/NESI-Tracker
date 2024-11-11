@@ -11,7 +11,7 @@ import DieselPrices from 'src/components/econometrics-components/dieselPrices';
 
 const EconomicData = () => {
     return (
-      <PageContainer title="Staff Manager" description="this is Staff Overview Dashboard page">
+      <PageContainer title="Economy" description="This is the Economy  Dashboard page">
         <Box mt={3}>
           <Grid container spacing={3}>
             {/* column */}

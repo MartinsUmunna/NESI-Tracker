@@ -13,7 +13,7 @@ import NBETOutstandingBalancetoGencoTable from 'src/components/generation-compon
 const GenerationData = () => {
   return (
     
-    <PageContainer title="Financial Overview" description="This is Financial Overview Dashboard page">
+    <PageContainer title="Generation" description="This is the Generation Dashboard page">
       <Box mt={3}>
         <Grid container spacing={3}>
           {/* Welcome Card */}

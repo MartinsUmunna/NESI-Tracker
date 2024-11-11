@@ -13,6 +13,7 @@ import Welcome from 'src/layouts/full/shared/welcome/Welcome';
 
 const Industry = () => {
   return (
+    
     <Box>
       <Grid container spacing={3}>
       

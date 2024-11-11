@@ -19,7 +19,7 @@ import NumberofRegisteredPrograms from 'src/components/mini-grids-components/Num
 
 const MiniGridsData = () => {
   return (
-    <PageContainer title="Staff Manager" description="this is Staff Overview Dashboard page">
+    <PageContainer title="Mini Grids" description="This is the Mini Grids Dashboard page">
       <Box mt={3}>
         <Grid container spacing={3}>
           {/* column */}

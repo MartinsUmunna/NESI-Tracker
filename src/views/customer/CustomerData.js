@@ -10,7 +10,7 @@ import CustomerPopulationbyServiceBand from  'src/components/customer-components
 
 const CustomerData = () => {
   return (
-    <PageContainer title="Technical Overview" description="this is Technical Overview Dashboard page">
+    <PageContainer title="Customer" description="This is the Customer Dashboard page">
       <Box mt={3}>
         <Grid container spacing={3}>
           {/* column */}

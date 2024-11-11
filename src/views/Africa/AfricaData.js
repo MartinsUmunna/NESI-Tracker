@@ -7,7 +7,7 @@ import WelcomeCard from 'src/components/dashboards/ecommerce/AfricaWelcomeCard';
 
 const AfricaData = () => {
     return (
-      <PageContainer title="Staff Manager" description="this is Staff Overview Dashboard page">
+      <PageContainer title="Africa" description="this is Staff Overview Dashboard page">
         <Box mt={3}>
           <Grid container spacing={3}>
             {/* column */}
