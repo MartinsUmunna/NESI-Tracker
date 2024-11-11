@@ -177,19 +177,24 @@ const IndustryEnergy = () => {
   };
 
   const processData = (fetchedData) => {
-    const hourlyData = Array(24).fill(0);
-  
-    fetchedData.forEach(item => {
-      const hour = parseInt(item.Hour.split(':')[0]);
-      hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
-    });
-  
-    const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
-    setProcessedData(roundedData);
-  
-    const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
-    setAverageEnergy((totalEnergy / 24).toFixed(2));
-  };
+  const hourlyData = Array(24).fill(0);
+
+  console.log('Raw Data:', fetchedData); // Log raw data for debugging
+
+  fetchedData.forEach(item => {
+    const hour = parseInt(item.Hour.split(':')[0]);
+    hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
+  });
+
+  console.log('Aggregated Hourly Data:', hourlyData); // Log aggregated data for debugging
+
+  const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
+  setProcessedData(roundedData);
+
+  const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
+  setAverageEnergy((totalEnergy / 24).toFixed(2));
+};
+
 
   const chartOptions = {
     chart: {

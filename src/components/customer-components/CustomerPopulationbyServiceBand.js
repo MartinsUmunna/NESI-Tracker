@@ -137,15 +137,19 @@ const CustomerPopulationbyServiceBand = () => {
   const seriescolumnchart = processChartData();
 
   const getTotalCustomers = () => {
-    const filteredData = filterData();
+    const filteredData = filterData(); // This ensures the data is filtered according to the selected year and disco.
+    const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
+  
     if (isAnnual) {
-      const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
+      // Only consider data for the latest month in the selected year for annual view
       const latestMonthData = filteredData.filter(item => item.MonthName === latestMonth);
-      return latestMonthData.reduce((sum, item) => sum + item['Total Customers'], 0);
+      return latestMonthData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     } else {
-      return filteredData.reduce((sum, item) => sum + item['Total Customers'], 0);
+      // Consider all data for the selected month in monthly view
+      return filteredData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     }
   };
+  
 
   const totalCustomers = getTotalCustomers();
 

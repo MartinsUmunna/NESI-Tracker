@@ -84,6 +84,7 @@ const ShareofAvailableCapacity = () => {
       height: 350,
       toolbar: { show: false },
       parentHeightOffset: 0,
+      fontFamily: theme.typography.fontFamily, // Using theme's default font family
     },
     plotOptions: {
       bar: {
@@ -101,7 +102,8 @@ const ShareofAvailableCapacity = () => {
       offsetY: -20,
       style: {
         colors: [textColor],
-        fontSize: '12px'
+        fontSize: '12px',
+        fontFamily: theme.typography.fontFamily, // Using theme's default font family
       },
     },
     xaxis: {
@@ -109,7 +111,8 @@ const ShareofAvailableCapacity = () => {
       labels: {
         style: {
           colors: textColor,
-          fontSize: '10px'
+          fontSize: '10px',
+          fontFamily: theme.typography.fontFamily, // Using theme's default font family
         },
         rotate: -45,
         rotateAlways: true,
@@ -127,14 +130,20 @@ const ShareofAvailableCapacity = () => {
     },
     yaxis: {
       min: 0,
-      max: Math.max(...(chartData.series[0]?.data || [0])) * 1.1, // Add 10% padding
+      max: Math.max(...(chartData.series[0]?.data || [0])) * 1.1,
       labels: {
-        style: { colors: textColor },
+        style: { 
+          colors: textColor,
+          fontFamily: theme.typography.fontFamily, // Using theme's default font family
+        },
         formatter: (val) => `${val.toFixed(0)}%`
       },
       title: {
         text: 'Share of Available Capacity (%)',
-        style: { color: textColor }
+        style: { 
+          color: textColor,
+          fontFamily: theme.typography.fontFamily, // Using theme's default font family
+        }
       }
     },
     tooltip: {
@@ -144,6 +153,9 @@ const ShareofAvailableCapacity = () => {
         title: {
           formatter: () => 'Share:'
         }
+      },
+      style: {
+        fontFamily: theme.typography.fontFamily, // Using theme's default font family
       }
     },
     grid: {

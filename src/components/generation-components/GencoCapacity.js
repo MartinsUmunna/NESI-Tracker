@@ -111,13 +111,17 @@ const GencoCapacity = () => {
     let totalAvailable = 0;
   
     Object.values(plantGroups).forEach(plants => {
-      // Take the first occurrence for installed capacity as it should be constant
-      // Ensure InstalledCapacity is treated as a number
-      const installedCapacity = Number(plants[0].InstalledCapacity) || 0;
+      // Parse installed capacity and ensure it's a valid number
+      const installedCapacity = parseFloat(plants[0].InstalledCapacity) || 0;
       totalInstalled += installedCapacity;
   
-      // For available capacity, take the unique values only
-      const uniqueAvailable = [...new Set(plants.map(p => Number(p.TotalAvailableCapacity)))];
+      // For available capacity, take the unique values and ensure they're valid numbers
+      const uniqueAvailable = [...new Set(plants.map(p => {
+        const availableCapacity = parseFloat(p.TotalAvailableCapacity);
+        return isNaN(availableCapacity) ? 0 : availableCapacity;
+      }))];
+      
+      // Sum up the unique available capacities
       totalAvailable += uniqueAvailable.reduce((sum, val) => sum + val, 0);
     });
   
@@ -126,7 +130,6 @@ const GencoCapacity = () => {
       availableCapacity: totalAvailable
     };
   };
-  
 
   const prepareChartData = () => {
     if (!fetchedData) return;
