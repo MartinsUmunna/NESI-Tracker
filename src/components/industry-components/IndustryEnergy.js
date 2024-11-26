@@ -13,12 +13,20 @@ const IndustryEnergy = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
+  // Function to get yesterday's date
+  const getYesterdayDate = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday;
+  };
+
   const [data, setData] = useState([]);
   const [processedData, setProcessedData] = useState(Array(24).fill(0));
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(getYesterdayDate());
   const [selectedGenco, setSelectedGenco] = useState('All');
   const [gencos, setGencos] = useState(['All']);
-  const [latestDate, setLatestDate] = useState(new Date());
+  const [fullGencoList, setFullGencoList] = useState(['All']);
+  const [latestDate, setLatestDate] = useState(getYesterdayDate());
   const [averageEnergy, setAverageEnergy] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [capacityData, setCapacityData] = useState(null);
@@ -56,6 +64,22 @@ const IndustryEnergy = () => {
     'GEREGU (GAS)': 'Geregu',
   };
 
+  // Initial fetch to populate full genco list
+  useEffect(() => {
+    const fetchFullGencoList = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`);
+        const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
+        const completeGencoList = ['All', ...uniqueGencos];
+        setFullGencoList(completeGencoList);
+      } catch (error) {
+        console.error('Error fetching full genco list:', error);
+      }
+    };
+
+    fetchFullGencoList();
+  }, []);
+
   useEffect(() => {
     fetchData();
     fetchCapacityData();
@@ -73,15 +97,12 @@ const IndustryEnergy = () => {
   const matchGenco = (plant, selectedGencoName) => {
     if (selectedGencoName === 'All') return true;
     
-    // Get the mapped name from the gencoMapping object
     const mappedGencoName = gencoMapping[selectedGencoName];
     
-    // If we have a mapping, use exact match
     if (mappedGencoName) {
       return plant.toLowerCase() === mappedGencoName.toLowerCase();
     }
     
-    // Fallback to partial matching if no mapping exists
     const plantName = plant.toLowerCase();
     const selectedName = selectedGencoName.toLowerCase();
     return plantName.includes(selectedName) || selectedName.includes(plantName);
@@ -93,14 +114,11 @@ const IndustryEnergy = () => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonth = selectedDate.toLocaleString('en-US', { month: 'long' });
 
-    // Filter data for selected year
     const yearData = capacityData.filter(item => item.Year === selectedYear);
     
     if (selectedGenco === 'All') {
-      // For ALL Gencos
       const installedCapacity = yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
       
-      // Sum unique TotalAvailableCapacity values for the year
       const uniqueAvailableCapacities = new Set();
       yearData.forEach(item => {
         uniqueAvailableCapacities.add(parseFloat(item.TotalAvailableCapacity));
@@ -115,7 +133,6 @@ const IndustryEnergy = () => {
         </Typography>
       );
     } else {
-      // For specific Genco
       const gencoData = yearData.find(item => 
         matchGenco(item.Plant, selectedGenco) && 
         item.Month_Name === selectedMonth
@@ -133,7 +150,6 @@ const IndustryEnergy = () => {
         );
       }
       
-      // If no data found for the specific month, try to find any data for that year
       const anyGencoData = yearData.find(item => matchGenco(item.Plant, selectedGenco));
       if (anyGencoData) {
         const installedCapacity = parseFloat(anyGencoData.InstalledCapacity);
@@ -149,7 +165,6 @@ const IndustryEnergy = () => {
     return null;
   };
 
-
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -163,8 +178,8 @@ const IndustryEnergy = () => {
       const data = response.data.data;
       setData(data);
   
-      const uniqueGencos = [...new Set(data.map(item => item.Gencos))];
-      setGencos(['All', ...uniqueGencos]);
+      // Use the full genco list instead of just the current data
+      setGencos(fullGencoList);
   
       processData(data);
     } catch (error) {
@@ -177,24 +192,19 @@ const IndustryEnergy = () => {
   };
 
   const processData = (fetchedData) => {
-  const hourlyData = Array(24).fill(0);
+    const hourlyData = Array(24).fill(0);
 
-  console.log('Raw Data:', fetchedData); // Log raw data for debugging
+    fetchedData.forEach(item => {
+      const hour = parseInt(item.Hour.split(':')[0]);
+      hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
+    });
 
-  fetchedData.forEach(item => {
-    const hour = parseInt(item.Hour.split(':')[0]);
-    hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
-  });
+    const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
+    setProcessedData(roundedData);
 
-  console.log('Aggregated Hourly Data:', hourlyData); // Log aggregated data for debugging
-
-  const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
-  setProcessedData(roundedData);
-
-  const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
-  setAverageEnergy((totalEnergy / 24).toFixed(2));
-};
-
+    const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
+    setAverageEnergy((totalEnergy / 24).toFixed(2));
+  };
 
   const chartOptions = {
     chart: {
