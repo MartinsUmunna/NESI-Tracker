@@ -64,25 +64,54 @@ const IndustryEnergy = () => {
     'GEREGU (GAS)': 'Geregu',
   };
 
-  // Initial fetch to populate full genco list
+  // Modification: Add a function to fetch gencos and separate from initial useEffect
+  const fetchGencoList = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
+        params: { 
+          startDate: selectedDate.toISOString().split('T')[0], 
+          endDate: selectedDate.toISOString().split('T')[0] 
+        }
+      });
+      const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
+      const completeGencoList = ['All', ...uniqueGencos];
+      setFullGencoList(completeGencoList);
+      setGencos(completeGencoList);
+    } catch (error) {
+      console.error('Error fetching genco list:', error);
+    }
+  };
+
+  // Initial fetch to get capacity data and initial genco list
   useEffect(() => {
-    const fetchFullGencoList = async () => {
+    const initializeData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`);
-        const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
-        const completeGencoList = ['All', ...uniqueGencos];
-        setFullGencoList(completeGencoList);
+        // Fetch capacity data
+        const capacityResponse = await axios.get(`${API_URL}/installed-vs-available-capacity`);
+        setCapacityData(capacityResponse.data);
+
+        // Fetch initial genco list for the default date
+        await fetchGencoList();
+
+        // Fetch initial energy data
+        await fetchData();
       } catch (error) {
-        console.error('Error fetching full genco list:', error);
+        console.error('Error initializing data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchFullGencoList();
+    initializeData();
   }, []);
 
+  // Modify existing useEffect to fetch data when date or genco changes
   useEffect(() => {
-    fetchData();
-    fetchCapacityData();
+    if (selectedDate) {
+      fetchGencoList();
+      fetchData();
+      fetchCapacityData();
+    }
   }, [selectedDate, selectedGenco]);
 
   const fetchCapacityData = async () => {
@@ -177,9 +206,6 @@ const IndustryEnergy = () => {
   
       const data = response.data.data;
       setData(data);
-  
-      // Use the full genco list instead of just the current data
-      setGencos(fullGencoList);
   
       processData(data);
     } catch (error) {

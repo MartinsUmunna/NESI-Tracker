@@ -21,8 +21,10 @@ const CapacityIndustry = () => {
   const [data, setData] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
   const [years, setYears] = useState([]);
-  const [installedSeries, setInstalledSeries] = useState([]);
-  const [availableSeries, setAvailableSeries] = useState([]);
+  const [installedSeries, setInstalledSeries] = useState([0, 0]);
+  const [availableSeries, setAvailableSeries] = useState([0, 0]);
+  const [installedTotals, setInstalledTotals] = useState({ renewable: 0, nonRenewable: 0 });
+  const [availableTotals, setAvailableTotals] = useState({ renewable: 0, nonRenewable: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -82,8 +84,20 @@ const CapacityIndustry = () => {
       parseFloat(available.find(item => item.Source === 'THERMAL')?.CapacityPercentage) || 0
     ];
 
+    const installedMW = {
+      renewable: parseFloat(installed.find(item => item.Source === 'HYDRO')?.CapacityMW) || 0,
+      nonRenewable: parseFloat(installed.find(item => item.Source === 'THERMAL')?.CapacityMW) || 0
+    };
+
+    const availableMW = {
+      renewable: parseFloat(available.find(item => item.Source === 'HYDRO')?.CapacityMW) || 0,
+      nonRenewable: parseFloat(available.find(item => item.Source === 'THERMAL')?.CapacityMW) || 0
+    };
+
     setInstalledSeries(installedPercentages);
     setAvailableSeries(availablePercentages);
+    setInstalledTotals(installedMW);
+    setAvailableTotals(availableMW);
   };
 
   const optionsDonut = (type) => ({
@@ -94,7 +108,7 @@ const CapacityIndustry = () => {
         show: false,
       },
     },
-    labels: ["Renewable Energy", "Non-Renewable Energy"],
+    labels: ['Renewable Energy', 'Non-Renewable Energy'],
     colors: [secondary, primary], 
     plotOptions: {
       pie: {
@@ -105,25 +119,20 @@ const CapacityIndustry = () => {
           labels: {
             show: true,
             name: {
-              show: true,
-              fontSize: '14px',
-              offsetY: -10,
+              show: false,
             },
             value: {
               show: true,
               fontSize: '20px',
               fontWeight: 'bold',
-              formatter: function(val) {
-                return val ? val.toFixed(1) + '%' : '0%';
-              }
+              formatter: function (val, opts) {
+                const totals = type === 'installed' ? installedTotals : availableTotals;
+                const total = totals.renewable + totals.nonRenewable;
+                return total.toFixed(1) + ' MW';
+              },
             },
             total: {
-              show: true,
-              label: 'Total',
-              fontSize: '12px',
-              formatter: function(w) {
-                return w.globals.seriesTotals.reduce((a, b) => a + b, 0).toFixed(1) + '%';
-              }
+              show: false,
             }
           }
         }
@@ -131,7 +140,7 @@ const CapacityIndustry = () => {
     },
     dataLabels: {
       enabled: true,
-      formatter: function(val, opts) {
+      formatter: function (val, opts) {
         return opts.w.config.labels[opts.seriesIndex] + '\n' + (val ? val.toFixed(1) + '%' : '0%');
       },
       textAnchor: 'middle',
@@ -161,8 +170,13 @@ const CapacityIndustry = () => {
     tooltip: {
       enabled: true,
       y: {
-        formatter: function(val) {
-          return val ? val.toFixed(1) + '%' : '0%';
+        formatter: function (val, opts) {
+          const totals = type === 'installed' ? installedTotals : availableTotals;
+          const mwValue =
+            opts.seriesIndex === 0
+              ? (totals.renewable * (val / 100)).toFixed(1)
+              : (totals.nonRenewable * (val / 100)).toFixed(1);
+          return val ? `${val.toFixed(1)}% (${mwValue} MW)` : '0%';
         }
       }
     }
