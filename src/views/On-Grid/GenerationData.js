@@ -9,6 +9,8 @@ import GencoStatsTable from 'src/components/generation-components/GencoStatsTabl
 import GencoInvoicetoNBET_Table from 'src/components/generation-components/GencoInvoicetoNBET_Table';
 import NBETInvoicetoGencoTable from 'src/components/generation-components/NBETInvoicetoGencoTable';
 import NBETOutstandingBalancetoGencoTable from 'src/components/generation-components/NBETOutstandingBalancetoGencoTable';
+import GencoTableMarketInvoiceNBET from 'src/components/generation-components/GencoTableMarketInvoiceNBET';
+
 
 const GenerationData = () => {
   return (
@@ -37,6 +39,9 @@ const GenerationData = () => {
           </Grid>
           <Grid item xs={12}>
             <NBETOutstandingBalancetoGencoTable />
+          </Grid>
+          <Grid item xs={12}>
+            <GencoTableMarketInvoiceNBET />
           </Grid>
 
          

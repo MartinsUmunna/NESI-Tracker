@@ -309,7 +309,11 @@ const DiscoInvoicetoNBET_Table = () => {
   }];
 
   const formatValue = (value) => {
-    return `₦${value.toFixed(2)}B`;
+    if (value >= 1000) {
+      return `₦${(value / 1000).toFixed(2)}T`;
+    } else {
+      return `₦${value.toFixed(2)}B`;
+    }
   };
 
   // Compute totals for each column

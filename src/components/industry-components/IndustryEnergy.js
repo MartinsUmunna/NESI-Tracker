@@ -78,7 +78,7 @@ const IndustryEnergy = () => {
       setFullGencoList(completeGencoList);
       setGencos(completeGencoList);
     } catch (error) {
-      console.error('Error fetching genco list:', error);
+      // Removed console.error
     }
   };
 
@@ -96,7 +96,7 @@ const IndustryEnergy = () => {
         // Fetch initial energy data
         await fetchData();
       } catch (error) {
-        console.error('Error initializing data:', error);
+        // Removed console.error
       } finally {
         setIsLoading(false);
       }
@@ -119,7 +119,7 @@ const IndustryEnergy = () => {
       const response = await axios.get(`${API_URL}/installed-vs-available-capacity`);
       setCapacityData(response.data);
     } catch (error) {
-      console.error('Error fetching capacity data:', error);
+      // Removed console.error
     }
   };
 
@@ -209,7 +209,7 @@ const IndustryEnergy = () => {
   
       processData(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      // Removed console.error
       setProcessedData(Array(24).fill(0));
       setAverageEnergy(0);
     } finally {

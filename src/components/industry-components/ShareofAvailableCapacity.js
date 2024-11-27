@@ -98,7 +98,7 @@ const ShareofAvailableCapacity = () => {
     },
     dataLabels: {
       enabled: true,
-      formatter: (val) => `${Number(val).toFixed(2)}%`,
+      formatter: (val) => `${Number(val).toFixed(0)}%`,
       offsetY: -20,
       style: {
         colors: [textColor],
