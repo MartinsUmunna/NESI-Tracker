@@ -22,6 +22,11 @@ const YearlyEnergyGenerated = () => {
     fetchData();
   }, [isAnnual]);
 
+  useEffect(() => {
+    const years = Object.keys(energyData).sort((a, b) => parseInt(a) - parseInt(b));
+    setYearOptions(years);
+  }, [energyData]);
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -29,49 +34,79 @@ const YearlyEnergyGenerated = () => {
         ? `${API_URL}/yearly-Energy-Sentout`
         : `${API_URL}/Monthly-Energy-Sentout`;
       const response = await axios.get(url);
-      const formattedData = formatData(response.data);
+
+      // Add a check to ensure response.data exists and is an array
+      if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+        throw new Error('No data received from the server');
+      }
+
+      const formattedData = formatData(response.data, isAnnual);
       setEnergyData(formattedData);
-      const years = Object.keys(formattedData).sort((a, b) => a - b);
-      setYearOptions(years);
-      setYear(prev => prev || years[years.length - 1]);
+      
+      // Safely set the year, defaulting to the latest year if not set
+      const years = Object.keys(formattedData).sort((a, b) => parseInt(a) - parseInt(b));
+      setYear(prev => prev || (years.length > 0 ? years[years.length - 1] : ''));
+      
       setLoading(false);
     } catch (error) {
-      setError(error.message);
+      console.error('Error fetching data:', error);
+      setError(error.message || 'An error occurred while fetching data');
       setLoading(false);
     }
   };
 
-  const formatData = (data) => {
-    const formattedData = {};
-    if (isAnnual) {
-      data.forEach(item => {
-        const year = item.Year.toString();
-        if (!formattedData[year]) {
-          formattedData[year] = { thermal: 0, hydro: 0 };
-        }
-        if (item.Energy_Source === 'THERMAL') {
-          formattedData[year].thermal = item.YearlyAvgEnergy;
-        } else if (item.Energy_Source === 'HYDRO') {
-          formattedData[year].hydro = item.YearlyAvgEnergy;
-        }
-      });
-    } else {
-      data.forEach(item => {
-        const year = item.Year.toString();
-        if (!formattedData[year]) {
-          formattedData[year] = { months: {} };
-        }
-        if (!formattedData[year].months[item.Month_Name]) {
-          formattedData[year].months[item.Month_Name] = { thermal: 0, hydro: 0 };
-        }
-        if (item.Energy_Source === 'THERMAL') {
-          formattedData[year].months[item.Month_Name].thermal = item.Total_Energy;
-        } else if (item.Energy_Source === 'HYDRO') {
-          formattedData[year].months[item.Month_Name].hydro = item.Total_Energy;
-        }
-      });
+  const formatData = (data, isAnnual) => {
+    // Defensive check for data
+    if (!data || !Array.isArray(data)) {
+      console.warn('Invalid data format');
+      return {};
     }
-    return formattedData;
+
+    const formattedData = {};
+    try {
+      if (isAnnual) {
+        console.log("Annual Data")
+        const annualData = {};
+        data.forEach(item => {
+          const year = item.Year.toString();
+          if (!annualData[year]) {
+            annualData[year] = { thermal: 0, hydro: 0 };
+          }
+          if (item.Energy_Source === 'THERMAL') {
+            annualData[year].thermal = Number(item.YearlyAvgEnergy) || 0;
+          } else if (item.Energy_Source === 'HYDRO') {
+            annualData[year].hydro = Number(item.YearlyAvgEnergy) || 0;
+          }
+        });
+        return annualData;
+      } else {
+        console.log("Monthly Data")
+        // Monthly data formatting
+        console.log("DATA", data)
+        data[0].forEach(item=> {
+          const year = item["Year"].toString();
+          const monthName = item.Month_Name;
+
+          if (!formattedData[year]) {
+            formattedData[year] = { months: {} };
+          }
+
+          if (!formattedData[year].months[monthName]) {
+            formattedData[year].months[monthName] = { thermal: 0, hydro: 0 };
+          }
+
+          if (item.Energy_Source === 'THERMAL') {
+            formattedData[year].months[monthName].thermal = Number(item.Total_Energy) || 0;
+          } else if (item.Energy_Source === 'HYDRO') {
+            formattedData[year].months[monthName].hydro = Number(item.Total_Energy) || 0;
+          }
+        });
+        return formattedData;
+      }
+    } catch (error) {
+      console.error('Error in formatData:', error);
+      return {};
+    }
   };
 
   const handleChangeYear = (event) => {
@@ -83,6 +118,7 @@ const YearlyEnergyGenerated = () => {
       setOpenSubscribeDialog(true);
     } else {
       setIsAnnual(true);
+      fetchData(); // Fetch annual data when toggling back
     }
   };
 
@@ -123,26 +159,31 @@ const YearlyEnergyGenerated = () => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  const seriescolumnchart = [
-    {
-      name: 'Thermal Energy',
-      data: isAnnual
-        ? yearOptions.map(y => Math.round(energyData[y]?.thermal || 0))
-        : monthOrder.map(m => {
-            const monthData = energyData[year]?.months?.[m];
-            return Math.round(monthData?.thermal || 0);
-          }),
-    },
-    {
-      name: 'Hydro Energy',
-      data: isAnnual
-        ? yearOptions.map(y => Math.round(energyData[y]?.hydro || 0))
-        : monthOrder.map(m => {
-            const monthData = energyData[year]?.months?.[m];
-            return Math.round(monthData?.hydro || 0);
-          }),
-    },
-  ];
+  // Sort the months for x-axis categories and series data
+const sortedMonths = Object.keys(energyData[year]?.months || {}).sort(
+  (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b)
+);
+
+const seriescolumnchart = [
+  {
+    name: 'Thermal Energy',
+    data: isAnnual
+      ? yearOptions.map((y) => Math.round(energyData[y]?.thermal || 0))
+      : sortedMonths.map((m) => {
+          const monthData = energyData[year]?.months?.[m];
+          return Math.round(monthData?.thermal || 0);
+        }),
+  },
+  {
+    name: 'Hydro Energy',
+    data: isAnnual
+      ? yearOptions.map((y) => Math.round(energyData[y]?.hydro || 0))
+      : sortedMonths.map((m) => {
+          const monthData = energyData[year]?.months?.[m];
+          return Math.round(monthData?.hydro || 0);
+        }),
+  },
+];
 
   const calculateTotalEnergy = () => {
     if (isAnnual) {
@@ -211,7 +252,7 @@ const YearlyEnergyGenerated = () => {
       },
     },
     xaxis: {
-      categories: isAnnual ? yearOptions : monthOrder,
+      categories: isAnnual ? yearOptions : sortedMonths,
       axisBorder: {
         show: false,
       },

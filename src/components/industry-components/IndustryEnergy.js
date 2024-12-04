@@ -62,6 +62,8 @@ const IndustryEnergy = () => {
     'KAINJI (HYDRO)': 'Kainji',
     'OKPAI (GAS/STEAM)': 'Okpai',
     'GEREGU (GAS)': 'Geregu',
+    'AFAM III FAST POWER' : 'AFAM III FAST POWER',
+    'TRANS AFAM POWER': 'TRANS AFAM POWER'
   };
 
   // Modification: Add a function to fetch gencos and separate from initial useEffect
