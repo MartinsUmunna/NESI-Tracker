@@ -9,6 +9,7 @@ import { DarkThemeColors } from './DarkThemeColors';
 import { LightThemeColors } from './LightThemeColors';
 import * as locales from '@mui/material/locale';
 import { baseDarkTheme, baselightTheme } from './DefaultColors';
+import { breakpoints } from '@mui/system';
 
 export const BuildTheme = (config = {}) => {
   const themeOptions = LightThemeColors.find((theme) => theme.name === config.theme);
@@ -31,6 +32,14 @@ export const BuildTheme = (config = {}) => {
   const theme = createTheme(
     _.merge({}, baseMode, defaultTheme, locales[customizer.isLanguage], themeSelect, {
       direction: config.direction,
+      breakpoints: {
+        values: {
+          xs: 0,
+          sm: 350,
+          md: 900,
+          lg: 1000,
+        },
+      },
     }),
   );
   theme.components = components(theme);

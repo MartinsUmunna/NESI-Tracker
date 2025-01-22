@@ -47,9 +47,9 @@ const IndustryEnergy = () => {
     'ODUKPANI NIPP (GAS)': 'Odukpani',
     'TRANS-AMADI (GAS)': 'Trans Amadi',
     'TRANS AMADI': 'Trans Amadi',
-    'Taopex': 'Taopex',
-    'Aes': 'Aes',
-    'Asco':'Asco',
+    Taopex: 'Taopex',
+    Aes: 'Aes',
+    Asco: 'Asco',
     'OMOTOSHO NIPP (GAS)': 'Omotosho NIPP',
     'ALAOJI NIPP (GAS)': 'Alaoji NIPP',
     'AFAM VI (GAS/STEAM)': 'Afam VI',
@@ -62,20 +62,20 @@ const IndustryEnergy = () => {
     'KAINJI (HYDRO)': 'Kainji',
     'OKPAI (GAS/STEAM)': 'Okpai',
     'GEREGU (GAS)': 'Geregu',
-    'AFAM III FAST POWER' : 'AFAM III FAST POWER',
-    'TRANS AFAM POWER': 'TRANS AFAM POWER'
+    'AFAM III FAST POWER': 'AFAM III FAST POWER',
+    'TRANS AFAM POWER': 'TRANS AFAM POWER',
   };
 
   // Modification: Add a function to fetch gencos and separate from initial useEffect
   const fetchGencoList = async () => {
     try {
       const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
-        params: { 
-          startDate: selectedDate.toISOString().split('T')[0], 
-          endDate: selectedDate.toISOString().split('T')[0] 
-        }
+        params: {
+          startDate: selectedDate.toISOString().split('T')[0],
+          endDate: selectedDate.toISOString().split('T')[0],
+        },
       });
-      const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
+      const uniqueGencos = [...new Set(response.data.data.map((item) => item.Gencos))];
       const completeGencoList = ['All', ...uniqueGencos];
       setFullGencoList(completeGencoList);
       setGencos(completeGencoList);
@@ -127,13 +127,13 @@ const IndustryEnergy = () => {
 
   const matchGenco = (plant, selectedGencoName) => {
     if (selectedGencoName === 'All') return true;
-    
+
     const mappedGencoName = gencoMapping[selectedGencoName];
-    
+
     if (mappedGencoName) {
       return plant.toLowerCase() === mappedGencoName.toLowerCase();
     }
-    
+
     const plantName = plant.toLowerCase();
     const selectedName = selectedGencoName.toLowerCase();
     return plantName.includes(selectedName) || selectedName.includes(plantName);
@@ -145,28 +145,31 @@ const IndustryEnergy = () => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonth = selectedDate.toLocaleString('en-US', { month: 'long' });
 
-    const yearData = capacityData.filter(item => item.Year === selectedYear);
-    
+    const yearData = capacityData.filter((item) => item.Year === selectedYear);
+
     if (selectedGenco === 'All') {
-      const installedCapacity = yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
-      
+      const installedCapacity =
+        yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
+
       const uniqueAvailableCapacities = new Set();
-      yearData.forEach(item => {
+      yearData.forEach((item) => {
         uniqueAvailableCapacities.add(parseFloat(item.TotalAvailableCapacity));
       });
-      const availableCapacity = Array.from(uniqueAvailableCapacities)
-        .reduce((sum, capacity) => sum + capacity, 0);
+      const availableCapacity = Array.from(uniqueAvailableCapacities).reduce(
+        (sum, capacity) => sum + capacity,
+        0,
+      );
 
       return (
         <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-          Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
+          Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
+          <br />
           Available Capacity ({selectedYear}) - {availableCapacity.toFixed(2)} MW
         </Typography>
       );
     } else {
-      const gencoData = yearData.find(item => 
-        matchGenco(item.Plant, selectedGenco) && 
-        item.Month_Name === selectedMonth
+      const gencoData = yearData.find(
+        (item) => matchGenco(item.Plant, selectedGenco) && item.Month_Name === selectedMonth,
       );
 
       if (gencoData) {
@@ -175,19 +178,22 @@ const IndustryEnergy = () => {
 
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
-            Available Capacity ({selectedMonth} {selectedYear}) - {avgAvailableCapacity.toFixed(2)} MW
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
+            <br />
+            Available Capacity ({selectedMonth} {selectedYear}) - {avgAvailableCapacity.toFixed(2)}{' '}
+            MW
           </Typography>
         );
       }
-      
-      const anyGencoData = yearData.find(item => matchGenco(item.Plant, selectedGenco));
+
+      const anyGencoData = yearData.find((item) => matchGenco(item.Plant, selectedGenco));
       if (anyGencoData) {
         const installedCapacity = parseFloat(anyGencoData.InstalledCapacity);
 
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
+            <br />
             Available Capacity ({selectedMonth} {selectedYear}) - Not Available
           </Typography>
         );
@@ -201,14 +207,14 @@ const IndustryEnergy = () => {
     try {
       const startDate = selectedDate.toISOString().split('T')[0];
       const genco = selectedGenco !== 'All' ? selectedGenco : undefined;
-  
+
       const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
-        params: { startDate, endDate: startDate, genco }
+        params: { startDate, endDate: startDate, genco },
       });
-  
+
       const data = response.data.data;
       setData(data);
-  
+
       processData(data);
     } catch (error) {
       // Removed console.error
@@ -222,12 +228,12 @@ const IndustryEnergy = () => {
   const processData = (fetchedData) => {
     const hourlyData = Array(24).fill(0);
 
-    fetchedData.forEach(item => {
+    fetchedData.forEach((item) => {
       const hour = parseInt(item.Hour.split(':')[0]);
       hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
     });
 
-    const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
+    const roundedData = hourlyData.map((value) => parseFloat(value.toFixed(2)));
     setProcessedData(roundedData);
 
     const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
@@ -260,12 +266,12 @@ const IndustryEnergy = () => {
     dataLabels: {
       enabled: true,
       background: {
-        enabled: false
+        enabled: false,
       },
       offsetY: -10,
       style: {
         fontSize: '12px',
-      }
+      },
     },
     title: {
       text: `Average Energy Generated: ${averageEnergy} MW`,
@@ -291,7 +297,7 @@ const IndustryEnergy = () => {
       },
       axisTicks: {
         show: true,
-        borderType: 'dotted'
+        borderType: 'dotted',
       },
     },
     yaxis: {
@@ -341,12 +347,16 @@ const IndustryEnergy = () => {
           {isLoading ? (
             <Typography>Loading...</Typography>
           ) : (
-            <Chart
-              options={chartOptions}
-              series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
-              type="area"
-              height="345px"
-            />
+            <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+              <div style={{ width: '900px' }}>
+                <Chart
+                  options={chartOptions}
+                  series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
+                  type="area"
+                  height="345px"
+                />
+              </div>
+            </div>
           )}
         </Grid>
       </Grid>
