@@ -15,6 +15,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  useMediaQuery,
 } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
@@ -74,6 +75,8 @@ const GencoTableMarketInvoiceNBET = () => {
   const [isAnnual, setIsAnnual] = useState(true);
   const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   // New state for fuel type filter
   const [selectedFuelType, setSelectedFuelType] = useState('ALL');
   const [fuelTypes, setFuelTypes] = useState(['ALL']);
@@ -222,24 +225,24 @@ const GencoTableMarketInvoiceNBET = () => {
   const getChartOptions = () => ({
     chart: {
       type: 'bar',
-      height: 350,
+      height: isMobile ? 250 : 350,
       toolbar: { show: false },
       background: 'transparent',
     },
     plotOptions: {
       bar: {
         borderRadius: 4,
-        horizontal: false,
-        columnWidth: '40%',
-        dataLabels: { position: 'top' },
+        horizontal: isMobile, // Switch to horizontal on mobile
+        columnWidth: isMobile ? '80%' : '40%',
+        dataLabels: { position: isMobile ? 'right' : 'top' },
       },
     },
     dataLabels: {
       enabled: true,
-      offsetX: 0,
-      offsetY: -20,
+      offsetX: isMobile ? 10 : 0,
+      offsetY: isMobile ? 0 : -20,
       style: {
-        fontSize: '10px',
+        fontSize: isMobile ? '8px' : '10px',
         colors: [theme.palette.text.primary],
       },
       formatter: (val) => formatNumber(val),
@@ -271,118 +274,221 @@ const GencoTableMarketInvoiceNBET = () => {
   });
 
   return (
-    <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Genco NBET Remittances and Invoice
-        </Typography>
+    <Box
+      sx={{
+        p: isMobile ? 1 : 2,
+        width: '100%',
+        overflowX: 'auto',
+      }}
+    >
+      {isMobile ? (
+        <Stack spacing={2}>
+          {/* Mobile Layout */}
+          <Typography variant="h6" align="center" gutterBottom>
+            Genco NBET Remittances and Invoice
+          </Typography>
 
-        <Stack direction="row">
-          <StyledButton
-            variant={view === 'invoice' ? 'contained' : 'outlined'}
-            onClick={() => {
-              setView('invoice');
-              setCompare(false);
-            }}
-            sx={{
-              backgroundColor: view === 'invoice' ? theme.palette.primary.main : 'transparent',
-              color: view === 'invoice' ? 'white' : theme.palette.primary.main,
-              '&:hover': {
-                backgroundColor: view === 'invoice' ? theme.palette.primary.dark : 'transparent',
-              },
-            }}
-          >
-            Genco Invoice
-          </StyledButton>
-          <StyledButton
-            variant={view === 'remittance' ? 'contained' : 'outlined'}
-            onClick={() => {
-              setView('remittance');
-              setCompare(false);
-            }}
-            sx={{
-              backgroundColor: view === 'remittance' ? theme.palette.secondary.main : 'transparent',
-              color: view === 'remittance' ? 'white' : theme.palette.secondary.main,
-              '&:hover': {
-                backgroundColor:
-                  view === 'remittance' ? theme.palette.secondary.dark : 'transparent',
-              },
-            }}
-          >
-            Genco Remittance
-          </StyledButton>
-        </Stack>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <FormControl variant="outlined" size="small">
-            <InputLabel>Year</InputLabel>
-            <Select
-              value={selectedYear || ''}
-              onChange={handleYearChange}
-              label="Year"
-              sx={{ minWidth: 100 }}
+          {/* View Selection (Buttons) */}
+          <Stack direction="row" spacing={1} justifyContent="center">
+            <StyledButton
+              fullWidth
+              variant={view === 'invoice' ? 'contained' : 'outlined'}
+              onClick={() => {
+                setView('invoice');
+                setCompare(false);
+              }}
             >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {!isAnnual && (
-            <FormControl variant="outlined" size="small">
-              <InputLabel>Month</InputLabel>
-              <Select
-                value={selectedMonth}
-                onChange={handleMonthChange}
-                label="Month"
-                sx={{ minWidth: 120 }}
-              >
-                {months.map((month) => (
-                  <MenuItem key={month} value={month}>
-                    {month}
+              Genco Invoice
+            </StyledButton>
+            <StyledButton
+              fullWidth
+              variant={view === 'remittance' ? 'contained' : 'outlined'}
+              onClick={() => {
+                setView('remittance');
+                setCompare(false);
+              }}
+            >
+              Genco Remittance
+            </StyledButton>
+          </Stack>
+
+          {/* Filters */}
+          <Stack spacing={2}>
+            <FormControl variant="outlined" size="small" fullWidth>
+              <InputLabel>Year</InputLabel>
+              <Select value={selectedYear || ''} onChange={handleYearChange} label="Year">
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          )}
-          <FormControl variant="outlined" size="small">
-            <InputLabel>Fuel Type</InputLabel>
-            <Select
-              value={selectedFuelType}
-              onChange={handleFuelTypeChange}
-              label="Fuel Type"
-              sx={{ minWidth: 120 }}
-            >
-              {fuelTypes.map((fuelType) => (
-                <MenuItem key={fuelType} value={fuelType}>
-                  {fuelType}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControlLabel
-            control={<Switch checked={isAnnual} onChange={handleToggleView} name="viewToggle" />}
-            label={isAnnual ? 'Annual' : 'Monthly'}
-          />
-          <FormControlLabel
-            control={
-              <Switch checked={compare} onChange={handleToggleCompare} name="compareToggle" />
-            }
-            label="Compare"
-          />
+
+            {!isAnnual && (
+              <FormControl variant="outlined" size="small" fullWidth>
+                <InputLabel>Month</InputLabel>
+                <Select value={selectedMonth} onChange={handleMonthChange} label="Month">
+                  {months.map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {month}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+
+            <FormControl variant="outlined" size="small" fullWidth>
+              <InputLabel>Fuel Type</InputLabel>
+              <Select value={selectedFuelType} onChange={handleFuelTypeChange} label="Fuel Type">
+                {fuelTypes.map((fuelType) => (
+                  <MenuItem key={fuelType} value={fuelType}>
+                    {fuelType}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Toggles */}
+            <Stack direction="column" spacing={1}>
+              <FormControlLabel
+                control={
+                  <Switch checked={isAnnual} onChange={handleToggleView} name="viewToggle" />
+                }
+                label={isAnnual ? 'Annual' : 'Monthly'}
+                sx={{ m: 0 }}
+              />
+              <FormControlLabel
+                control={
+                  <Switch checked={compare} onChange={handleToggleCompare} name="compareToggle" />
+                }
+                label="Compare"
+                sx={{ m: 0 }}
+              />
+            </Stack>
+          </Stack>
         </Stack>
-      </Stack>
+      ) : (
+        <Stack
+          direction={isMobile ? 'column' : 'row'}
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={isMobile ? 2 : 0}
+          mb={2}
+        >
+          <Typography
+            variant="h6"
+            align={isMobile ? 'center' : 'left'}
+            gutterBottom
+            sx={{ width: isMobile ? '100%' : 'auto' }}
+          >
+            Genco NBET Remittances and Invoice
+          </Typography>
+
+          <Stack
+            direction={isMobile ? 'column' : 'row'}
+            spacing={2}
+            alignItems="center"
+            sx={{ width: isMobile ? '100%' : 'auto' }}
+          >
+            <Stack direction="row" spacing={1} sx={{ width: isMobile ? '100%' : 'auto' }}>
+              <StyledButton
+                fullWidth={isMobile}
+                variant={view === 'invoice' ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setView('invoice');
+                  setCompare(false);
+                }}
+              >
+                Genco Invoice
+              </StyledButton>
+              <StyledButton
+                fullWidth={isMobile}
+                variant={view === 'remittance' ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setView('remittance');
+                  setCompare(false);
+                }}
+              >
+                Genco Remittance
+              </StyledButton>
+            </Stack>
+
+            <Stack
+              direction={isMobile ? 'column' : 'row'}
+              spacing={1}
+              sx={{ width: isMobile ? '100%' : 'auto' }}
+            >
+              <FormControl variant="outlined" size="small" fullWidth={isMobile}>
+                <InputLabel>Year</InputLabel>
+                <Select value={selectedYear || ''} onChange={handleYearChange} label="Year">
+                  {years.map((year) => (
+                    <MenuItem key={year} value={year}>
+                      {year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {!isAnnual && (
+                <FormControl variant="outlined" size="small" fullWidth={isMobile}>
+                  <InputLabel>Month</InputLabel>
+                  <Select value={selectedMonth} onChange={handleMonthChange} label="Month">
+                    {months.map((month) => (
+                      <MenuItem key={month} value={month}>
+                        {month}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+
+              <FormControl variant="outlined" size="small" fullWidth={isMobile}>
+                <InputLabel>Fuel Type</InputLabel>
+                <Select value={selectedFuelType} onChange={handleFuelTypeChange} label="Fuel Type">
+                  {fuelTypes.map((fuelType) => (
+                    <MenuItem key={fuelType} value={fuelType}>
+                      {fuelType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Stack
+                direction={isMobile ? 'column' : 'row'}
+                spacing={1}
+                sx={{ width: isMobile ? '100%' : 'auto' }}
+              >
+                <FormControlLabel
+                  control={
+                    <Switch checked={isAnnual} onChange={handleToggleView} name="viewToggle" />
+                  }
+                  label={isAnnual ? 'Annual' : 'Monthly'}
+                  sx={{ m: 0 }}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch checked={compare} onChange={handleToggleCompare} name="compareToggle" />
+                  }
+                  label="Compare"
+                  sx={{ m: 0 }}
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Stack>
+      )}
 
       <ResponsiveEl>
-        {' '}
         <ReactApexChart
           options={getChartOptions()}
           series={chartData.series}
           type="bar"
-          height={350}
+          height={isMobile ? 250 : 350}
         />
       </ResponsiveEl>
 
+      {/* Dialog remains the same */}
       <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
         <DialogTitle>Subscribe to EMRC</DialogTitle>
         <DialogContent>

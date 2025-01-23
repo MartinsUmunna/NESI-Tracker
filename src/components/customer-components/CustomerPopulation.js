@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Stack, Typography, Button, Avatar, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  Avatar,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import API_URL from '../../config/apiconfig';
@@ -16,7 +27,7 @@ const CustomerPopulation = () => {
   const [customerData, setCustomerData] = useState({
     metered: [],
     unmetered: [],
-    years: []
+    years: [],
   });
   const [loading, setLoading] = useState(true);
 
@@ -37,11 +48,11 @@ const CustomerPopulation = () => {
   };
 
   const processData = (data) => {
-    const discoSet = new Set(data.map(item => item.Discos));
+    const discoSet = new Set(data.map((item) => item.Discos));
     setDiscos(['All', ...Array.from(discoSet)]);
 
     const yearlyData = {};
-    data.forEach(item => {
+    data.forEach((item) => {
       const year = new Date(item.End_of_Quarter).getFullYear();
       if (!yearlyData[year]) {
         yearlyData[year] = {};
@@ -51,33 +62,39 @@ const CustomerPopulation = () => {
           metered: 0,
           unmetered: 0,
           latestMeteredQuarter: new Date(0),
-          latestUnmeteredQuarter: new Date(0)
+          latestUnmeteredQuarter: new Date(0),
         };
       }
       const currentQuarter = new Date(item.End_of_Quarter);
-      if (item.Customer_Type === 'Metered Customer' && currentQuarter > yearlyData[year][item.Discos].latestMeteredQuarter) {
+      if (
+        item.Customer_Type === 'Metered Customer' &&
+        currentQuarter > yearlyData[year][item.Discos].latestMeteredQuarter
+      ) {
         yearlyData[year][item.Discos].metered = item.Customer_Number;
         yearlyData[year][item.Discos].latestMeteredQuarter = currentQuarter;
-      } else if (item.Customer_Type === 'Unmetered Customer' && currentQuarter > yearlyData[year][item.Discos].latestUnmeteredQuarter) {
+      } else if (
+        item.Customer_Type === 'Unmetered Customer' &&
+        currentQuarter > yearlyData[year][item.Discos].latestUnmeteredQuarter
+      ) {
         yearlyData[year][item.Discos].unmetered = item.Customer_Number;
         yearlyData[year][item.Discos].latestUnmeteredQuarter = currentQuarter;
       }
     });
 
     const years = Object.keys(yearlyData).sort();
-    const allData = years.map(year => {
+    const allData = years.map((year) => {
       const yearData = Object.values(yearlyData[year]);
       return {
         metered: yearData.reduce((sum, disco) => sum + disco.metered, 0),
-        unmetered: yearData.reduce((sum, disco) => sum + disco.unmetered, 0)
+        unmetered: yearData.reduce((sum, disco) => sum + disco.unmetered, 0),
       };
     });
 
     setCustomerData({
-      metered: allData.map(d => d.metered),
-      unmetered: allData.map(d => d.unmetered),
+      metered: allData.map((d) => d.metered),
+      unmetered: allData.map((d) => d.unmetered),
       years,
-      yearlyData
+      yearlyData,
     });
   };
 
@@ -86,12 +103,12 @@ const CustomerPopulation = () => {
       return {
         metered: customerData.metered,
         unmetered: customerData.unmetered,
-        years: customerData.years
+        years: customerData.years,
       };
     }
     const filteredMetered = [];
     const filteredUnmetered = [];
-    customerData.years.forEach(year => {
+    customerData.years.forEach((year) => {
       const discoData = customerData.yearlyData[year][disco];
       if (discoData) {
         filteredMetered.push(discoData.metered);
@@ -104,7 +121,7 @@ const CustomerPopulation = () => {
     return {
       metered: filteredMetered,
       unmetered: filteredUnmetered,
-      years: customerData.years
+      years: customerData.years,
     };
   };
 
@@ -143,7 +160,7 @@ const CustomerPopulation = () => {
       labels: {
         formatter: function (value) {
           return value.toLocaleString();
-        }
+        },
       },
       min: 0,
       forceNiceScale: true,
@@ -156,10 +173,10 @@ const CustomerPopulation = () => {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       fillSeriesColor: false,
       y: {
-        formatter: function(value) {
+        formatter: function (value) {
           return value.toLocaleString();
-        }
-      }
+        },
+      },
     },
   };
 
@@ -174,7 +191,9 @@ const CustomerPopulation = () => {
       return {
         metered: customerData.metered[customerData.metered.length - 1],
         unmetered: customerData.unmetered[customerData.unmetered.length - 1],
-        total: customerData.metered[customerData.metered.length - 1] + customerData.unmetered[customerData.unmetered.length - 1]
+        total:
+          customerData.metered[customerData.metered.length - 1] +
+          customerData.unmetered[customerData.unmetered.length - 1],
       };
     } else {
       const latestYear = customerData.years[customerData.years.length - 1];
@@ -182,7 +201,7 @@ const CustomerPopulation = () => {
       return {
         metered: latestData ? latestData.metered : 0,
         unmetered: latestData ? latestData.unmetered : 0,
-        total: latestData ? latestData.metered + latestData.unmetered : 0
+        total: latestData ? latestData.metered + latestData.unmetered : 0,
       };
     }
   };
@@ -200,31 +219,45 @@ const CustomerPopulation = () => {
   return (
     <DashboardCard title="">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={12}>
           <Typography variant="h4" gutterBottom>
             Total Customer Population
           </Typography>
           <Typography variant="body1" paragraph>
-            Nigeria has made strides in diversifying its energy sources by investing in renewable energy, particularly solar power. Initiatives promoting solar projects and off-grid solutions have gained traction, aiming to improve access to electricity, especially in rural areas.
+            Nigeria has made strides in diversifying its energy sources by investing in renewable
+            energy, particularly solar power. Initiatives promoting solar projects and off-grid
+            solutions have gained traction, aiming to improve access to electricity, especially in
+            rural areas.
           </Typography>
           <Typography variant="body1" paragraph>
-            Additionally, policy reforms have aimed to attract investments in the energy sector and promote privatization for increased efficiency. Despite these efforts, challenges persist, including inadequate infrastructure and ongoing issues with electricity access and reliability.
+            Additionally, policy reforms have aimed to attract investments in the energy sector and
+            promote privatization for increased efficiency. Despite these efforts, challenges
+            persist, including inadequate infrastructure and ongoing issues with electricity access
+            and reliability.
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <FormControl sx={{ minWidth: 120 }}>
-              <InputLabel id="disco-select-label" sx={{ color: theme.palette.mode === 'dark' ? 'white' : 'black' }}>Select Disco</InputLabel>
+              <InputLabel
+                id="disco-select-label"
+                sx={{ color: theme.palette.mode === 'dark' ? 'white' : 'black' }}
+              >
+                Select Disco
+              </InputLabel>
               <Select
                 labelId="disco-select-label"
                 id="disco-select"
                 value={selectedDisco}
                 label="Select Disco"
                 onChange={handleDiscoChange}
-                sx={{ 
+                sx={{
                   color: theme.palette.mode === 'dark' ? 'white' : 'black',
                   '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
+                    borderColor:
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.23)'
+                        : 'rgba(0, 0, 0, 0.23)',
                   },
                   '&:hover .MuiOutlinedInput-notchedOutline': {
                     borderColor: theme.palette.mode === 'dark' ? 'white' : 'black',
@@ -235,7 +268,9 @@ const CustomerPopulation = () => {
                 }}
               >
                 {discos.map((disco) => (
-                  <MenuItem key={disco} value={disco}>{disco}</MenuItem>
+                  <MenuItem key={disco} value={disco}>
+                    {disco}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>

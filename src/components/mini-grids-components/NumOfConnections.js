@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { 
-  CardContent, 
-  Typography, 
-  Grid, 
-  Stack, 
-  Box, 
+import {
+  CardContent,
+  Typography,
+  Grid,
+  Stack,
+  Box,
   Avatar,
   Select,
   MenuItem,
-  FormControl
+  FormControl,
 } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import { IconGridDots } from '@tabler/icons';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const NumOfConnections = () => {
   const theme = useTheme();
@@ -30,7 +31,7 @@ const NumOfConnections = () => {
     productiveData: [],
     publicData: [],
   });
-  
+
   const [selectedYear, setSelectedYear] = useState(null);
   const [yearlyData, setYearlyData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -52,10 +53,10 @@ const NumOfConnections = () => {
               residential: 0,
               productive: 0,
               public: 0,
-              year: curr.Year
+              year: curr.Year,
             };
           }
-          
+
           const type = curr.Type.toLowerCase();
           acc[curr.Year][type] = parseInt(curr.NumofConnections) || 0;
           return acc;
@@ -70,7 +71,7 @@ const NumOfConnections = () => {
         };
 
         const sortedYears = Object.keys(yearlyBreakdown).sort((a, b) => a - b);
-        sortedYears.forEach(year => {
+        sortedYears.forEach((year) => {
           processedData.years.push(year);
           processedData.commercialData.push(yearlyBreakdown[year].commercial);
           processedData.residentialData.push(yearlyBreakdown[year].residential);
@@ -126,7 +127,7 @@ const NumOfConnections = () => {
       labels: {
         formatter: function (value) {
           return value.toLocaleString();
-        }
+        },
       },
       min: 0,
       forceNiceScale: true,
@@ -139,10 +140,10 @@ const NumOfConnections = () => {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       fillSeriesColor: false,
       y: {
-        formatter: function(value) {
+        formatter: function (value) {
           return value.toLocaleString();
-        }
-      }
+        },
+      },
     },
   };
 
@@ -165,11 +166,12 @@ const NumOfConnections = () => {
     },
   ];
 
-  const totalConnections = selectedYear && yearlyData[selectedYear]
-    ? Object.entries(yearlyData[selectedYear])
-        .filter(([key]) => key !== 'year')
-        .reduce((acc, [_, value]) => acc + value, 0)
-    : 0;
+  const totalConnections =
+    selectedYear && yearlyData[selectedYear]
+      ? Object.entries(yearlyData[selectedYear])
+          .filter(([key]) => key !== 'year')
+          .reduce((acc, [_, value]) => acc + value, 0)
+      : 0;
 
   if (fetchError) {
     return (
@@ -195,31 +197,34 @@ const NumOfConnections = () => {
     <BlankCard>
       <CardContent sx={{ p: '25px' }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={12}>
             <Typography variant="h4" gutterBottom>
               Number of Connections
             </Typography>
             <Typography variant="body1" paragraph>
-              This chart displays the distribution of electrical connections across different sectors in Nigeria, showing the growth and composition of our customer base over time.
+              This chart displays the distribution of electrical connections across different
+              sectors in Nigeria, showing the growth and composition of our customer base over time.
             </Typography>
             <Typography variant="body1" paragraph>
-              The data demonstrates the expanding reach of our mini-grid network and the diverse range of consumers we serve across commercial, residential, productive, and public sectors.
+              The data demonstrates the expanding reach of our mini-grid network and the diverse
+              range of consumers we serve across commercial, residential, productive, and public
+              sectors.
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={12}>
             <Box sx={{ position: 'relative' }}>
-              <FormControl 
-                sx={{ 
-                  position: 'absolute', 
-                  right: 0, 
-                  top: 0, 
+              <FormControl
+                sx={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
                   width: '120px',
                   zIndex: 1,
                   backgroundColor: theme.palette.background.paper,
                   '& .MuiInputBase-root': {
                     height: '40px',
                     fontSize: '0.875rem',
-                  }
+                  },
                 }}
               >
                 <Select
@@ -230,7 +235,7 @@ const NumOfConnections = () => {
                   sx={{
                     '& .MuiSelect-select': {
                       paddingY: '8px',
-                    }
+                    },
                   }}
                 >
                   {chartData.years.map((year) => (
@@ -249,93 +254,113 @@ const NumOfConnections = () => {
                 />
               </Box>
             </Box>
-            <Box sx={{ mt: 2 }}>
-              <Stack direction="row" spacing={3} justifyContent="space-between">
-                <Stack direction="row" spacing={2} alignItems="center">
-                  <Box
-                    width={40}
-                    height={40}
-                    bgcolor="primary.light"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{ borderRadius: '8px' }}
-                  >
-                    <Typography color="primary" variant="h6" display="flex">
-                      <IconGridDots width={21} />
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="h3" fontWeight="700">
-                      {totalConnections.toLocaleString()}
-                    </Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Total Connections ({selectedYear})
-                    </Typography>
-                  </Box>
+            <ResponsiveEl>
+              <Box sx={{ mt: 2 }}>
+                <Stack direction="row" spacing={3} justifyContent="space-between">
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Box
+                      width={40}
+                      height={40}
+                      bgcolor="primary.light"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      sx={{ borderRadius: '8px' }}
+                    >
+                      <Typography color="primary" variant="h6" display="flex">
+                        <IconGridDots width={21} />
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="h3" fontWeight="700">
+                        {totalConnections.toLocaleString()}
+                      </Typography>
+                      <Typography variant="subtitle2" color="textSecondary">
+                        Total Connections ({selectedYear})
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <Avatar
+                      sx={{
+                        width: 9,
+                        mt: 1,
+                        height: 9,
+                        bgcolor: primary,
+                        svg: { display: 'none' },
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="h5">
+                        {selectedYear && yearlyData[selectedYear]
+                          ? yearlyData[selectedYear].commercial.toLocaleString()
+                          : '0'}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Commercial {selectedYear}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <Avatar
+                      sx={{
+                        width: 9,
+                        mt: 1,
+                        height: 9,
+                        bgcolor: secondary,
+                        svg: { display: 'none' },
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="h5">
+                        {selectedYear && yearlyData[selectedYear]
+                          ? yearlyData[selectedYear].residential.toLocaleString()
+                          : '0'}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Residential {selectedYear}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <Avatar
+                      sx={{ width: 9, mt: 1, height: 9, bgcolor: error, svg: { display: 'none' } }}
+                    />
+                    <Box>
+                      <Typography variant="h5">
+                        {selectedYear && yearlyData[selectedYear]
+                          ? yearlyData[selectedYear].productive.toLocaleString()
+                          : '0'}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Productive {selectedYear}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <Avatar
+                      sx={{
+                        width: 9,
+                        mt: 1,
+                        height: 9,
+                        bgcolor: warning,
+                        svg: { display: 'none' },
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="h5">
+                        {selectedYear && yearlyData[selectedYear]
+                          ? yearlyData[selectedYear].public.toLocaleString()
+                          : '0'}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Public {selectedYear}
+                      </Typography>
+                    </Box>
+                  </Stack>
                 </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Avatar
-                    sx={{ width: 9, mt: 1, height: 9, bgcolor: primary, svg: { display: 'none' } }}
-                  />
-                  <Box>
-                    <Typography variant="h5">
-                      {selectedYear && yearlyData[selectedYear]
-                        ? yearlyData[selectedYear].commercial.toLocaleString()
-                        : '0'}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Commercial {selectedYear}
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Avatar
-                    sx={{ width: 9, mt: 1, height: 9, bgcolor: secondary, svg: { display: 'none' } }}
-                  />
-                  <Box>
-                    <Typography variant="h5">
-                      {selectedYear && yearlyData[selectedYear]
-                        ? yearlyData[selectedYear].residential.toLocaleString()
-                        : '0'}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Residential {selectedYear}
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Avatar
-                    sx={{ width: 9, mt: 1, height: 9, bgcolor: error, svg: { display: 'none' } }}
-                  />
-                  <Box>
-                    <Typography variant="h5">
-                      {selectedYear && yearlyData[selectedYear]
-                        ? yearlyData[selectedYear].productive.toLocaleString()
-                        : '0'}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Productive {selectedYear}
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Avatar
-                    sx={{ width: 9, mt: 1, height: 9, bgcolor: warning, svg: { display: 'none' } }}
-                  />
-                  <Box>
-                    <Typography variant="h5">
-                      {selectedYear && yearlyData[selectedYear]
-                        ? yearlyData[selectedYear].public.toLocaleString()
-                        : '0'}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Public {selectedYear}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </Stack>
-            </Box>
+              </Box>
+            </ResponsiveEl>
           </Grid>
         </Grid>
       </CardContent>
