@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const ShareofAvailableCapacity = () => {
   const theme = useTheme();
@@ -186,13 +187,11 @@ const ShareofAvailableCapacity = () => {
           </Select>
         </FormControl>
       </Box>
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-        <div style={{ width: '900px' }}>
-          <Box mt={4} sx={{ height: '300px' }}>
-            <Chart options={options} series={chartData.series} type="bar" height="100%" />
-          </Box>
-        </div>
-      </div>
+      <ResponsiveEl>
+        <Box mt={4} sx={{ height: '300px' }}>
+          <Chart options={options} series={chartData.series} type="bar" height="100%" />
+        </Box>
+      </ResponsiveEl>
     </DashboardCard>
   );
 };

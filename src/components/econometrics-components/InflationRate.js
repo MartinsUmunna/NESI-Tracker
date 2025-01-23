@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Box, CircularProgress } from '@mui/material';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const InflationRate = () => {
   const theme = useTheme();
@@ -49,14 +50,14 @@ const InflationRate = () => {
           {
             offset: 0,
             color: theme.palette.primary.main,
-            opacity: 0.3
+            opacity: 0.3,
           },
           {
             offset: 100,
             color: theme.palette.primary.main,
-            opacity: 0
-          }
-        ]
+            opacity: 0,
+          },
+        ],
       },
     },
     stroke: {
@@ -66,7 +67,7 @@ const InflationRate = () => {
     },
     dataLabels: {
       enabled: true,
-      formatter: val => `${parseFloat(val).toFixed(1)}%`,
+      formatter: (val) => `${parseFloat(val).toFixed(1)}%`,
       position: 'top',
       offsetY: -10,
       style: {
@@ -101,7 +102,7 @@ const InflationRate = () => {
       },
     },
     xaxis: {
-      categories: inflationData.map(item => item.YEAR.toString()),
+      categories: inflationData.map((item) => item.YEAR.toString()),
       labels: { rotate: 0 },
       axisBorder: { show: false },
     },
@@ -109,15 +110,17 @@ const InflationRate = () => {
       theme: theme.palette.mode,
       fillSeriesColor: false,
       y: {
-        formatter: (val) => `${parseFloat(val).toFixed(2)}%`
+        formatter: (val) => `${parseFloat(val).toFixed(2)}%`,
       },
     },
   };
 
-  const series = [{
-    name: 'Inflation Rate',
-    data: inflationData.map(item => parseFloat(item.CORE_INFLATION_RATE))
-  }];
+  const series = [
+    {
+      name: 'Inflation Rate',
+      data: inflationData.map((item) => parseFloat(item.CORE_INFLATION_RATE)),
+    },
+  ];
 
   return (
     <EnergyComparisonAllStatesDashboardWidgetCard title="Inflation Rate">
@@ -125,16 +128,20 @@ const InflationRate = () => {
         <Grid item xs={12}>
           <Box className="rounded-bars" sx={{ position: 'relative', minHeight: 375 }}>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 375 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 375,
+                }}
+              >
                 <CircularProgress />
               </Box>
             ) : (
-              <Chart
-                options={chartOptions}
-                series={series}
-                type="area"
-                height="375"
-              />
+              <ResponsiveEl>
+                <Chart options={chartOptions} series={series} type="area" height="375" />
+              </ResponsiveEl>
             )}
           </Box>
         </Grid>

@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Switch, FormControlLabel, MenuItem, Button, Stack, Dialog, DialogTitle, 
-  DialogContent, DialogActions, FormControl, InputLabel, Select } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Switch,
+  FormControlLabel,
+  MenuItem,
+  Button,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+} from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,
@@ -29,8 +44,18 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const formatNumber = (value) => {
@@ -48,7 +73,7 @@ const GencoTableMarketInvoiceNBET = () => {
   const [compare, setCompare] = useState(false);
   const [isAnnual, setIsAnnual] = useState(true);
   const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
-  
+
   // New state for fuel type filter
   const [selectedFuelType, setSelectedFuelType] = useState('ALL');
   const [fuelTypes, setFuelTypes] = useState(['ALL']);
@@ -65,11 +90,11 @@ const GencoTableMarketInvoiceNBET = () => {
         return months.indexOf(a.Month_Name) - months.indexOf(b.Month_Name);
       });
       setData(sortedData);
-      
+
       // Extract unique years and fuel types
-      const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => b - a);
-      const uniqueFuelTypes = ['ALL', ...new Set(sortedData.map(item => item.Fuel_type))];
-      
+      const uniqueYears = [...new Set(sortedData.map((item) => item.Year))].sort((a, b) => b - a);
+      const uniqueFuelTypes = ['ALL', ...new Set(sortedData.map((item) => item.Fuel_type))];
+
       setYears(uniqueYears);
       setFuelTypes(uniqueFuelTypes);
       setSelectedYear(uniqueYears[0]);
@@ -82,19 +107,20 @@ const GencoTableMarketInvoiceNBET = () => {
     if (!data.length) return { categories: [], series: [] };
 
     // Filter data based on year and fuel type
-    const filteredData = data.filter(item => 
-      item.Year === selectedYear && 
-      (selectedFuelType === 'ALL' || item.Fuel_type === selectedFuelType)
+    const filteredData = data.filter(
+      (item) =>
+        item.Year === selectedYear &&
+        (selectedFuelType === 'ALL' || item.Fuel_type === selectedFuelType),
     );
 
     if (isAnnual) {
       // Process annual data
       const annualData = {};
-      filteredData.forEach(item => {
+      filteredData.forEach((item) => {
         if (!annualData[item.Genco]) {
           annualData[item.Genco] = {
             invoice: 0,
-            remittance: 0
+            remittance: 0,
           };
         }
         annualData[item.Genco].invoice += item.GencoNbetInvoice;
@@ -104,19 +130,21 @@ const GencoTableMarketInvoiceNBET = () => {
       const gencos = Object.keys(annualData);
       return {
         categories: gencos,
-        series: getSeriesData(gencos.map(genco => ({
-          invoice: annualData[genco].invoice,
-          remittance: annualData[genco].remittance
-        })))
+        series: getSeriesData(
+          gencos.map((genco) => ({
+            invoice: annualData[genco].invoice,
+            remittance: annualData[genco].remittance,
+          })),
+        ),
       };
     } else {
       // Process monthly data
       const monthlyData = {};
-      filteredData.forEach(item => {
+      filteredData.forEach((item) => {
         if (item.Month_Name === selectedMonth) {
           monthlyData[item.Genco] = {
             invoice: item.GencoNbetInvoice,
-            remittance: item.NBETPaymenttoGenco
+            remittance: item.NBETPaymenttoGenco,
           };
         }
       });
@@ -124,10 +152,12 @@ const GencoTableMarketInvoiceNBET = () => {
       const gencos = Object.keys(monthlyData);
       return {
         categories: gencos,
-        series: getSeriesData(gencos.map(genco => ({
-          invoice: monthlyData[genco].invoice,
-          remittance: monthlyData[genco].remittance
-        })))
+        series: getSeriesData(
+          gencos.map((genco) => ({
+            invoice: monthlyData[genco].invoice,
+            remittance: monthlyData[genco].remittance,
+          })),
+        ),
       };
     }
   };
@@ -137,18 +167,20 @@ const GencoTableMarketInvoiceNBET = () => {
       return [
         {
           name: 'Invoice',
-          data: data.map(item => item.invoice)
+          data: data.map((item) => item.invoice),
         },
         {
           name: 'Remittance',
-          data: data.map(item => item.remittance)
-        }
+          data: data.map((item) => item.remittance),
+        },
       ];
     } else {
-      return [{
-        name: view === 'invoice' ? 'Invoice' : 'Remittance',
-        data: data.map(item => view === 'invoice' ? item.invoice : item.remittance)
-      }];
+      return [
+        {
+          name: view === 'invoice' ? 'Invoice' : 'Remittance',
+          data: data.map((item) => (view === 'invoice' ? item.invoice : item.remittance)),
+        },
+      ];
     }
   };
 
@@ -165,7 +197,7 @@ const GencoTableMarketInvoiceNBET = () => {
   };
 
   const handleToggleCompare = () => {
-    setCompare(prev => !prev);
+    setCompare((prev) => !prev);
   };
 
   const handleToggleView = () => {
@@ -230,11 +262,11 @@ const GencoTableMarketInvoiceNBET = () => {
     grid: { show: false },
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-      y: { formatter: (val) => formatNumber(val) }
+      y: { formatter: (val) => formatNumber(val) },
     },
-    colors: compare ? 
-      [theme.palette.primary.main, theme.palette.secondary.main] : 
-      [view === 'invoice' ? theme.palette.primary.main : theme.palette.secondary.main],
+    colors: compare
+      ? [theme.palette.primary.main, theme.palette.secondary.main]
+      : [view === 'invoice' ? theme.palette.primary.main : theme.palette.secondary.main],
     legend: { show: compare },
   });
 
@@ -244,6 +276,7 @@ const GencoTableMarketInvoiceNBET = () => {
         <Typography variant="h6" align="center" gutterBottom>
           Genco NBET Remittances and Invoice
         </Typography>
+
         <Stack direction="row">
           <StyledButton
             variant={view === 'invoice' ? 'contained' : 'outlined'}
@@ -256,7 +289,7 @@ const GencoTableMarketInvoiceNBET = () => {
               color: view === 'invoice' ? 'white' : theme.palette.primary.main,
               '&:hover': {
                 backgroundColor: view === 'invoice' ? theme.palette.primary.dark : 'transparent',
-              }
+              },
             }}
           >
             Genco Invoice
@@ -271,8 +304,9 @@ const GencoTableMarketInvoiceNBET = () => {
               backgroundColor: view === 'remittance' ? theme.palette.secondary.main : 'transparent',
               color: view === 'remittance' ? 'white' : theme.palette.secondary.main,
               '&:hover': {
-                backgroundColor: view === 'remittance' ? theme.palette.secondary.dark : 'transparent',
-              }
+                backgroundColor:
+                  view === 'remittance' ? theme.palette.secondary.dark : 'transparent',
+              },
             }}
           >
             Genco Remittance
@@ -288,7 +322,9 @@ const GencoTableMarketInvoiceNBET = () => {
               sx={{ minWidth: 100 }}
             >
               {years.map((year) => (
-                <MenuItem key={year} value={year}>{year}</MenuItem>
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -302,7 +338,9 @@ const GencoTableMarketInvoiceNBET = () => {
                 sx={{ minWidth: 120 }}
               >
                 {months.map((month) => (
-                  <MenuItem key={month} value={month}>{month}</MenuItem>
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -316,39 +354,34 @@ const GencoTableMarketInvoiceNBET = () => {
               sx={{ minWidth: 120 }}
             >
               {fuelTypes.map((fuelType) => (
-                <MenuItem key={fuelType} value={fuelType}>{fuelType}</MenuItem>
+                <MenuItem key={fuelType} value={fuelType}>
+                  {fuelType}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControlLabel
-            control={
-              <Switch
-                checked={isAnnual}
-                onChange={handleToggleView}
-                name="viewToggle"
-              />
-            }
+            control={<Switch checked={isAnnual} onChange={handleToggleView} name="viewToggle" />}
             label={isAnnual ? 'Annual' : 'Monthly'}
           />
           <FormControlLabel
             control={
-              <Switch
-                checked={compare}
-                onChange={handleToggleCompare}
-                name="compareToggle"
-              />
+              <Switch checked={compare} onChange={handleToggleCompare} name="compareToggle" />
             }
             label="Compare"
           />
         </Stack>
       </Stack>
 
-      <ReactApexChart
-        options={getChartOptions()}
-        series={chartData.series}
-        type="bar"
-        height={350}
-      />
+      <ResponsiveEl>
+        {' '}
+        <ReactApexChart
+          options={getChartOptions()}
+          series={chartData.series}
+          type="bar"
+          height={350}
+        />
+      </ResponsiveEl>
 
       <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
         <DialogTitle>Subscribe to EMRC</DialogTitle>

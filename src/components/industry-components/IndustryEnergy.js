@@ -8,6 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const IndustryEnergy = () => {
   const theme = useTheme();
@@ -347,16 +348,14 @@ const IndustryEnergy = () => {
           {isLoading ? (
             <Typography>Loading...</Typography>
           ) : (
-            <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-              <div style={{ width: '900px' }}>
-                <Chart
-                  options={chartOptions}
-                  series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
-                  type="area"
-                  height="345px"
-                />
-              </div>
-            </div>
+            <ResponsiveEl>
+              <Chart
+                options={chartOptions}
+                series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
+                type="area"
+                height="345px"
+              />
+            </ResponsiveEl>
           )}
         </Grid>
       </Grid>
