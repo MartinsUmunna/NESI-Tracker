@@ -63,7 +63,7 @@ const GlobalEnergyTrends = () => {
         </Typography>
         <Grid container spacing={3}>
           {energyCards.map((card, index) => (
-            <Grid item sm={12} md={4} key={index}>
+            <Grid item sm={12} md={6} lg={4} key={index}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardMedia
                   component="img"

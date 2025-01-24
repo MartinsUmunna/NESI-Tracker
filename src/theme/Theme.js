@@ -36,7 +36,7 @@ export const BuildTheme = (config = {}) => {
         values: {
           xs: 0,
           sm: 350,
-          md: 900,
+          md: 800,
           lg: 1000,
         },
       },
