@@ -3,7 +3,7 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import { Grid, Typography, TextField, MenuItem, Box } from '@mui/material';
+import { Grid, Typography, TextField, MenuItem, Box, Button } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -49,7 +49,7 @@ const IndustryEnergy = () => {
     'TRANS AMADI': 'Trans Amadi',
     'Taopex': 'Taopex',
     'Aes': 'Aes',
-    'Asco':'Asco',
+    'Asco': 'Asco',
     'OMOTOSHO NIPP (GAS)': 'Omotosho NIPP',
     'ALAOJI NIPP (GAS)': 'Alaoji NIPP',
     'AFAM VI (GAS/STEAM)': 'Afam VI',
@@ -62,17 +62,17 @@ const IndustryEnergy = () => {
     'KAINJI (HYDRO)': 'Kainji',
     'OKPAI (GAS/STEAM)': 'Okpai',
     'GEREGU (GAS)': 'Geregu',
-    'AFAM III FAST POWER' : 'AFAM III FAST POWER',
+    'AFAM III FAST POWER': 'AFAM III FAST POWER',
     'TRANS AFAM POWER': 'TRANS AFAM POWER'
   };
 
-  // Modification: Add a function to fetch gencos and separate from initial useEffect
+  // Function to fetch gencos
   const fetchGencoList = async () => {
     try {
       const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
-        params: { 
-          startDate: selectedDate.toISOString().split('T')[0], 
-          endDate: selectedDate.toISOString().split('T')[0] 
+        params: {
+          startDate: selectedDate.toISOString().split('T')[0],
+          endDate: selectedDate.toISOString().split('T')[0]
         }
       });
       const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
@@ -107,7 +107,7 @@ const IndustryEnergy = () => {
     initializeData();
   }, []);
 
-  // Modify existing useEffect to fetch data when date or genco changes
+  // Fetch data when date or genco changes
   useEffect(() => {
     if (selectedDate) {
       fetchGencoList();
@@ -127,13 +127,13 @@ const IndustryEnergy = () => {
 
   const matchGenco = (plant, selectedGencoName) => {
     if (selectedGencoName === 'All') return true;
-    
+
     const mappedGencoName = gencoMapping[selectedGencoName];
-    
+
     if (mappedGencoName) {
       return plant.toLowerCase() === mappedGencoName.toLowerCase();
     }
-    
+
     const plantName = plant.toLowerCase();
     const selectedName = selectedGencoName.toLowerCase();
     return plantName.includes(selectedName) || selectedName.includes(plantName);
@@ -146,10 +146,10 @@ const IndustryEnergy = () => {
     const selectedMonth = selectedDate.toLocaleString('en-US', { month: 'long' });
 
     const yearData = capacityData.filter(item => item.Year === selectedYear);
-    
+
     if (selectedGenco === 'All') {
       const installedCapacity = yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
-      
+
       const uniqueAvailableCapacities = new Set();
       yearData.forEach(item => {
         uniqueAvailableCapacities.add(parseFloat(item.TotalAvailableCapacity));
@@ -164,8 +164,8 @@ const IndustryEnergy = () => {
         </Typography>
       );
     } else {
-      const gencoData = yearData.find(item => 
-        matchGenco(item.Plant, selectedGenco) && 
+      const gencoData = yearData.find(item =>
+        matchGenco(item.Plant, selectedGenco) &&
         item.Month_Name === selectedMonth
       );
 
@@ -180,7 +180,7 @@ const IndustryEnergy = () => {
           </Typography>
         );
       }
-      
+
       const anyGencoData = yearData.find(item => matchGenco(item.Plant, selectedGenco));
       if (anyGencoData) {
         const installedCapacity = parseFloat(anyGencoData.InstalledCapacity);
@@ -201,14 +201,14 @@ const IndustryEnergy = () => {
     try {
       const startDate = selectedDate.toISOString().split('T')[0];
       const genco = selectedGenco !== 'All' ? selectedGenco : undefined;
-  
+
       const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
         params: { startDate, endDate: startDate, genco }
       });
-  
+
       const data = response.data.data;
       setData(data);
-  
+
       processData(data);
     } catch (error) {
       // Removed console.error
@@ -232,6 +232,37 @@ const IndustryEnergy = () => {
 
     const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
     setAverageEnergy((totalEnergy / 24).toFixed(2));
+  };
+
+  const handlePreviousDay = () => {
+    const previousDay = new Date(selectedDate);
+    previousDay.setDate(previousDay.getDate() - 1);
+    setSelectedDate(previousDay);
+  };
+
+  const handleNextDay = () => {
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setSelectedDate(nextDay);
+  };
+
+  // Function to check if the selected date is yesterday
+  const isYesterday = (date) => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date.toDateString() === yesterday.toDateString();
+  };
+
+  // Function to check if the selected date is before yesterday
+  const isBeforeYesterday = (date) => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date < yesterday;
+  };
+
+  const getPeakHour = () => {
+    let maxEnergy = Math.max(...processedData);
+    return processedData.indexOf(maxEnergy);
   };
 
   const chartOptions = {
@@ -297,7 +328,7 @@ const IndustryEnergy = () => {
     yaxis: {
       tickAmount: 5,
       labels: {
-        formatter: (val) => `${val.toFixed(2)} MW`,
+        formatter: (val) => `${val.toFixed(0)} MW`,
         style: {
           colors: theme.palette.mode === 'dark' ? '#fff' : '#adb0bb',
         },
@@ -306,6 +337,28 @@ const IndustryEnergy = () => {
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
     },
+    annotations: {
+      points: [{
+        x: getPeakHour(),
+        y: processedData[getPeakHour()],
+        marker: {
+          size: 8,
+          fillColor: '#ff0000',
+          strokeColor: '#ffffff',
+          strokeWidth: 2,
+          radius: 2,
+        },
+        label: {
+          borderColor: '#ff0000',
+          offsetY: 0,
+          style: {
+            color: '#fff',
+            background: '#ff0000',
+          },
+          text: `Peak: ${processedData[getPeakHour()].toFixed(0)} MW`,
+        }
+      }]
+    }
   };
 
   return (
@@ -313,14 +366,30 @@ const IndustryEnergy = () => {
       {getCapacityInfo()}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Select Date"
-            value={selectedDate}
-            onChange={(newValue) => setSelectedDate(newValue)}
-            renderInput={(params) => <TextField {...params} sx={{ width: 200, mr: 2 }} />}
-            maxDate={latestDate}
-            minDate={new Date('2018-01-01')}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              onClick={handlePreviousDay}
+              sx={{ mr: 1 }}
+              disabled={!isBeforeYesterday(selectedDate)} // Disable if selected date is yesterday or before
+            >
+              Previous Day
+            </Button>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              onChange={(newValue) => setSelectedDate(newValue)}
+              renderInput={(params) => <TextField {...params} sx={{ width: 200, mr: 2 }} />}
+              maxDate={latestDate}
+              minDate={new Date('2018-01-01')}
+            />
+            <Button
+              onClick={handleNextDay}
+              sx={{ ml: 1 }}
+              disabled={isYesterday(selectedDate)} // Disable if selected date is yesterday
+            >
+              Next Day
+            </Button>
+          </Box>
         </LocalizationProvider>
         <TextField
           select

@@ -63,7 +63,7 @@ const AverageCollectionEfficiency = () => {
             year: parseInt(year),
             efficiency: (data.collected / data.billed) * 100
           }))
-          .filter(item => item.year <= 2023) // Exclude 2024
+          
           .sort((a, b) => b.year - a.year);
 
         // Get latest (2023) and previous year data

@@ -28,6 +28,7 @@ import { useTheme } from '@mui/material/styles';
 import { IconSearch, IconFilter } from '@tabler/icons';
 import ReactApexChart from 'react-apexcharts';
 
+import AbaLogo from 'src/assets/images/Genco_Logos/Aba_Logo.png';
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
 import PhLogo from 'src/assets/images/Genco_Logos/Ph_Logo.jpg';

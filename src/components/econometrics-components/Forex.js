@@ -32,7 +32,7 @@ const Forex = () => {
   };
 
   const years = useMemo(() => {
-    return [...new Set(data.map(item => item.Year))].sort((a, b) => b - a); // Sort in descending order
+    return [...new Set(data.map(item => item.Year))].sort((a, b) => a - b); // Sort in descending order
   }, [data]);
 
   const processedData = useMemo(() => {

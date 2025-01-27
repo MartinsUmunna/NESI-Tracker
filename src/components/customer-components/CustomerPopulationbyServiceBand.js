@@ -23,6 +23,9 @@ const CustomerPopulationbyServiceBand = () => {
   const [openSubscribeDialog, setOpenSubscribeDialog] = useState(false);
   const [isAnnual, setIsAnnual] = useState(true);
 
+  // Define the desired order of notations
+  const notationOrder = ['Band A', 'Band B', 'Band C', 'Band D', 'Band E', 'Lifeline'];
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,7 +39,10 @@ const CustomerPopulationbyServiceBand = () => {
       const uniqueYears = [...new Set(data.map(item => item.YEAR))].sort((a, b) => b - a);
       const uniqueDiscos = [...new Set(data.map(item => item.Disco))];
       const uniqueMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      const uniqueNotations = [...new Set(data.map(item => item.Notation))];
+      
+      // Sort notations according to the predefined order
+      const uniqueNotations = [...new Set(data.map(item => item.Notation))]
+        .sort((a, b) => notationOrder.indexOf(a) - notationOrder.indexOf(b));
 
       setYears(uniqueYears);
       setDiscos(uniqueDiscos);
@@ -73,7 +79,7 @@ const CustomerPopulationbyServiceBand = () => {
       const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
       chartData = [{
         name: selectedDisco,
-        data: notations.map(notation => {
+        data: notationOrder.map(notation => {
           const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === latestMonth);
           return notationData ? notationData['Total Customers'] : 0;
         })
@@ -81,7 +87,7 @@ const CustomerPopulationbyServiceBand = () => {
     } else {
       chartData = [{
         name: selectedDisco,
-        data: notations.map(notation => {
+        data: notationOrder.map(notation => {
           const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === selectedMonth);
           return notationData ? notationData['Total Customers'] : 0;
         })
@@ -122,7 +128,7 @@ const CustomerPopulationbyServiceBand = () => {
       }
     },
     xaxis: {
-      categories: notations,
+      categories: notationOrder,
       axisBorder: { show: false },
     },
     tooltip: {
@@ -137,19 +143,16 @@ const CustomerPopulationbyServiceBand = () => {
   const seriescolumnchart = processChartData();
 
   const getTotalCustomers = () => {
-    const filteredData = filterData(); // This ensures the data is filtered according to the selected year and disco.
+    const filteredData = filterData();
     const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
   
     if (isAnnual) {
-      // Only consider data for the latest month in the selected year for annual view
       const latestMonthData = filteredData.filter(item => item.MonthName === latestMonth);
       return latestMonthData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     } else {
-      // Consider all data for the selected month in monthly view
       return filteredData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     }
   };
-  
 
   const totalCustomers = getTotalCustomers();
 
