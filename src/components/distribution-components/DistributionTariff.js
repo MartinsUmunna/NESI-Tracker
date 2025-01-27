@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import { Grid, Typography, CircularProgress } from '@mui/material';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const DistributionTariff = () => {
   const theme = useTheme();
@@ -75,26 +76,26 @@ const DistributionTariff = () => {
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return "₦" + val.toFixed(0) + "/kWh";
+        return '₦' + val.toFixed(0) + '/kWh';
       },
       style: {
         fontSize: '12px',
-        colors: [theme.palette.mode === 'dark' ? '#fff' : '#000']
+        colors: [theme.palette.mode === 'dark' ? '#fff' : '#000'],
       },
       offsetY: -20,
-      position: 'top', 
+      position: 'top',
     },
     colors: [theme.palette.primary.main],
-    
+
     xaxis: {
-      categories: chartData.map(item => item.Year.toString()),
+      categories: chartData.map((item) => item.Year.toString()),
       axisBorder: {
         show: false,
       },
     },
     yaxis: {
       title: {
-        text: '₦/kWh'
+        text: '₦/kWh',
       },
       labels: {
         formatter: (val) => `₦${val.toFixed(0)}`,
@@ -102,34 +103,33 @@ const DistributionTariff = () => {
           colors: theme.palette.mode === 'dark' ? '#fff' : '#adb0bb',
         },
       },
-      tickAmount: 2, 
+      tickAmount: 2,
     },
     grid: {
-      show: false, 
+      show: false,
     },
     tooltip: {
       y: {
-        formatter: (val) => `₦${val.toFixed(2)}/kWh`
+        formatter: (val) => `₦${val.toFixed(2)}/kWh`,
       },
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
     },
   };
 
-  const series = [{
-    name: 'Average Tariff',
-    data: chartData.map(item => item.AVGTariff)
-  }];
+  const series = [
+    {
+      name: 'Average Tariff',
+      data: chartData.map((item) => item.AVGTariff),
+    },
+  ];
 
   return (
     <EnergyComparisonAllStatesDashboardWidgetCard title="Average Tariff">
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Chart
-            options={chartOptions}
-            series={series}
-            type="bar"
-            height="275px"
-          />
+          <ResponsiveEl>
+            <Chart options={chartOptions} series={series} type="bar" height="275px" />
+          </ResponsiveEl>
         </Grid>
       </Grid>
     </EnergyComparisonAllStatesDashboardWidgetCard>

@@ -2,9 +2,25 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, styled, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import {
+  Grid,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Switch,
+  FormControlLabel,
+  styled,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from '@mui/material';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 120,
@@ -42,20 +58,33 @@ const Forex = () => {
     if (viewMode === 'yearly') {
       return assets.map((asset, index) => ({
         name: assetNames[index],
-        data: years.map(year => {
-          const yearData = data.filter(item => item.Year === year);
+        data: years.map((year) => {
+          const yearData = data.filter((item) => item.Year === year);
           const average = yearData.reduce((sum, item) => sum + item[asset], 0) / yearData.length;
           return parseFloat(average.toFixed(2));
-        })
+        }),
       }));
     } else {
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
       return assets.map((asset, index) => ({
         name: assetNames[index],
-        data: months.map(month => {
-          const monthData = data.find(item => item.Year === selectedYear && item.Month === month);
+        data: months.map((month) => {
+          const monthData = data.find((item) => item.Year === selectedYear && item.Month === month);
           return monthData ? parseFloat(monthData[asset].toFixed(2)) : null;
-        })
+        }),
       }));
     }
   }, [data, selectedYear, viewMode, years]);
@@ -70,7 +99,12 @@ const Forex = () => {
       },
       height: 370,
     },
-    colors: [theme.palette.primary.main, theme.palette.secondary.main, theme.palette.error.main, theme.palette.warning.main],
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.secondary.main,
+      theme.palette.error.main,
+      theme.palette.warning.main,
+    ],
     plotOptions: {
       bar: {
         horizontal: false,
@@ -99,14 +133,15 @@ const Forex = () => {
       },
     },
     xaxis: {
-      categories: viewMode === 'yearly'
-        ? years
-        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      categories:
+        viewMode === 'yearly'
+          ? years
+          : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     },
     tooltip: {
       theme: theme.palette.mode,
       y: {
-        formatter: (val) => `₦${val.toFixed(2)}`
+        formatter: (val) => `₦${val.toFixed(2)}`,
       },
     },
   };
@@ -146,8 +181,10 @@ const Forex = () => {
               onChange={handleYearChange}
               disabled={viewMode === 'yearly'}
             >
-              {years.map(year => (
-                <MenuItem key={year} value={year}>{year}</MenuItem>
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
               ))}
             </Select>
           </StyledFormControl>
@@ -166,21 +203,17 @@ const Forex = () => {
         </Grid>
         <Grid item xs={12}>
           <Box className="rounded-bars">
-            <Chart
-              options={chartOptions}
-              series={processedData}
-              type="bar"
-              height="400"
-            />
+            <ResponsiveEl>
+              <Chart options={chartOptions} series={processedData} type="bar" height="400" />
+            </ResponsiveEl>
+            s
           </Box>
         </Grid>
       </Grid>
 
       <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
         <DialogTitle>Subscribe to EMRC Services</DialogTitle>
-        <DialogContent>
-          To access monthly data, please subscribe to EMRC Services.
-        </DialogContent>
+        <DialogContent>To access monthly data, please subscribe to EMRC Services.</DialogContent>
         <DialogActions>
           <Button onClick={handleCloseSubscribeDialog}>Cancel</Button>
           <Button onClick={handleSubscribe} color="primary">
