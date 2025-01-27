@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { CardContent, Typography, Grid, Slider, Stack, Box } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import API_URL from '../../config/apiconfig';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const WorldEnergyMix = () => {
   const theme = useTheme();
@@ -18,7 +19,7 @@ const WorldEnergyMix = () => {
         setData(jsonData);
 
         // Set initial year range to last 5 years
-        const years = [...new Set(jsonData.map(item => item.Year))].sort((a, b) => a - b);
+        const years = [...new Set(jsonData.map((item) => item.Year))].sort((a, b) => a - b);
         const lastYear = years[years.length - 1];
         setYearRange([lastYear - 4, lastYear]);
       } catch (error) {
@@ -38,15 +39,15 @@ const WorldEnergyMix = () => {
   }, [data, yearRange]);
 
   const energySources = useMemo(() => {
-    return [...new Set(data.map(item => item.Energy_Source))];
+    return [...new Set(data.map((item) => item.Energy_Source))];
   }, [data]);
 
   const seriesBarChart = useMemo(() => {
-    return energySources.map(source => ({
+    return energySources.map((source) => ({
       name: source,
       data: filteredData
-        .filter(item => item.Energy_Source === source)
-        .map(({ Year, Energy_TWh }) => [Year, Math.round(Energy_TWh)])
+        .filter((item) => item.Energy_Source === source)
+        .map(({ Year, Energy_TWh }) => [Year, Math.round(Energy_TWh)]),
     }));
   }, [filteredData, energySources]);
 
@@ -93,7 +94,7 @@ const WorldEnergyMix = () => {
     },
     xaxis: {
       type: 'numeric',
-      categories: [...new Set(filteredData.map(item => item.Year))],
+      categories: [...new Set(filteredData.map((item) => item.Year))],
       labels: {
         formatter: function (val) {
           return `${parseInt(val)}`;
@@ -105,7 +106,7 @@ const WorldEnergyMix = () => {
         text: 'Energy (TWh)',
       },
       labels: {
-        formatter: val => `${Math.round(val)}`,
+        formatter: (val) => `${Math.round(val)}`,
       },
     },
     tooltip: {
@@ -133,11 +134,17 @@ const WorldEnergyMix = () => {
               value={yearRange}
               onChange={handleChangeYearRange}
               valueLabelDisplay="auto"
-              min={Math.min(...data.map(item => item.Year))}
-              max={Math.max(...data.map(item => item.Year))}
+              min={Math.min(...data.map((item) => item.Year))}
+              max={Math.max(...data.map((item) => item.Year))}
               marks={[
-                { value: Math.min(...data.map(item => item.Year)), label: Math.min(...data.map(item => item.Year)) },
-                { value: Math.max(...data.map(item => item.Year)), label: Math.max(...data.map(item => item.Year)) },
+                {
+                  value: Math.min(...data.map((item) => item.Year)),
+                  label: Math.min(...data.map((item) => item.Year)),
+                },
+                {
+                  value: Math.max(...data.map((item) => item.Year)),
+                  label: Math.max(...data.map((item) => item.Year)),
+                },
               ]}
             />
           </Box>
@@ -145,12 +152,15 @@ const WorldEnergyMix = () => {
         <Grid container spacing={0} mt={2}>
           <Grid item xs={12}>
             <Box mt={2}>
-              <Chart
-                options={optionsBarChart}
-                series={seriesBarChart}
-                type="bar"
-                height="300px"
-              />
+              <ResponsiveEl>
+                {' '}
+                <Chart
+                  options={optionsBarChart}
+                  series={seriesBarChart}
+                  type="bar"
+                  height="300px"
+                />
+              </ResponsiveEl>
             </Box>
           </Grid>
         </Grid>
