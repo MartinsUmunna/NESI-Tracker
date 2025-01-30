@@ -1,28 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import {
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  Box,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControlLabel,
-  Switch,
-} from '@mui/material';
+import { Grid, Stack, Typography, Button, Box, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, Switch } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import axios from 'axios';
 import API_URL from '../../config/apiconfig';
-import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const CustomerPopulationbyServiceBand = () => {
   const theme = useTheme();
@@ -56,10 +39,7 @@ const CustomerPopulationbyServiceBand = () => {
       const uniqueYears = [...new Set(data.map(item => item.YEAR))].sort((a, b) => b - a);
       const uniqueDiscos = [...new Set(data.map(item => item.Disco))];
       const uniqueMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      
-      // Sort notations according to the predefined order
-      const uniqueNotations = [...new Set(data.map(item => item.Notation))]
-        .sort((a, b) => notationOrder.indexOf(a) - notationOrder.indexOf(b));
+      const uniqueNotations = [...new Set(data.map(item => item.Notation))];
 
       setYears(uniqueYears);
       setDiscos(uniqueDiscos);
@@ -73,20 +53,16 @@ const CustomerPopulationbyServiceBand = () => {
   };
 
   const getLatestAvailableMonth = (data, year, disco) => {
-    const yearData = data.filter(
-      (item) => item.YEAR.toString() === year.toString() && item.Disco === disco,
-    );
-    const availableMonths = [...new Set(yearData.map((item) => item.MonthName))];
-    return months.filter((month) => availableMonths.includes(month)).pop() || 'December';
+    const yearData = data.filter(item => item.YEAR.toString() === year.toString() && item.Disco === disco);
+    const availableMonths = [...new Set(yearData.map(item => item.MonthName))];
+    return months.filter(month => availableMonths.includes(month)).pop() || 'December';
   };
 
   const filterData = () => {
-    let filteredData = customerData.filter(
-      (item) => item.YEAR.toString() === selectedYear && item.Disco === selectedDisco,
-    );
+    let filteredData = customerData.filter(item => item.YEAR.toString() === selectedYear && item.Disco === selectedDisco);
 
     if (!isAnnual && isSubscribed) {
-      filteredData = filteredData.filter((item) => item.MonthName === selectedMonth);
+      filteredData = filteredData.filter(item => item.MonthName === selectedMonth);
     }
 
     return filteredData;
@@ -100,7 +76,7 @@ const CustomerPopulationbyServiceBand = () => {
       const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
       chartData = [{
         name: selectedDisco,
-        data: notationOrder.map(notation => {
+        data: notations.map(notation => {
           const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === latestMonth);
           return notationData ? notationData['Total Customers'] : 0;
         })
@@ -108,7 +84,7 @@ const CustomerPopulationbyServiceBand = () => {
     } else {
       chartData = [{
         name: selectedDisco,
-        data: notationOrder.map(notation => {
+        data: notations.map(notation => {
           const notationData = filteredData.find(item => item.Notation === notation && item.MonthName === selectedMonth);
           return notationData ? notationData['Total Customers'] : 0;
         })
@@ -142,11 +118,11 @@ const CustomerPopulationbyServiceBand = () => {
     grid: {
       show: false,
     },
-    yaxis: {
+    yaxis: { 
       title: { text: 'Customers' },
       labels: {
-        formatter: (value) => value.toLocaleString(),
-      },
+        formatter: (value) => value.toLocaleString()
+      }
     },
     xaxis: {
       categories: notationOrder,
@@ -166,14 +142,16 @@ const CustomerPopulationbyServiceBand = () => {
   const getTotalCustomers = () => {
     const filteredData = filterData();
     const latestMonth = getLatestAvailableMonth(customerData, selectedYear, selectedDisco);
-
+  
     if (isAnnual) {
+      // Only consider data for the latest month in the selected year for annual view
       const latestMonthData = filteredData.filter(item => item.MonthName === latestMonth);
       return latestMonthData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     } else {
       return filteredData.reduce((sum, item) => sum + Number(item['Total Customers']), 0);
     }
   };
+  
 
   const totalCustomers = getTotalCustomers();
 
@@ -202,7 +180,7 @@ const CustomerPopulationbyServiceBand = () => {
   return (
     <DashboardCard title="">
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={8}>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
               <FormControl fullWidth>
@@ -213,15 +191,11 @@ const CustomerPopulationbyServiceBand = () => {
                   label="Year"
                   onChange={(e) => {
                     setSelectedYear(e.target.value);
-                    setSelectedMonth(
-                      getLatestAvailableMonth(customerData, e.target.value, selectedDisco),
-                    );
+                    setSelectedMonth(getLatestAvailableMonth(customerData, e.target.value, selectedDisco));
                   }}
                 >
                   {years.map((year) => (
-                    <MenuItem key={year} value={year.toString()}>
-                      {year}
-                    </MenuItem>
+                    <MenuItem key={year} value={year.toString()}>{year}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -235,15 +209,11 @@ const CustomerPopulationbyServiceBand = () => {
                   label="Disco"
                   onChange={(e) => {
                     setSelectedDisco(e.target.value);
-                    setSelectedMonth(
-                      getLatestAvailableMonth(customerData, selectedYear, e.target.value),
-                    );
+                    setSelectedMonth(getLatestAvailableMonth(customerData, selectedYear, e.target.value));
                   }}
                 >
                   {discos.map((disco) => (
-                    <MenuItem key={disco} value={disco}>
-                      {disco}
-                    </MenuItem>
+                    <MenuItem key={disco} value={disco}>{disco}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -259,9 +229,7 @@ const CustomerPopulationbyServiceBand = () => {
                     onChange={(e) => setSelectedMonth(e.target.value)}
                   >
                     {months.map((month) => (
-                      <MenuItem key={month} value={month}>
-                        {month}
-                      </MenuItem>
+                      <MenuItem key={month} value={month}>{month}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -269,14 +237,7 @@ const CustomerPopulationbyServiceBand = () => {
             )}
             <Grid item xs={3}>
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={isAnnual}
-                    onChange={handleToggle}
-                    name="toggleView"
-                    color="primary"
-                  />
-                }
+                control={<Switch checked={isAnnual} onChange={handleToggle} name="toggleView" color="primary" />}
                 label={isAnnual ? 'Annual' : 'Monthly'}
               />
             </Grid>
@@ -308,40 +269,24 @@ const CustomerPopulationbyServiceBand = () => {
                   {totalCustomers.toLocaleString()}
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Total Customers for {selectedDisco} in{' '}
-                  {isAnnual
-                    ? `${selectedYear} (${getLatestAvailableMonth(
-                        customerData,
-                        selectedYear,
-                        selectedDisco,
-                      )})`
-                    : `${selectedMonth} ${selectedYear}`}
+                  Total Customers for {selectedDisco} in {isAnnual ? `${selectedYear} (${getLatestAvailableMonth(customerData, selectedYear, selectedDisco)})` : `${selectedMonth} ${selectedYear}`}
                 </Typography>
               </Box>
             </Stack>
           </Stack>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={4}>
           <Typography variant="h4" gutterBottom>
             Customer Population by Service Band
           </Typography>
           <Typography variant="body1" paragraph>
-            The distribution of customers across different service bands provides insights into the
-            energy consumption patterns and service levels. This data helps in understanding the
-            demand distribution and planning for service improvements accordingly.
+            The distribution of customers across different service bands provides insights into the energy consumption patterns and service levels. This data helps in understanding the demand distribution and planning for service improvements accordingly.
           </Typography>
           <Typography variant="body1" paragraph>
-            By analyzing these metrics, utilities can better manage resources and improve service
-            quality. This information is crucial for optimizing energy distribution and enhancing
-            overall operational efficiency.
+            By analyzing these metrics, utilities can better manage resources and improve service quality. This information is crucial for optimizing energy distribution and enhancing overall operational efficiency.
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ width: '200px' }}
-              onClick={handleViewFullReport}
-            >
+            <Button color="primary" variant="contained" sx={{ width: '200px' }} onClick={handleViewFullReport}>
               View Full Report
             </Button>
           </Box>

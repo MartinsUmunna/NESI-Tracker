@@ -8,7 +8,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import API_URL from '../../config/apiconfig';
-import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const IndustryEnergy = () => {
   const theme = useTheme();
@@ -51,6 +50,9 @@ const IndustryEnergy = () => {
     'Taopex': 'Taopex',
     'Aes': 'Aes',
     'Asco': 'Asco',
+    'Taopex': 'Taopex',
+    'Aes': 'Aes',
+    'Asco':'Asco',
     'OMOTOSHO NIPP (GAS)': 'Omotosho NIPP',
     'ALAOJI NIPP (GAS)': 'Alaoji NIPP',
     'AFAM VI (GAS/STEAM)': 'Afam VI',
@@ -76,7 +78,7 @@ const IndustryEnergy = () => {
           endDate: selectedDate.toISOString().split('T')[0]
         }
       });
-      const uniqueGencos = [...new Set(response.data.data.map((item) => item.Gencos))];
+      const uniqueGencos = [...new Set(response.data.data.map(item => item.Gencos))];
       const completeGencoList = ['All', ...uniqueGencos];
       setFullGencoList(completeGencoList);
       setGencos(completeGencoList);
@@ -155,18 +157,15 @@ const IndustryEnergy = () => {
       const installedCapacity = yearData.length > 0 ? parseFloat(yearData[0].TotalInstalledCapacity) : 0;
 
       const uniqueAvailableCapacities = new Set();
-      yearData.forEach((item) => {
+      yearData.forEach(item => {
         uniqueAvailableCapacities.add(parseFloat(item.TotalAvailableCapacity));
       });
-      const availableCapacity = Array.from(uniqueAvailableCapacities).reduce(
-        (sum, capacity) => sum + capacity,
-        0,
-      );
+      const availableCapacity = Array.from(uniqueAvailableCapacities)
+        .reduce((sum, capacity) => sum + capacity, 0);
 
       return (
         <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-          Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
-          <br />
+          Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
           Available Capacity ({selectedYear}) - {availableCapacity.toFixed(2)} MW
         </Typography>
       );
@@ -182,10 +181,8 @@ const IndustryEnergy = () => {
 
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
-            <br />
-            Available Capacity ({selectedMonth} {selectedYear}) - {avgAvailableCapacity.toFixed(2)}{' '}
-            MW
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
+            Available Capacity ({selectedMonth} {selectedYear}) - {avgAvailableCapacity.toFixed(2)} MW
           </Typography>
         );
       }
@@ -196,8 +193,7 @@ const IndustryEnergy = () => {
 
         return (
           <Typography variant="body1" sx={{ mt: 1, mb: 2 }}>
-            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW
-            <br />
+            Installed Capacity ({selectedYear}) - {installedCapacity.toLocaleString()} MW<br />
             Available Capacity ({selectedMonth} {selectedYear}) - Not Available
           </Typography>
         );
@@ -214,7 +210,7 @@ const IndustryEnergy = () => {
 
 
       const response = await axios.get(`${API_URL}/Hourly-Energy-Generated`, {
-        params: { startDate, endDate: startDate, genco },
+        params: { startDate, endDate: startDate, genco }
       });
 
 
@@ -235,12 +231,12 @@ const IndustryEnergy = () => {
   const processData = (fetchedData) => {
     const hourlyData = Array(24).fill(0);
 
-    fetchedData.forEach((item) => {
+    fetchedData.forEach(item => {
       const hour = parseInt(item.Hour.split(':')[0]);
       hourlyData[hour] += parseFloat(item.EnergyGeneratedMWh);
     });
 
-    const roundedData = hourlyData.map((value) => parseFloat(value.toFixed(2)));
+    const roundedData = hourlyData.map(value => parseFloat(value.toFixed(2)));
     setProcessedData(roundedData);
 
     const totalEnergy = roundedData.reduce((acc, val) => acc + val, 0);
@@ -304,12 +300,12 @@ const IndustryEnergy = () => {
     dataLabels: {
       enabled: true,
       background: {
-        enabled: false,
+        enabled: false
       },
       offsetY: -10,
       style: {
         fontSize: '12px',
-      },
+      }
     },
     title: {
       text: `Average Energy Generated: ${averageEnergy} MW`,
@@ -335,7 +331,7 @@ const IndustryEnergy = () => {
       },
       axisTicks: {
         show: true,
-        borderType: 'dotted',
+        borderType: 'dotted'
       },
     },
     yaxis: {
@@ -423,14 +419,12 @@ const IndustryEnergy = () => {
           {isLoading ? (
             <Typography>Loading...</Typography>
           ) : (
-            <ResponsiveEl>
-              <Chart
-                options={chartOptions}
-                series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
-                type="area"
-                height="345px"
-              />
-            </ResponsiveEl>
+            <Chart
+              options={chartOptions}
+              series={[{ name: 'Energy Generated (MW)', data: processedData, color: primary }]}
+              type="area"
+              height="345px"
+            />
           )}
         </Grid>
       </Grid>

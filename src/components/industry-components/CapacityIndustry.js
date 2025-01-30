@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Stack, Typography, Box, Divider, Select, MenuItem, FormControl } from '@mui/material';
+import { 
+  Stack, 
+  Typography, 
+  Box, 
+  Divider,
+  Select,
+  MenuItem,
+  FormControl
+} from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard.js';
 import API_URL from '../../config/apiconfig';
 
@@ -35,11 +43,11 @@ const CapacityIndustry = () => {
     try {
       const response = await fetch(`${API_URL}/Capacity-Industry-Percentage`);
       const jsonData = await response.json();
-
+      
       if (Array.isArray(jsonData) && jsonData.length > 0) {
         setData(jsonData);
-
-        const uniqueYears = [...new Set(jsonData.map((item) => item.Year))];
+        
+        const uniqueYears = [...new Set(jsonData.map(item => item.Year))];
         setYears(uniqueYears);
         setSelectedYear(uniqueYears[uniqueYears.length - 1]);
         setError('');
@@ -55,37 +63,35 @@ const CapacityIndustry = () => {
   };
 
   const processData = () => {
-    const yearData = data.filter((item) => item.Year === selectedYear);
-
+    const yearData = data.filter(item => item.Year === selectedYear);
+    
     if (yearData.length === 0) {
       setInstalledSeries([0, 0]);
       setAvailableSeries([0, 0]);
       return;
     }
 
-    const installed = yearData.filter((item) => item.CapacityType === 'Installed');
-    const available = yearData.filter((item) => item.CapacityType === 'Available');
+    const installed = yearData.filter(item => item.CapacityType === 'Installed');
+    const available = yearData.filter(item => item.CapacityType === 'Available');
 
     const installedPercentages = [
-      parseFloat(installed.find((item) => item.Source === 'HYDRO')?.CapacityPercentage) || 0,
-      parseFloat(installed.find((item) => item.Source === 'THERMAL')?.CapacityPercentage) || 0,
+      parseFloat(installed.find(item => item.Source === 'HYDRO')?.CapacityPercentage) || 0,
+      parseFloat(installed.find(item => item.Source === 'THERMAL')?.CapacityPercentage) || 0
     ];
 
     const availablePercentages = [
-      parseFloat(available.find((item) => item.Source === 'HYDRO')?.CapacityPercentage) || 0,
-      parseFloat(available.find((item) => item.Source === 'THERMAL')?.CapacityPercentage) || 0,
+      parseFloat(available.find(item => item.Source === 'HYDRO')?.CapacityPercentage) || 0,
+      parseFloat(available.find(item => item.Source === 'THERMAL')?.CapacityPercentage) || 0
     ];
 
     const installedMW = {
-      renewable: parseFloat(installed.find((item) => item.Source === 'HYDRO')?.CapacityMW) || 0,
-      nonRenewable:
-        parseFloat(installed.find((item) => item.Source === 'THERMAL')?.CapacityMW) || 0,
+      renewable: parseFloat(installed.find(item => item.Source === 'HYDRO')?.CapacityMW) || 0,
+      nonRenewable: parseFloat(installed.find(item => item.Source === 'THERMAL')?.CapacityMW) || 0
     };
 
     const availableMW = {
-      renewable: parseFloat(available.find((item) => item.Source === 'HYDRO')?.CapacityMW) || 0,
-      nonRenewable:
-        parseFloat(available.find((item) => item.Source === 'THERMAL')?.CapacityMW) || 0,
+      renewable: parseFloat(available.find(item => item.Source === 'HYDRO')?.CapacityMW) || 0,
+      nonRenewable: parseFloat(available.find(item => item.Source === 'THERMAL')?.CapacityMW) || 0
     };
 
     setInstalledSeries(installedPercentages);
@@ -103,7 +109,7 @@ const CapacityIndustry = () => {
       },
     },
     labels: ['Renewable Energy', 'Non-Renewable Energy'],
-    colors: [secondary, primary],
+    colors: [secondary, primary], 
     plotOptions: {
       pie: {
         startAngle: -90,
@@ -127,10 +133,10 @@ const CapacityIndustry = () => {
             },
             total: {
               show: false,
-            },
-          },
-        },
-      },
+            }
+          }
+        }
+      }
     },
     dataLabels: {
       enabled: true,
@@ -144,7 +150,7 @@ const CapacityIndustry = () => {
       style: {
         fontSize: '12px',
         fontFamily: 'Plus Jakarta Sans, sans-serif',
-        colors: ['#000'],
+        colors: ['#000']
       },
       dropShadow: {
         enabled: true,
@@ -152,14 +158,14 @@ const CapacityIndustry = () => {
         top: 2,
         left: 0,
         blur: 3,
-        opacity: 0.2,
-      },
+        opacity: 0.2
+      }
     },
     legend: {
       show: false,
     },
     stroke: {
-      width: 0,
+      width: 0
     },
     tooltip: {
       enabled: true,
@@ -171,13 +177,13 @@ const CapacityIndustry = () => {
               ? (totals.renewable * (val / 100)).toFixed(1)
               : (totals.nonRenewable * (val / 100)).toFixed(1);
           return val ? `${val.toFixed(1)}% (${mwValue} MW)` : '0%';
-        },
-      },
-    },
+        }
+      }
+    }
   });
 
   return (
-    <DashboardCard
+    <DashboardCard 
       title="Industry Capacity Distribution"
       action={
         <FormControl size="small">
@@ -196,13 +202,9 @@ const CapacityIndustry = () => {
       }
     >
       {loading ? (
-        <Typography variant="body1" align="center">
-          Loading data...
-        </Typography>
+        <Typography variant="body1" align="center">Loading data...</Typography>
       ) : error ? (
-        <Typography variant="body1" color="error" align="center">
-          {error}
-        </Typography>
+        <Typography variant="body1" color="error" align="center">{error}</Typography>
       ) : (
         <Stack direction="row" spacing={2} justifyContent="space-between" mt={3}>
           <Box width="48%">
@@ -229,7 +231,7 @@ const CapacityIndustry = () => {
           <Divider orientation="vertical" flexItem />
           <Box width="48%">
             <Typography variant="h6" color="textSecondary" gutterBottom align="center">
-              Available Capacity
+              Available Capacity 
             </Typography>
             <Chart
               options={optionsDonut('available')}

@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import {
-  Grid,
-  Stack,
-  Typography,
-  Avatar,
-  Box,
-  FormControl,
-  Select,
-  MenuItem,
-  useMediaQuery,
-} from '@mui/material';
+import { Grid, Stack, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import API_URL from '../../config/apiconfig';
-import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const InstalledCapacitySource = () => {
   const theme = useTheme();
@@ -25,15 +14,12 @@ const InstalledCapacitySource = () => {
   const warning = theme.palette.warning.main;
   const info = theme.palette.info.main;
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-
   const [selectedYear, setSelectedYear] = useState(null);
   const [capacityData, setCapacityData] = useState({
     years: [],
     sources: {},
     totals: {},
-    latestYear: null,
+    latestYear: null
   });
 
   useEffect(() => {
@@ -43,21 +29,21 @@ const InstalledCapacitySource = () => {
         const data = await response.json();
 
         // Get unique years and sources
-        const years = [...new Set(data.map((item) => item.Year))].sort();
-        const sources = [...new Set(data.map((item) => item.Source))];
-
+        const years = [...new Set(data.map(item => item.Year))].sort();
+        const sources = [...new Set(data.map(item => item.Source))];
+        
         // Initialize data structure
         const sourceData = {};
-        sources.forEach((source) => {
-          sourceData[source] = years.map((year) => {
-            const entry = data.find((d) => d.Year === year && d.Source === source);
+        sources.forEach(source => {
+          sourceData[source] = years.map(year => {
+            const entry = data.find(d => d.Year === year && d.Source === source);
             return entry ? entry.InstalledCapacityMW : 0;
           });
         });
 
         // Calculate totals for each source
         const totals = {};
-        sources.forEach((source) => {
+        sources.forEach(source => {
           totals[source] = sourceData[source].reduce((a, b) => a + b, 0);
         });
 
@@ -65,9 +51,9 @@ const InstalledCapacitySource = () => {
           years: years.map(String),
           sources: sourceData,
           totals: totals,
-          latestYear: Math.max(...years),
+          latestYear: Math.max(...years)
         });
-
+        
         // Set initial selected year to latest year
         setSelectedYear(Math.max(...years).toString());
       } catch (error) {
@@ -111,7 +97,7 @@ const InstalledCapacitySource = () => {
       labels: {
         formatter: function (value) {
           return value.toLocaleString();
-        },
+        }
       },
       min: 0,
       forceNiceScale: true,
@@ -124,16 +110,16 @@ const InstalledCapacitySource = () => {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       fillSeriesColor: false,
       y: {
-        formatter: function (value) {
+        formatter: function(value) {
           return value.toLocaleString() + ' MWp';
-        },
-      },
+        }
+      }
     },
   };
 
   const seriescolumnchart = Object.entries(capacityData.sources).map(([source, data]) => ({
     name: source,
-    data: data,
+    data: data
   }));
 
   // Calculate total capacity based on selected year
@@ -153,21 +139,18 @@ const InstalledCapacitySource = () => {
   return (
     <DashboardCard title="">
       <Grid container spacing={3}>
-        <Grid item lg={6} sm={12}>
+        <Grid item xs={12} sm={4}>
           <Typography variant="h4" gutterBottom>
             Installed Capacity by Source
           </Typography>
           <Typography variant="body1" paragraph>
-            Nigeria has been diversifying its energy mix, focusing on renewable sources to
-            complement conventional power generation. This chart shows the installed capacity trends
-            for various energy sources over the years.
+            Nigeria has been diversifying its energy mix, focusing on renewable sources to complement conventional power generation. This chart shows the installed capacity trends for various energy sources over the years.
           </Typography>
           <Typography variant="body1" paragraph>
-            The growth in renewable energy capacity reflects Nigeria's commitment to sustainable
-            energy development and improved access to electricity across the country.
+            The growth in renewable energy capacity reflects Nigeria's commitment to sustainable energy development and improved access to electricity across the country.
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={8}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <Select
@@ -192,58 +175,56 @@ const InstalledCapacitySource = () => {
               height="370px"
             />
           </Box>
-          <ResponsiveEl>
-            <Box sx={{ mt: 2 }}>
-              <Stack direction="row" spacing={3} justifyContent="space-between" flexWrap="wrap">
-                <Stack direction="row" spacing={2} alignItems="center">
-                  <Box
-                    width={40}
-                    height={40}
-                    bgcolor="primary.light"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Typography color="primary" variant="h6" display="flex">
-                      <IconGridDots width={21} />
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="h3" fontWeight="700">
-                      {totalCapacity.toLocaleString()} MWp
-                    </Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Total Capacity {selectedYear ? `(${selectedYear})` : ''}
-                    </Typography>
-                  </Box>
-                </Stack>
-                {Object.entries(capacityData.sources).map(([source, data], index) => {
-                  const yearIndex = selectedYear
-                    ? capacityData.years.indexOf(selectedYear)
-                    : data.length - 1;
-                  return (
-                    <Stack direction="row" spacing={2} key={source}>
-                      <Avatar
-                        sx={{
-                          width: 9,
-                          mt: 1,
-                          height: 9,
-                          bgcolor: getSourceColor(index),
-                          svg: { display: 'none' },
-                        }}
-                      />
-                      <Box>
-                        <Typography variant="h5">{data[yearIndex].toLocaleString()} MWp</Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                          {source} {selectedYear || capacityData.latestYear}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  );
-                })}
+          <Box sx={{ mt: 2 }}>
+            <Stack direction="row" spacing={3} justifyContent="space-between" flexWrap="wrap">
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Box
+                  width={40}
+                  height={40}
+                  bgcolor="primary.light"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography color="primary" variant="h6" display="flex">
+                    <IconGridDots width={21} />
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h3" fontWeight="700">
+                    {totalCapacity.toLocaleString()} MWp
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Total Capacity {selectedYear ? `(${selectedYear})` : ''}
+                  </Typography>
+                </Box>
               </Stack>
-            </Box>
-          </ResponsiveEl>
+              {Object.entries(capacityData.sources).map(([source, data], index) => {
+                const yearIndex = selectedYear ? capacityData.years.indexOf(selectedYear) : data.length - 1;
+                return (
+                  <Stack direction="row" spacing={2} key={source}>
+                    <Avatar
+                      sx={{ 
+                        width: 9, 
+                        mt: 1, 
+                        height: 9, 
+                        bgcolor: getSourceColor(index), 
+                        svg: { display: 'none' } 
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="h5">
+                        {data[yearIndex].toLocaleString()} MWp
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        {source} {selectedYear || capacityData.latestYear}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                );
+              })}
+            </Stack>
+          </Box>
         </Grid>
       </Grid>
     </DashboardCard>

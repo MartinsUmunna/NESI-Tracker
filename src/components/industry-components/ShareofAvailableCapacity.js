@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { 
+  Box, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem 
+} from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import API_URL from '../../config/apiconfig';
-import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 
 const ShareofAvailableCapacity = () => {
   const theme = useTheme();
@@ -25,7 +30,7 @@ const ShareofAvailableCapacity = () => {
       const response = await axios.get(`${API_URL}/share-of-generation-Capacity`);
       const sortedData = response.data.sort((a, b) => b.Year - a.Year);
       setData(sortedData);
-      const uniqueYears = [...new Set(sortedData.map((item) => item.Year))].sort((a, b) => b - a);
+      const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => b - a);
       setYears(uniqueYears);
       setSelectedYear(uniqueYears[0]);
     } catch (error) {
@@ -38,13 +43,13 @@ const ShareofAvailableCapacity = () => {
   };
 
   const processData = (year) => {
-    const filteredData = data.filter((item) => item.Year === year);
+    const filteredData = data.filter(item => item.Year === year);
     // Group by Plant and take average of ShareofAvailability
     const plantGroups = filteredData.reduce((acc, curr) => {
       if (!acc[curr.Plant]) {
         acc[curr.Plant] = {
           sum: curr.ShareofAvailability,
-          count: 1,
+          count: 1
         };
       } else {
         acc[curr.Plant].sum += curr.ShareofAvailability;
@@ -55,19 +60,17 @@ const ShareofAvailableCapacity = () => {
 
     const averagedData = Object.entries(plantGroups).map(([plant, data]) => ({
       Plant: plant,
-      ShareofAvailability: data.sum / data.count,
+      ShareofAvailability: data.sum / data.count
     }));
 
-    const sortedByShare = averagedData.sort(
-      (a, b) => b.ShareofAvailability - a.ShareofAvailability,
-    );
+    const sortedByShare = averagedData.sort((a, b) => b.ShareofAvailability - a.ShareofAvailability);
 
     return {
-      categories: sortedByShare.map((item) => item.Plant),
+      categories: sortedByShare.map(item => item.Plant),
       series: [
         {
           name: 'Share of Available Capacity (%)',
-          data: sortedByShare.map((item) => item.ShareofAvailability),
+          data: sortedByShare.map(item => item.ShareofAvailability),
         },
       ],
     };
@@ -89,7 +92,7 @@ const ShareofAvailableCapacity = () => {
         columnWidth: '65%',
         borderRadius: 4,
         dataLabels: {
-          position: 'top',
+          position: 'top'
         },
       },
     },
@@ -115,63 +118,67 @@ const ShareofAvailableCapacity = () => {
         rotateAlways: true,
         trim: false,
         hideOverlappingLabels: true,
-        maxHeight: 150,
+        maxHeight: 150
       },
       tickPlacement: 'on',
       axisBorder: {
-        show: true,
+        show: true
       },
       axisTicks: {
-        show: true,
-      },
+        show: true
+      }
     },
     yaxis: {
       min: 0,
       max: Math.max(...(chartData.series[0]?.data || [0])) * 1.1,
       labels: {
-        style: {
+        style: { 
           colors: textColor,
           fontFamily: theme.typography.fontFamily, // Using theme's default font family
         },
-        formatter: (val) => `${val.toFixed(0)}%`,
+        formatter: (val) => `${val.toFixed(0)}%`
       },
       title: {
         text: 'Share of Available Capacity (%)',
-        style: {
+        style: { 
           color: textColor,
           fontFamily: theme.typography.fontFamily, // Using theme's default font family
-        },
-      },
+        }
+      }
     },
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-      y: {
+      y: { 
         formatter: (val) => `${Number(val).toFixed(2)}%`,
         title: {
-          formatter: () => 'Share:',
-        },
+          formatter: () => 'Share:'
+        }
       },
       style: {
         fontFamily: theme.typography.fontFamily, // Using theme's default font family
-      },
+      }
     },
     grid: {
       borderColor: theme.palette.grey[100],
       padding: {
-        bottom: 20,
-      },
+        bottom: 20
+      }
     },
     colors: [primaryColor],
-    legend: { show: false },
+    legend: { show: false }
   };
 
   return (
-    <DashboardCard
-      title="Share of Available Capacity (%)"
+    <DashboardCard 
+      title="Share of Available Capacity (%)" 
       subtitle="Distribution of available capacity across power plants"
     >
       <Box display="flex" justifyContent="flex-end" mb={2}>
-        <FormControl variant="outlined" sx={{ minWidth: 120 }} size="small">
+        <FormControl 
+          variant="outlined" 
+          sx={{ minWidth: 120 }}
+          size="small"
+        >
           <InputLabel id="year-select-label">Year</InputLabel>
           <Select
             labelId="year-select-label"
@@ -187,11 +194,15 @@ const ShareofAvailableCapacity = () => {
           </Select>
         </FormControl>
       </Box>
-      <ResponsiveEl>
-        <Box mt={4} sx={{ height: '300px' }}>
-          <Chart options={options} series={chartData.series} type="bar" height="100%" />
-        </Box>
-      </ResponsiveEl>
+
+      <Box mt={4} sx={{ height: '300px' }}>
+        <Chart 
+          options={options} 
+          series={chartData.series} 
+          type="bar" 
+          height="100%" 
+        />
+      </Box>
     </DashboardCard>
   );
 };

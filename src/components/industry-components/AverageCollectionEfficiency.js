@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CardContent, Typography, Avatar, Box } from '@mui/material';
+import { CardContent, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 import API_URL from 'src/config/apiConfig';
@@ -7,12 +7,15 @@ import API_URL from 'src/config/apiConfig';
 const AverageCollectionEfficiency = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [latestEfficiency, setLatestEfficiency] = useState(null);
-  const [latestYear, setLatestYear] = useState(null);
-  const [previousEfficiency, setPreviousEfficiency] = useState(null);
-  const [previousYear, setPreviousYear] = useState(null);
-  const [percentageChange, setPercentageChange] = useState(null);
-  const [isIncrease, setIsIncrease] = useState(false);
+  const [efficiencyData, setEfficiencyData] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [currentValues, setCurrentValues] = useState({
+    efficiency: null,
+    previousEfficiency: null,
+    percentageChange: null,
+    isIncrease: false
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,52 +35,53 @@ const AverageCollectionEfficiency = () => {
         const billedData = await billedResponse.json();
         const collectedData = await collectedResponse.json();
 
+        // Create sets of years from both datasets
+        const billedYears = new Set(billedData.map(item => item.Year));
+        const collectedYears = new Set(collectedData.map(item => item.Year));
+
+        // Find years that exist in both datasets
+        const validYears = [...billedYears].filter(year => collectedYears.has(year));
+
         // Calculate yearly totals
         const yearlyTotals = {};
         
-        // Process billed revenue data
-        billedData.forEach(item => {
-          if (!yearlyTotals[item.Year]) {
-            yearlyTotals[item.Year] = {
-              billed: 0,
-              collected: 0
+        // Process billed revenue data for valid years
+        validYears.forEach(year => {
+          const yearBilledData = billedData.filter(item => item.Year === year);
+          const yearCollectedData = collectedData.filter(item => item.Year === year);
+
+          const totalBilled = yearBilledData.reduce((sum, item) => 
+            sum + parseFloat(item.RevenueBilled_m || 0), 0);
+          const totalCollected = yearCollectedData.reduce((sum, item) => 
+            sum + parseFloat(item.RevenueCollected || 0), 0);
+
+          // Only include years where both values are valid and non-zero
+          if (totalBilled > 0 && totalCollected > 0) {
+            yearlyTotals[year] = {
+              billed: totalBilled,
+              collected: totalCollected
             };
           }
-          yearlyTotals[item.Year].billed += parseFloat(item.RevenueBilled_m);
         });
 
-        // Process collected revenue data
-        collectedData.forEach(item => {
-          if (!yearlyTotals[item.Year]) {
-            yearlyTotals[item.Year] = {
-              billed: 0,
-              collected: 0
-            };
-          }
-          yearlyTotals[item.Year].collected += parseFloat(item.RevenueCollected);
-        });
-
-        // Calculate efficiency for each year (Revenue Collected / Revenue Billed) * 100
+        // Calculate efficiency for years with valid data
         const efficiencies = Object.entries(yearlyTotals)
           .map(([year, data]) => ({
             year: parseInt(year),
             efficiency: (data.collected / data.billed) * 100
           }))
-          
           .sort((a, b) => b.year - a.year);
 
-        // Get latest (2023) and previous year data
-        const currentYear = efficiencies[0];
-        const previousYear = efficiencies[1];
+        // Only proceed if we have valid data
+        if (efficiencies.length === 0) {
+          throw new Error('No valid efficiency data available');
+        }
 
-        const change = ((currentYear.efficiency - previousYear.efficiency) / previousYear.efficiency) * 100;
-
-        setLatestEfficiency(currentYear.efficiency);
-        setLatestYear(currentYear.year);
-        setPreviousEfficiency(previousYear.efficiency);
-        setPreviousYear(previousYear.year);
-        setPercentageChange(change);
-        setIsIncrease(change > 0);
+        const validYearsList = efficiencies.map(item => item.year);
+        
+        setEfficiencyData(efficiencies);
+        setYears(validYearsList);
+        setSelectedYear(validYearsList[0]); // Set most recent valid year as default
         setError(null);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -89,6 +93,26 @@ const AverageCollectionEfficiency = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (selectedYear && efficiencyData.length > 0) {
+      const currentYearData = efficiencyData.find(item => item.year === selectedYear);
+      const previousYearData = efficiencyData.find(item => item.year === selectedYear - 1);
+
+      if (currentYearData) {
+        const change = previousYearData 
+          ? ((currentYearData.efficiency - previousYearData.efficiency) / previousYearData.efficiency) * 100
+          : 0;
+
+        setCurrentValues({
+          efficiency: currentYearData.efficiency,
+          previousEfficiency: previousYearData?.efficiency || null,
+          percentageChange: previousYearData ? change : null,
+          isIncrease: change > 0
+        });
+      }
+    }
+  }, [selectedYear, efficiencyData]);
 
   if (loading) {
     return (
@@ -132,43 +156,70 @@ const AverageCollectionEfficiency = () => {
         alignItems: 'center',
         height: '100%'
       }}>
-        <Typography variant="h6" gutterBottom textAlign="center">
-          Average Collection Efficiency ({latestYear})
-        </Typography>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
+          }}
+        >
+          <Typography variant="h6">
+            Average Collection Efficiency
+          </Typography>
+          <FormControl size="small">
+            <Select
+              value={selectedYear || ''}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              sx={{ minWidth: 120 }}
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  Year {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          {latestEfficiency?.toFixed(2)}%
+          {currentValues.efficiency?.toFixed(2)}%
         </Typography>
 
-        <Typography variant="subtitle2" color="textSecondary" textAlign="center">
-          (Previous Year: {previousEfficiency?.toFixed(2)}%)
-        </Typography>
-
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mt: 2
-        }}>
-          <Avatar sx={{
-            bgcolor: isIncrease ? 'success.light' : 'error.light',
-            width: 24,
-            height: 24,
-            mr: 1
-          }}>
-            {isIncrease ? (
-              <IconArrowUpRight width={16} color="#13DEB9" />
-            ) : (
-              <IconArrowDownRight width={16} color="#FA896B" />
-            )}
-          </Avatar>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: isIncrease ? 'success.main' : 'error.main' }}
-          >
-            {Math.abs(percentageChange).toFixed(2)}%
+        {currentValues.previousEfficiency !== null && (
+          <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+            (Previous Year: {currentValues.previousEfficiency?.toFixed(2)}%)
           </Typography>
-        </Box>
+        )}
+
+        {currentValues.percentageChange !== null && (
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mt: 2
+          }}>
+            <Avatar sx={{
+              bgcolor: currentValues.isIncrease ? 'success.light' : 'error.light',
+              width: 24,
+              height: 24,
+              mr: 1
+            }}>
+              {currentValues.isIncrease ? (
+                <IconArrowUpRight width={16} color="#13DEB9" />
+              ) : (
+                <IconArrowDownRight width={16} color="#FA896B" />
+              )}
+            </Avatar>
+            <Typography
+              variant="subtitle2"
+              sx={{ color: currentValues.isIncrease ? 'success.main' : 'error.main' }}
+            >
+              {Math.abs(currentValues.percentageChange).toFixed(2)}%
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </BlankCard>
   );

@@ -1,20 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import {
-  CardContent,
-  Typography,
-  Grid,
-  Slider,
-  Stack,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Chip,
-  Button,
-} from '@mui/material';
+import { CardContent, Typography, Grid, Slider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Chip, Button } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 import API_URL from '../../config/apiconfig';
 
@@ -36,13 +23,13 @@ const GHGByContinentAndSector = () => {
         }
         const result = await response.json();
         setData(result);
-
+        
         // Set default values
-        const years = [...new Set(result.map((item) => item.Years))].sort((a, b) => b - a);
+        const years = [...new Set(result.map(item => item.Years))].sort((a, b) => b - a);
         const latestYear = years[0];
         setYearRange([latestYear - 4, latestYear]);
         setSelectedEmissionType(result[0].EmissionType);
-
+        
         setIsLoading(false);
       } catch (error) {
         setError(error.message);
@@ -65,34 +52,29 @@ const GHGByContinentAndSector = () => {
     setSelectedEmissionType(type);
   };
 
-  const sectors = useMemo(() => [...new Set(data.map((item) => item.Sector))], [data]);
-  const continents = useMemo(() => [...new Set(data.map((item) => item.Continent))], [data]);
-  const emissionTypes = useMemo(() => [...new Set(data.map((item) => item.EmissionType))], [data]);
-  const years = useMemo(
-    () => [...new Set(data.map((item) => item.Years))].sort((a, b) => a - b),
-    [data],
-  );
+  const sectors = useMemo(() => [...new Set(data.map(item => item.Sector))], [data]);
+  const continents = useMemo(() => [...new Set(data.map(item => item.Continent))], [data]);
+  const emissionTypes = useMemo(() => [...new Set(data.map(item => item.EmissionType))], [data]);
+  const years = useMemo(() => [...new Set(data.map(item => item.Years))].sort((a, b) => a - b), [data]);
 
   const filteredData = useMemo(() => {
-    return data.filter(
-      (d) =>
-        d.Years >= yearRange[0] &&
-        d.Years <= yearRange[1] &&
-        (selectedContinents.length === 0 || selectedContinents.includes(d.Continent)) &&
-        d.EmissionType === selectedEmissionType,
+    return data.filter(d => 
+      d.Years >= yearRange[0] && d.Years <= yearRange[1] &&
+      (selectedContinents.length === 0 || selectedContinents.includes(d.Continent)) &&
+      d.EmissionType === selectedEmissionType
     );
   }, [data, yearRange, selectedContinents, selectedEmissionType]);
 
   const chartData = useMemo(() => {
-    return sectors.map((sector) => ({
+    return sectors.map(sector => ({
       name: sector,
       data: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, index) => {
         const year = yearRange[0] + index;
         const value = filteredData
-          .filter((d) => d.Years === year && d.Sector === sector)
+          .filter(d => d.Years === year && d.Sector === sector)
           .reduce((sum, d) => sum + d.GHG, 0);
         return parseFloat(value.toFixed(2));
-      }),
+      })
     }));
   }, [filteredData, yearRange, sectors]);
 
@@ -136,10 +118,7 @@ const GHGByContinentAndSector = () => {
       show: false,
     },
     xaxis: {
-      categories: Array.from(
-        { length: yearRange[1] - yearRange[0] + 1 },
-        (_, i) => yearRange[0] + i,
-      ),
+      categories: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i),
       labels: {
         style: {
           colors: theme.palette.text.primary,
@@ -160,7 +139,7 @@ const GHGByContinentAndSector = () => {
         },
       },
       labels: {
-        formatter: function (val) {
+        formatter: function(val) {
           return val.toFixed(2);
         },
         style: {
@@ -171,17 +150,16 @@ const GHGByContinentAndSector = () => {
     tooltip: {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       y: {
-        formatter: function (val) {
+        formatter: function(val) {
           return val.toFixed(2);
         },
       },
     },
   };
 
-  const chartTitle =
-    yearRange[0] === yearRange[1]
-      ? `GHG by Continent and Sector in ${yearRange[0]}`
-      : `GHG by Continent and Sector from ${yearRange[0]} to ${yearRange[1]}`;
+  const chartTitle = yearRange[0] === yearRange[1]
+    ? `GHG by Continent and Sector in ${yearRange[0]}`
+    : `GHG by Continent and Sector from ${yearRange[0]} to ${yearRange[1]}`;
 
   if (isLoading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error: {error}</Typography>;
@@ -215,11 +193,11 @@ const GHGByContinentAndSector = () => {
           </Select>
         </FormControl>
 
-        <Stack direction="row" spacing={1} sx={{ mb: 2, gap: 2, flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: 'wrap' }}>
           {emissionTypes.map((type) => (
             <Button
               key={type}
-              variant={selectedEmissionType === type ? 'contained' : 'outlined'}
+              variant={selectedEmissionType === type ? "contained" : "outlined"}
               onClick={() => handleEmissionTypeChange(type)}
               size="small"
             >
@@ -228,9 +206,7 @@ const GHGByContinentAndSector = () => {
           ))}
         </Stack>
 
-        <Typography gutterBottom>
-          Year Range: {yearRange[0]} - {yearRange[1]}
-        </Typography>
+        <Typography gutterBottom>Year Range: {yearRange[0]} - {yearRange[1]}</Typography>
         <Slider
           value={yearRange}
           onChange={handleChangeYearRange}
@@ -241,7 +217,12 @@ const GHGByContinentAndSector = () => {
         />
 
         <Box sx={{ height: 500 }}>
-          <Chart options={chartOptions} series={chartData} type="bar" height="100%" />
+          <Chart
+            options={chartOptions}
+            series={chartData}
+            type="bar"
+            height="100%"
+          />
         </Box>
       </CardContent>
     </BlankCard>

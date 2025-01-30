@@ -11,8 +11,10 @@ import NBETInvoicetoGencoTable from 'src/components/generation-components/NBETIn
 import NBETOutstandingBalancetoGencoTable from 'src/components/generation-components/NBETOutstandingBalancetoGencoTable';
 import GencoTableMarketInvoiceNBET from 'src/components/generation-components/GencoTableMarketInvoiceNBET';
 
+
 const GenerationData = () => {
   return (
+    
     <PageContainer title="Generation" description="This is the Generation Dashboard page">
       <Box mt={3}>
         <Grid container spacing={3}>
@@ -41,9 +43,13 @@ const GenerationData = () => {
           <Grid item xs={12}>
             <GencoTableMarketInvoiceNBET />
           </Grid>
+
+         
+          
         </Grid>
       </Box>
     </PageContainer>
+    
   );
 };
 
