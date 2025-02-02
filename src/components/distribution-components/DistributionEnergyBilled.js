@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Chart from 'react-apexcharts';
-import { useTheme } from '@mui/material/styles';
-import { 
-  Box, 
-  Typography, 
-  FormControlLabel, 
-  Switch, 
-  MenuItem, 
-  Select, 
-  FormControl, 
-  InputLabel,
+import {
+  Box,
+  Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  Button
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  Typography,
 } from '@mui/material';
-import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
+import React, { useEffect, useState } from 'react';
+
 import API_URL from '../../config/apiconfig';
+import Chart from 'react-apexcharts';
+import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
+import axios from 'axios';
+import { useTheme } from '@mui/material/styles';
 
 const DistributionEnergyBilled = () => {
   const theme = useTheme();
@@ -45,11 +47,24 @@ const DistributionEnergyBilled = () => {
       const response = await axios.get(`${API_URL}/Yearly-Energy-Billed`);
       const sortedData = response.data.sort((a, b) => {
         if (a.Year !== b.Year) return b.Year - a.Year;
-        const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthOrder = [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ];
         return monthOrder.indexOf(a.Month_Name) - monthOrder.indexOf(b.Month_Name);
       });
       setData(sortedData);
-      const uniqueYears = [...new Set(sortedData.map(item => item.Year))].sort((a, b) => a - b);
+      const uniqueYears = [...new Set(sortedData.map((item) => item.Year))].sort((a, b) => a - b);
       setYears(uniqueYears);
       setSelectedYear(uniqueYears[uniqueYears.length - 1]);
     } catch (error) {
@@ -80,42 +95,58 @@ const DistributionEnergyBilled = () => {
 
   const processData = (isAnnualView, selectedYear = null) => {
     if (isAnnualView) {
-      const annualData = years.map(year => {
-        const yearData = data.filter(item => item.Year === year);
+      const annualData = years.map((year) => {
+        const yearData = data.filter((item) => item.Year === year);
         const total = yearData.reduce((sum, item) => sum + item.YearlyEnergyBilled, 0);
         return {
           year,
-          total: Math.round(total)
+          total: Math.round(total),
         };
       });
 
       return {
-        categories: annualData.map(item => item.year),
-        series: [{
-          name: 'Energy Billed',
-          data: annualData.map(item => item.total)
-        }]
+        categories: annualData.map((item) => item.year),
+        series: [
+          {
+            name: 'Energy Billed',
+            data: annualData.map((item) => item.total),
+          },
+        ],
       };
     } else {
-      const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      
-      const monthlyData = monthOrder.map(month => {
-        const monthData = data.find(item => 
-          item.Year === selectedYear && 
-          item.Month_Name === month
+      const monthOrder = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+
+      const monthlyData = monthOrder.map((month) => {
+        const monthData = data.find(
+          (item) => item.Year === selectedYear && item.Month_Name === month,
         );
         return {
           month,
-          value: monthData ? Math.round(monthData.YearlyEnergyBilled) : 0
+          value: monthData ? Math.round(monthData.YearlyEnergyBilled) : 0,
         };
       });
 
       return {
-        categories: monthlyData.map(item => item.month.substring(0, 3)),
-        series: [{
-          name: 'Energy Billed',
-          data: monthlyData.map(item => item.value)
-        }]
+        categories: monthlyData.map((item) => item.month.substring(0, 3)),
+        series: [
+          {
+            name: 'Energy Billed',
+            data: monthlyData.map((item) => item.value),
+          },
+        ],
       };
     }
   };
@@ -214,11 +245,11 @@ const DistributionEnergyBilled = () => {
           )}
           <FormControlLabel
             control={
-              <Switch 
-                checked={isAnnual} 
-                onChange={handleToggle} 
-                name="toggleView" 
-                color="primary" 
+              <Switch
+                checked={isAnnual}
+                onChange={handleToggle}
+                name="toggleView"
+                color="primary"
               />
             }
             label={isAnnual ? 'Annual' : 'Monthly'}
@@ -226,14 +257,12 @@ const DistributionEnergyBilled = () => {
         </Box>
       }
     >
-      <Box mt={4}>
-        <Chart
-          options={options}
-          series={chartData.series}
-          type="bar"
-          height="350px"
-        />
-      </Box>
+      <ResponsiveEl>
+        {' '}
+        <Box mt={4}>
+          <Chart options={options} series={chartData.series} type="bar" height="350px" />
+        </Box>
+      </ResponsiveEl>
 
       <Dialog open={openSubscribeDialog} onClose={handleCloseSubscribeDialog}>
         <DialogTitle>Subscribe to EMRC</DialogTitle>

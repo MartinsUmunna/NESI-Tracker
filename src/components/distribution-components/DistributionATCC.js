@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Chart from 'react-apexcharts';
-import { useTheme } from '@mui/material/styles';
-import axios from 'axios'; // Import axios for API calls
-import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
-import { Grid, Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
 import API_URL from '../../config/apiconfig';
+import Chart from 'react-apexcharts';
+import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
+import axios from 'axios'; // Import axios for API calls
+import { useTheme } from '@mui/material/styles';
 
 const DistributionATCC = () => {
   const theme = useTheme();
@@ -20,8 +22,8 @@ const DistributionATCC = () => {
         const data = response.data;
 
         // Extract years and ATCC values from the response
-        const fetchedYears = data.map(item => item.Year);
-        const fetchedATCC = data.map(item => item.ATCC);
+        const fetchedYears = data.map((item) => item.Year);
+        const fetchedATCC = data.map((item) => item.ATCC);
 
         setYears(fetchedYears); // Set the x-axis categories (years)
         setAverageATCC(fetchedATCC); // Set the ATCC data
@@ -30,8 +32,8 @@ const DistributionATCC = () => {
       }
     };
 
-    fetchATCCData(); 
-  }, []); 
+    fetchATCCData();
+  }, []);
 
   const chartOptions = {
     chart: {
@@ -53,24 +55,24 @@ const DistributionATCC = () => {
           {
             offset: 0,
             color: '#FF0000',
-            opacity: 0.3
+            opacity: 0.3,
           },
           {
             offset: 100,
             color: '#FF0000',
-            opacity: 0
-          }
-        ]
+            opacity: 0,
+          },
+        ],
       },
     },
     stroke: {
       curve: 'smooth',
       width: 2,
-      colors: ['#FF0000'],  
+      colors: ['#FF0000'],
     },
     dataLabels: {
       enabled: true,
-      formatter: val => `${val.toFixed(1)}%`,
+      formatter: (val) => `${val.toFixed(1)}%`,
       position: 'top',
       offsetY: -10,
       style: {
@@ -97,7 +99,7 @@ const DistributionATCC = () => {
       },
     },
     xaxis: {
-      categories: years, 
+      categories: years,
       labels: { rotate: 0 },
       axisBorder: { show: false },
     },
@@ -105,7 +107,7 @@ const DistributionATCC = () => {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       fillSeriesColor: false,
       y: {
-        formatter: (val) => `${val.toFixed(2)}%`
+        formatter: (val) => `${val.toFixed(2)}%`,
       },
     },
   };
@@ -115,12 +117,14 @@ const DistributionATCC = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box className="rounded-bars">
-            <Chart
-              options={chartOptions}
-              series={[{ name: 'ATCC', data: averageATCC }]} 
-              type="area"
-              height="275"
-            />
+            <ResponsiveEl>
+              <Chart
+                options={chartOptions}
+                series={[{ name: 'ATCC', data: averageATCC }]}
+                type="area"
+                height="275"
+              />
+            </ResponsiveEl>
           </Box>
         </Grid>
       </Grid>

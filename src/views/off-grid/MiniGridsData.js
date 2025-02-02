@@ -1,21 +1,18 @@
-import React from 'react';
 import { Box, Grid } from '@mui/material';
-import PageContainer from 'src/components/container/PageContainer';
 
-
-import WelcomeCard from 'src/components/dashboards/ecommerce/MinigridsWelcomeCard';
-import MiniGridsMap from 'src/components/mini-grids-components/MiniGridsMap';
-import InstalledCapacity from 'src/components/mini-grids-components/InstalledCapacity';
-import PeopleConnected from 'src/components/mini-grids-components/PeopleConnected';
-import TotalInvestment from 'src/components/mini-grids-components/TotalInvestment';
-import ElectricityConsumed from 'src/components/mini-grids-components/ElectricityConsumed';
 import CommunitiesConnected from 'src/components/mini-grids-components/CommunitiesConnected';
+import ElectricityConsumed from 'src/components/mini-grids-components/ElectricityConsumed';
+import InstalledCapacity from 'src/components/mini-grids-components/InstalledCapacity';
 import InstalledCapacitySource from 'src/components/mini-grids-components/InstalledCapacitySource';
-import YearlyElectricityConsumption from 'src/components/mini-grids-components/YearlyElectricityConsumption';
+import MiniGridsMap from 'src/components/mini-grids-components/MiniGridsMap';
 import NumOfConnections from 'src/components/mini-grids-components/NumOfConnections';
 import NumberofRegisteredPrograms from 'src/components/mini-grids-components/NumberofRegisteredPrograms';
-
-
+import PageContainer from 'src/components/container/PageContainer';
+import PeopleConnected from 'src/components/mini-grids-components/PeopleConnected';
+import React from 'react';
+import TotalInvestment from 'src/components/mini-grids-components/TotalInvestment';
+import WelcomeCard from 'src/components/dashboards/ecommerce/MiniGridsWelcomeCard';
+import YearlyElectricityConsumption from 'src/components/mini-grids-components/YearlyElectricityConsumption';
 
 const MiniGridsData = () => {
   return (
@@ -23,45 +20,41 @@ const MiniGridsData = () => {
       <Box mt={3}>
         <Grid container spacing={3}>
           {/* column */}
-          <Grid item xs={12} >
+          <Grid item sm={12}>
             <WelcomeCard />
           </Grid>
 
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <MiniGridsMap />
           </Grid>
-          <Grid item xs={12} >
+          <Grid item sm={12}>
             <InstalledCapacitySource />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item sm={12} lg={6}>
             <InstalledCapacity />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item lg={6} sm={12}>
             <PeopleConnected />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item lg={6} sm={12}>
             <TotalInvestment />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item lg={6} sm={12}>
             <ElectricityConsumed />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item lg={6} sm={12}>
             <CommunitiesConnected />
           </Grid>
-          <Grid item xs={6} >
+          <Grid item lg={6} sm={12}>
             <NumberofRegisteredPrograms />
           </Grid>
-          
-          <Grid item xs={12} >
+
+          <Grid item xs={12}>
             <YearlyElectricityConsumption />
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <NumOfConnections />
           </Grid>
-
-      
-
-          
         </Grid>
       </Box>
     </PageContainer>
