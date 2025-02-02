@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import {
-  MenuItem,
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  Avatar,
-  Box,
-  FormControlLabel,
-  Switch,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@mui/material';
+import { MenuItem, Grid, Stack, Typography, Button, Avatar, Box, FormControlLabel, Switch, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { IconGridDots } from '@tabler/icons';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
@@ -49,18 +35,18 @@ const YearlyEnergyGenerated = () => {
         : `${API_URL}/Monthly-Energy-Sentout`;
       const response = await axios.get(url);
 
-      // Add a check to ensure response.data exists and is an array
-      if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+      // Add a check to ensure response.data exists
+      if (!response.data) {
         throw new Error('No data received from the server');
       }
 
       const formattedData = formatData(response.data, isAnnual);
       setEnergyData(formattedData);
-
+      
       // Safely set the year, defaulting to the latest year if not set
       const years = Object.keys(formattedData).sort((a, b) => parseInt(a) - parseInt(b));
-      setYear((prev) => prev || (years.length > 0 ? years[years.length - 1] : ''));
-
+      setYear(prev => prev || (years.length > 0 ? years[years.length - 1] : ''));
+      
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -71,7 +57,7 @@ const YearlyEnergyGenerated = () => {
 
   const formatData = (data, isAnnual) => {
     // Defensive check for data
-    if (!data || !Array.isArray(data)) {
+    if (!data) {
       console.warn('Invalid data format');
       return {};
     }
@@ -79,9 +65,13 @@ const YearlyEnergyGenerated = () => {
     const formattedData = {};
     try {
       if (isAnnual) {
-        console.log('Annual Data');
         const annualData = {};
-        data.forEach((item) => {
+        // Ensure data is an array
+        const dataArray = Array.isArray(data) ? data : [data];
+        
+        dataArray.forEach(item => {
+          if (!item || typeof item.Year === 'undefined') return;
+          
           const year = item.Year.toString();
           if (!annualData[year]) {
             annualData[year] = { thermal: 0, hydro: 0 };
@@ -94,11 +84,14 @@ const YearlyEnergyGenerated = () => {
         });
         return annualData;
       } else {
-        console.log('Monthly Data');
-        // Monthly data formatting
-        console.log('DATA', data);
-        data[0].forEach((item) => {
-          const year = item['Year'].toString();
+        // Handle monthly data
+        // Ensure data is an array
+        const dataArray = Array.isArray(data) ? data : [data];
+        
+        dataArray.forEach(item => {
+          if (!item || typeof item.Year === 'undefined') return;
+          
+          const year = item.Year.toString();
           const monthName = item.Month_Name;
 
           if (!formattedData[year]) {
@@ -169,24 +162,15 @@ const YearlyEnergyGenerated = () => {
   }
 
   const monthOrder = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   // Sort the months for x-axis categories and series data
-  const sortedMonths = Object.keys(energyData[year]?.months || {}).sort(
-    (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b),
-  );
+  const sortedMonths = isAnnual ? [] : 
+    monthOrder.filter(month => 
+      energyData[year]?.months?.[month] !== undefined
+    );
 
   const seriescolumnchart = [
     {
@@ -214,26 +198,34 @@ const YearlyEnergyGenerated = () => {
       return (energyData[year]?.thermal || 0) + (energyData[year]?.hydro || 0);
     } else {
       const monthlyData = energyData[year]?.months || {};
-      return (
-        Object.values(monthlyData).reduce(
-          (sum, month) => sum + (month.thermal || 0) + (month.hydro || 0),
-          0,
-        ) / 12
+      const total = Object.values(monthlyData).reduce(
+        (sum, month) => sum + (month.thermal || 0) + (month.hydro || 0),
+        0
       );
+      return Object.keys(monthlyData).length > 0 ? total / Object.keys(monthlyData).length : 0;
     }
   };
 
+  const getLatestMonthData = () => {
+    if (!energyData[year]?.months) return { thermal: 0, hydro: 0 };
+    
+    const availableMonths = monthOrder
+      .filter(month => energyData[year]?.months?.[month])
+      .sort((a, b) => monthOrder.indexOf(b) - monthOrder.indexOf(a));
+    
+    return availableMonths.length > 0
+      ? energyData[year].months[availableMonths[0]]
+      : { thermal: 0, hydro: 0 };
+  };
+
   const totalEnergy = formatNumber(calculateTotalEnergy());
-  const totalThermal = formatNumber(
-    isAnnual
-      ? energyData[year]?.thermal || 0
-      : energyData[year]?.months?.[monthOrder[monthOrder.length - 1]]?.thermal || 0,
-  );
-  const totalHydro = formatNumber(
-    isAnnual
-      ? energyData[year]?.hydro || 0
-      : energyData[year]?.months?.[monthOrder[monthOrder.length - 1]]?.hydro || 0,
-  );
+  const latestMonthData = getLatestMonthData();
+  const totalThermal = formatNumber(isAnnual 
+    ? (energyData[year]?.thermal || 0)
+    : (latestMonthData.thermal || 0));
+  const totalHydro = formatNumber(isAnnual 
+    ? (energyData[year]?.hydro || 0)
+    : (latestMonthData.hydro || 0));
 
   // chart
   const optionscolumnchart = {
@@ -317,21 +309,12 @@ const YearlyEnergyGenerated = () => {
               sx={{ marginRight: 2 }}
             >
               {yearOptions.map((y) => (
-                <MenuItem key={y} value={y}>
-                  {y}
-                </MenuItem>
+                <MenuItem key={y} value={y}>{y}</MenuItem>
               ))}
             </CustomSelect>
           )}
           <FormControlLabel
-            control={
-              <Switch
-                checked={isAnnual}
-                onChange={handleToggle}
-                name="toggleView"
-                color="primary"
-              />
-            }
+            control={<Switch checked={isAnnual} onChange={handleToggle} name="toggleView" color="primary" />}
             label={isAnnual ? 'Annual' : 'Monthly'}
           />
         </Box>
@@ -339,7 +322,7 @@ const YearlyEnergyGenerated = () => {
     >
       <Grid container spacing={3}>
         {/* column */}
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={10}>
           <Box className="rounded-bars">
             <Chart
               options={optionscolumnchart}
@@ -350,11 +333,11 @@ const YearlyEnergyGenerated = () => {
           </Box>
         </Grid>
         {/* column */}
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={2}>
           <Stack spacing={3} mt={3}>
             <Stack direction="row" spacing={2} alignItems="center">
               <Box
-                width={'100%'}
+                width={40}
                 height={40}
                 bgcolor="primary.light"
                 display="flex"
@@ -370,9 +353,7 @@ const YearlyEnergyGenerated = () => {
                   {totalEnergy} MWh
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
-                  {isAnnual
-                    ? 'Avg Total Energy Sent Out This Year'
-                    : 'Average Monthly Energy Sent Out'}
+                  {isAnnual ? 'Avg Total Energy Sent Out This Year' : 'Average Monthly Energy Sent Out'}
                 </Typography>
               </Box>
             </Stack>

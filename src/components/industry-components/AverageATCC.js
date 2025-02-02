@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CardContent, Typography, Avatar, Box, Divider } from '@mui/material';
+import { CardContent, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 import API_URL from '../../config/apiconfig';
@@ -7,12 +7,15 @@ import API_URL from '../../config/apiconfig';
 const AverageATCC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [latestATCC, setLatestATCC] = useState(null);
-  const [latestYear, setLatestYear] = useState(null);
-  const [previousATCC, setPreviousATCC] = useState(null);
-  const [previousYear, setPreviousYear] = useState(null);
-  const [percentageChange, setPercentageChange] = useState(null);
-  const [isIncrease, setIsIncrease] = useState(false);
+  const [atccData, setAtccData] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [currentValues, setCurrentValues] = useState({
+    atcc: null,
+    previousAtcc: null,
+    percentageChange: null,
+    isIncrease: false
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,21 +28,28 @@ const AverageATCC = () => {
         }
 
         const data = await response.json();
-        const sortedData = data.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
+        
+        // Filter out any entries with invalid ATCC values
+        const validData = data
+          .filter(item => {
+            const atccValue = parseFloat(item.ATCC);
+            return !isNaN(atccValue) && isFinite(atccValue) && atccValue > 0;
+          })
+          .map(item => ({
+            year: parseInt(item.Year),
+            atcc: parseFloat(item.ATCC)
+          }))
+          .sort((a, b) => b.year - a.year);
 
-        const currentYear = sortedData[0];
-        const previousYear = sortedData[1];
+        if (validData.length === 0) {
+          throw new Error('No valid ATCC data available');
+        }
 
-        const latestValue = parseFloat(currentYear.ATCC);
-        const previousValue = parseFloat(previousYear.ATCC);
-        const change = ((latestValue - previousValue) / previousValue) * 100;
-
-        setLatestATCC(latestValue);
-        setLatestYear(currentYear.Year);
-        setPreviousATCC(previousValue);
-        setPreviousYear(previousYear.Year);
-        setPercentageChange(change);
-        setIsIncrease(change > 0);
+        const validYears = validData.map(item => item.year);
+        
+        setAtccData(validData);
+        setYears(validYears);
+        setSelectedYear(validYears[0]); // Set most recent valid year as default
         setError(null);
       } catch (err) {
         console.error('Error fetching ATCC data:', err);
@@ -52,18 +62,36 @@ const AverageATCC = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedYear && atccData.length > 0) {
+      const currentYearData = atccData.find(item => item.year === selectedYear);
+      const previousYearData = atccData.find(item => item.year === selectedYear - 1);
+
+      if (currentYearData) {
+        const change = previousYearData 
+          ? ((currentYearData.atcc - previousYearData.atcc) / previousYearData.atcc) * 100
+          : 0;
+
+        setCurrentValues({
+          atcc: currentYearData.atcc,
+          previousAtcc: previousYearData?.atcc || null,
+          percentageChange: previousYearData ? change : null,
+          isIncrease: change > 0
+        });
+      }
+    }
+  }, [selectedYear, atccData]);
+
   if (loading) {
     return (
       <BlankCard>
-        <CardContent
-          sx={{
-            p: '25px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-        >
+        <CardContent sx={{
+          p: '25px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
+        }}>
           <Typography>Loading...</Typography>
         </CardContent>
       </BlankCard>
@@ -73,15 +101,13 @@ const AverageATCC = () => {
   if (error) {
     return (
       <BlankCard>
-        <CardContent
-          sx={{
-            p: '25px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-        >
+        <CardContent sx={{
+          p: '25px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
+        }}>
           <Typography color="error">{error}</Typography>
         </CardContent>
       </BlankCard>
@@ -90,59 +116,78 @@ const AverageATCC = () => {
 
   return (
     <BlankCard>
-      <CardContent
-        sx={{
-          p: '25px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        <Typography variant="h6" gutterBottom textAlign="center">
-          Average ATCC ({latestYear})
-        </Typography>
+      <CardContent sx={{
+        p: '25px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%'
+      }}>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
+          }}
+        >
+          <Typography variant="h6">
+            Average ATCC
+          </Typography>
+          <FormControl size="small">
+            <Select
+              value={selectedYear || ''}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              sx={{ minWidth: 120 }}
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  Year {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          {latestATCC?.toFixed(2)}%
+          {currentValues.atcc?.toFixed(2)}%
         </Typography>
 
-        
+        {currentValues.previousAtcc !== null && (
+          <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+            (Previous Year: {currentValues.previousAtcc?.toFixed(2)}%)
+          </Typography>
+        )}
 
-        <Typography variant="subtitle2" color="textSecondary" textAlign="center">
-          (Previous Year: {previousATCC?.toFixed(2)}%)
-        </Typography>
-
-        <Box
-          sx={{
+        {currentValues.percentageChange !== null && (
+          <Box sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            mt: 2,
-          }}
-        >
-          <Avatar
-            sx={{
-              bgcolor: isIncrease ? 'success.light' : 'error.light',
+            mt: 2
+          }}>
+            <Avatar sx={{
+              bgcolor: currentValues.isIncrease ? 'success.light' : 'error.light',
               width: 24,
               height: 24,
-              mr: 1,
-            }}
-          >
-            {isIncrease ? (
-              <IconArrowUpRight width={16} color="#13DEB9" />
-            ) : (
-              <IconArrowDownRight width={16} color="#FA896B" />
-            )}
-          </Avatar>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: isIncrease ? 'success.main' : 'error.main' }}
-          >
-            {Math.abs(percentageChange).toFixed(2)}%
-          </Typography>
-        </Box>
+              mr: 1
+            }}>
+              {currentValues.isIncrease ? (
+                <IconArrowUpRight width={16} color="#13DEB9" />
+              ) : (
+                <IconArrowDownRight width={16} color="#FA896B" />
+              )}
+            </Avatar>
+            <Typography
+              variant="subtitle2"
+              sx={{ color: currentValues.isIncrease ? 'success.main' : 'error.main' }}
+            >
+              {Math.abs(currentValues.percentageChange).toFixed(2)}%
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </BlankCard>
   );

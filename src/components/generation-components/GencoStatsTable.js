@@ -237,7 +237,7 @@ const GencoStatsTable = () => {
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6">Genco Energy Generated (GWh)</Typography>
+          <Typography variant="h6">Genco Energy Generated (MWh)</Typography>
           <IconButton>
             <IconFilter size="1.2rem" />
           </IconButton>

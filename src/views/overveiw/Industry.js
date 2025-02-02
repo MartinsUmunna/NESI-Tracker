@@ -31,59 +31,65 @@ const Industry = () => {
         <Grid container spacing={3}>
           {/* Welcome Card */}
           <Grid item xs={12}>
-            <WelcomeCard />
+              <WelcomeCard />
           </Grid>
           {/* column */}
-          <Grid item xs={12} lg={12}>
-            <ShareofAvailableCapacity />
-          </Grid>
           <Grid item xs={12} lg={12}>
             <IndustryEnergy />
-          </Grid>
+          </Grid> 
+          <Grid item xs={12} lg={12}>
+            <ShareofAvailableCapacity />
+          </Grid> 
           {/* column */}
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             <Grid container spacing={3}>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <AverageDiscoTariff />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <AverageATCC />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <AverageBillingEfficiency />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <AverageCollectionEfficiency />
               </Grid>
-              <Grid item sm={12} md={6} lg={8}>
+              <Grid item sm={12} lg={8} >
                 <CapacityIndustry />
               </Grid>
-              <Grid item sm={12} md={6} lg={4}>
+              <Grid item sm={12} lg={4} >
                 <TransmissionLossFactorVsGridCollapse />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <AllTimePeak />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <EnergySentOut />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <EnergyRecieved />
               </Grid>
-              <Grid item sm={12} md={6} lg={3}>
+              <Grid item sm={12} lg={3}>
                 <TCNWheelingCapacity />
               </Grid>
-              <Grid item sm={12}>
+              <Grid item sm={12} >
                 <GlobalEnergyTrends />
               </Grid>
+                
             </Grid>
           </Grid>
           {/* column */}
-
+          
           {/* column */}
           <Grid item xs={12} lg={4}>
-            <Grid container spacing={3}></Grid>
+            <Grid container spacing={3}>
+              
+              
+             
+            </Grid>
           </Grid>
+    
         </Grid>
         {/* column */}
         <Welcome />

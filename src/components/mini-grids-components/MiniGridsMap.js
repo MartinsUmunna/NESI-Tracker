@@ -60,7 +60,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Gnami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2014 by  Huawei in partnership with the ministry of power'
       }
     },
     {
@@ -71,7 +71,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '50kW Solar Hybrid minigrid in Makami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2022 by  ACOB Lighting Technology Limited'
       }
     },
     {
@@ -82,7 +82,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '24kW Solar minigrid in Charwa/Chakun community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2016 by Arnergy Solar Limited'
       }
     },
     {
@@ -203,7 +203,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar minigrid in Tunga Jika community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Nayo Utilities'
       }
     },
     {
@@ -225,7 +225,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '10kW Solar minigrid in Gololo community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by ACOB Lighting Technology Limited'
       }
     },
     {
@@ -236,7 +236,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '10kW Solar minigrid in Tarmasuwa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by ACOB Lighting Technology Limited'
       }
     },
     {
@@ -258,7 +258,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '8kW Solar Hybrid minigrid in Bayan Fada community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by ACOB Lighting Technology Limited'
       }
     },
     {

@@ -53,6 +53,8 @@ import {
 import { uniqueId } from 'lodash';
 
 const Menuitems = [
+
+
   {
     id: uniqueId(),
     title: 'Industry',
@@ -64,8 +66,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Economy',
-    icon: IconCurrencyDollar,
+    icon: IconAperture,
     href: '/econometrics/EconomicData',
+    
   },
   {
     navlabel: true,
@@ -74,9 +77,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'World Energy Report',
-    icon: IconChartLine,
+    icon: IconChartDonut3,
     href: '/World/WorldData',
-  },
+  }, 
   {
     navlabel: true,
     subheader: 'Africa',
@@ -84,15 +87,15 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Africa',
-    icon: IconBox,
+    icon: IconChartDonut3,
     href: '/Africa/AfricaData',
-  },
+  }, 
   {
     id: uniqueId(),
     title: 'West Africa',
-    icon: IconPackage,
+    icon: IconChartDonut3,
     href: '/Africa/WestAfricaData',
-  },
+  }, 
   {
     navlabel: true,
     subheader: 'On-Grid',
@@ -100,27 +103,42 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Generation',
-    icon: IconChartCandle,
+    icon: IconChartDonut3,
     href: '/On-Grid/GenerationData',
-  },
+  }, 
+  
   {
     id: uniqueId(),
     title: 'Transmission',
-    icon: IconGitMerge,
+    icon: IconChartDonut3,
     href: '/transmission/TransmissionData',
-  },
+  }, 
+
+  
+
+  
+ 
+ 
+  
   {
     id: uniqueId(),
     title: 'Distribution',
-    icon: IconApps,
+    icon: IconChartDonut3,
     href: '/distribution/Disco',
   },
+
+  
   {
     id: uniqueId(),
     title: 'Customer',
-    icon: IconUserCircle,
+    icon: IconChartDonut3,
     href: '/customer/CustomerData',
-  },
+  }, 
+  
+      
+    
+ 
+  
   {
     navlabel: true,
     subheader: 'Off-Grid',
@@ -128,9 +146,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Mini Grids',
-    icon: IconBoxMultiple,
+    icon: IconChartDonut3,
     href: '/off-grid/MiniGridsData',
-  },
+  }, 
   {
     navlabel: true,
     subheader: 'Energy Insights',
@@ -138,9 +156,10 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Reports',
-    icon: IconFileDescription,
+    icon: IconChartDonut3,
     href: '/off-grid/EnergyReportData',
-  },
+  }, 
+  
   {
     navlabel: true,
     subheader: 'Datasets',
@@ -148,9 +167,11 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Datasets',
-    icon: IconFiles,
+    icon: IconChartDonut3,
     href: '/dataset/Dataset_Data',
-  },
+  }, 
+  
+  
 ];
 
 export default Menuitems;

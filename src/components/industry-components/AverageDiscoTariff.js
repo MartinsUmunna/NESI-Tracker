@@ -1,28 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { CardContent, Typography, Avatar, Box, Divider } from '@mui/material';
+import { 
+  CardContent, 
+  Typography, 
+  Avatar, 
+  Box, 
+  FormControl,
+  Select,
+  MenuItem
+} from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard.js';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons';
 import API_URL from '../../config/apiconfig';
 
 const AverageDiscoTariff = () => {
-  const [tariffData, setTariffData] = useState({ current: 0, previous: 0, year: '' });
+  const [tariffData, setTariffData] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('');
+  const [years, setYears] = useState([]);
+  const [currentTariff, setCurrentTariff] = useState({ current: 0, previous: 0 });
 
   // Fetch Tariff Data
   const fetchTariffData = async () => {
     try {
       const response = await fetch(`${API_URL}/Yearly-Avg-Tariff`);
       const data = await response.json();
-
-      // Sort by year to get the latest and previous year's values
+      
+      // Sort by year to get all available years
       const sortedData = data.sort((a, b) => b.Year - a.Year);
-      const latest = sortedData[0];
-      const previous = sortedData[1];
-
-      setTariffData({
-        current: latest?.AVGTariff || 0,
-        previous: previous?.AVGTariff || 0,
-        year: latest?.Year || '',
-      });
+      const uniqueYears = [...new Set(sortedData.map(item => item.Year))];
+      
+      setTariffData(sortedData);
+      setYears(uniqueYears);
+      setSelectedYear(uniqueYears[0]); // Set most recent year as default
     } catch (error) {
       console.error('Error fetching tariff data:', error);
     }
@@ -32,11 +40,22 @@ const AverageDiscoTariff = () => {
     fetchTariffData();
   }, []);
 
+  useEffect(() => {
+    if (selectedYear && tariffData.length > 0) {
+      const currentYearData = tariffData.find(item => item.Year === selectedYear);
+      const previousYearData = tariffData.find(item => item.Year === selectedYear - 1);
+      
+      setCurrentTariff({
+        current: currentYearData?.AVGTariff || 0,
+        previous: previousYearData?.AVGTariff || 0
+      });
+    }
+  }, [selectedYear, tariffData]);
+
   // Helper: Calculate Change Details
   const getChangeDetails = (current, previous) => {
     const change = ((current - previous) / previous) * 100;
     const isPositive = change >= 0;
-
     return {
       change: change.toFixed(2),
       color: isPositive ? 'success.main' : 'error.light',
@@ -44,7 +63,7 @@ const AverageDiscoTariff = () => {
     };
   };
 
-  const changeDetails = getChangeDetails(tariffData.current, tariffData.previous);
+  const changeDetails = getChangeDetails(currentTariff.current, currentTariff.previous);
 
   return (
     <BlankCard>
@@ -53,23 +72,43 @@ const AverageDiscoTariff = () => {
           p: '25px',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           alignItems: 'center',
           height: '100%',
         }}
       >
-        <Typography variant="h6" gutterBottom textAlign="center">
-          Average Disco Tariff ({tariffData.year})
-        </Typography>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
+          }}
+        >
+          <Typography variant="h6">
+            Average Disco Tariff
+          </Typography>
+          <FormControl size="small">
+            <Select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              sx={{ minWidth: 120 }}
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  Year {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          ₦{tariffData.current || '---'}/KWh
+          ₦{currentTariff.current || '---'}/KWh
         </Typography>
-
         <Typography variant="subtitle2" color="textSecondary" textAlign="center">
-          (Previous Year: ₦{tariffData.previous || '---'}/KWh)
+          (Previous Year: ₦{currentTariff.previous || '---'}/KWh)
         </Typography>
-
         <Box
           sx={{
             display: 'flex',

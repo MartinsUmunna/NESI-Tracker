@@ -2,10 +2,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
-import { ReactComponent as LogoDarkSVG } from 'src/assets/images/logos/Nesi_Logo_2.svg';
-import { ReactComponent as LogoDarkRTLSVG } from 'src/assets/images/logos/Nesi_Logo_2.svg';
-import { ReactComponent as LogoLightSVG } from 'src/assets/images/logos/Nesi_Logo_2.svg';
-import { ReactComponent as LogoLightRTLSVG } from 'src/assets/images/logos/Nesi_Logo_2.svg';
+import { ReactComponent as LogoDarkSVG } from 'src/assets/images/logos/ELEC-T LOGO.svg';
+import { ReactComponent as LogoDarkRTLSVG } from 'src/assets/images/logos/ELEC-T LOGO.svg';
+import { ReactComponent as LogoLightSVG } from 'src/assets/images/logos/ELEC-T LOGO.svg';
+import { ReactComponent as LogoLightRTLSVG } from 'src/assets/images/logos/ELEC-T LOGO.svg';
 
 const LogoDark = props => <LogoDarkSVG {...props} width="100%" height="100%" />;
 const LogoDarkRTL = props => <LogoDarkRTLSVG {...props} width="100%" height="100%" />;

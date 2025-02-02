@@ -47,6 +47,7 @@ import SapeleLogo from 'src/assets/images/Genco_Logos/sapele_logo.jpg';
 import DefaultLogo from 'src/assets/images/Genco_Logos/Default_Logo.jpg';
 
 const logoMapping = {
+  
   "AFAM IV": AfamLogo,
   "AFAM": AfamLogo,
   "AFAM VI (SHELL)": AfamLogo,

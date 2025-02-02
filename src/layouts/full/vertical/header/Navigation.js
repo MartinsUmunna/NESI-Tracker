@@ -24,9 +24,7 @@ const AppDD = () => {
 
   return (
     <>
-      <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to='/home' component={Link}>
-        Home
-      </Button>
+      
       <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to='/overview/Industry' component={Link}>
         Industry
       </Button>

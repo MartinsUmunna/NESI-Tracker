@@ -1,6 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Grid, Button, Typography, ButtonGroup } from '@mui/material';
+import { 
+  Box,
+  Grid,
+  Button,
+  Typography,
+  Popper,
+  Fade,
+  Paper,
+  ClickAwayListener,
+  IconButton
+} from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import MenuIcon from '@mui/icons-material/Menu';
+import NavigationIcon from '@mui/icons-material/Navigation';
 import PageContainer from 'src/components/container/PageContainer';
 import WelcomeCard from 'src/components/dashboards/ecommerce/DistributionWelcomeCard';
 import DiscoMap_StatesCovered from 'src/components/distribution-components/DiscoMap_StatesCovered';
@@ -23,6 +35,11 @@ import DiscoTableMarketInvoiceNBET from 'src/components/distribution-components/
 
 const Disco = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [hoveredSection, setHoveredSection] = useState(null);
+
   const sectionRefs = {
     atcc: useRef(null),
     tariff: useRef(null),
@@ -35,17 +52,52 @@ const Disco = () => {
     metering: useRef(null),
   };
 
+  const sections = [
+    { key: 'atcc', label: 'ATCC', icon: '📊' },
+    { key: 'tariff', label: 'Tariff', icon: '💰' },
+    { key: 'energyReceived', label: 'Energy Received', icon: '⚡' },
+    { key: 'energyBilled', label: 'Energy Billed', icon: '📝' },
+    { key: 'revenueBilled', label: 'Revenue Billed', icon: '💵' },
+    { key: 'revenueCollected', label: 'Revenue Collected', icon: '🏦' },
+    { key: 'loadOfftake', label: 'Load Offtake', icon: '🔌' },
+    { key: 'invoices', label: 'Invoices', icon: '📑' },
+    { key: 'metering', label: 'Metering', icon: '⚡' },
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 300);
+
+      // Determine active section based on scroll position
+      const sectionEntries = Object.entries(sectionRefs);
+      for (const [key, ref] of sectionEntries) {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          if (rect.top >= 0 && rect.top <= window.innerHeight * 0.5) {
+            setActiveSection(key);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionRef) => {
-    sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const scrollToSection = (sectionKey) => {
+    sectionRefs[sectionKey].current?.scrollIntoView({ behavior: 'smooth' });
+    setActiveSection(sectionKey);
+    handleClose();
   };
 
   const scrollToTop = () => {
@@ -53,70 +105,99 @@ const Disco = () => {
   };
 
   return (
-    <PageContainer title="Distribution" description="This is the Distribution Dashboard page">
-      <Box>
-        <Box mt={3} mb={3} display="flex" alignItems="center" flexWrap="wrap">
-          <Typography variant="h4" gutterBottom sx={{ marginRight: 2 }}>
-            Jump to Section:
-          </Typography>
-          <ButtonGroup variant="outlined" size="small" sx={{ flexGrow: 1 }}>
+    <PageContainer title="Distribution" description="Distribution Dashboard">
+      <Box sx={{ position: 'relative' }}>
+        {/* Navigation Menu */}
+        <Box
+          sx={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 1100,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            padding: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Button
-              onClick={() => scrollToSection(sectionRefs.atcc)}
-              sx={{ flex: 1 }}
+              variant="contained"
+              onClick={handleClick}
+              startIcon={<MenuIcon />}
+              sx={{
+                borderRadius: 2,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                },
+              }}
             >
-              ATCC
+              Navigate Sections
             </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.tariff)}
-              sx={{ flex: 1 }}
-            >
-              Tariff
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.energyReceived)}
-              sx={{ flex: 1 }}
-            >
-              Energy Received
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.energyBilled)}
-              sx={{ flex: 1 }}
-            >
-              Energy Billed
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.revenueBilled)}
-              sx={{ flex: 1 }}
-            >
-              Revenue Billed
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.revenueCollected)}
-              sx={{ flex: 1 }}
-            >
-              Revenue Collected
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.loadOfftake)}
-              sx={{ flex: 1 }}
-            >
-              Load Offtake
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.invoices)}
-              sx={{ flex: 1 }}
-            >
-              Invoices
-            </Button>
-            <Button
-              onClick={() => scrollToSection(sectionRefs.metering)}
-              sx={{ flex: 1 }}
-            >
-              Metering
-            </Button>
-          </ButtonGroup>
+
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              {activeSection && sections.find(s => s.key === activeSection)?.label}
+            </Typography>
+          </Box>
         </Box>
 
+        <Popper
+          open={open}
+          anchorEl={anchorEl}
+          placement="bottom-start"
+          transition
+          sx={{ zIndex: 1200 }}
+        >
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper
+                sx={{
+                  mt: 1,
+                  p: 2,
+                  borderRadius: 2,
+                  boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+                  maxWidth: '80vw',
+                  maxHeight: '70vh',
+                  overflow: 'auto',
+                }}
+              >
+                <ClickAwayListener onClickAway={handleClose}>
+                  <Grid container spacing={1}>
+                    {sections.map((section) => (
+                      <Grid item xs={12} sm={6} md={4} key={section.key}>
+                        <Button
+                          fullWidth
+                          onClick={() => scrollToSection(section.key)}
+                          onMouseEnter={() => setHoveredSection(section.key)}
+                          onMouseLeave={() => setHoveredSection(null)}
+                          sx={{
+                            justifyContent: 'flex-start',
+                            padding: 2,
+                            borderRadius: 2,
+                            backgroundColor: activeSection === section.key ? 'primary.light' : 'transparent',
+                            color: activeSection === section.key ? 'primary.contrastText' : 'text.primary',
+                            transition: 'all 0.3s ease',
+                            transform: hoveredSection === section.key ? 'scale(1.05)' : 'scale(1)',
+                            '&:hover': {
+                              backgroundColor: activeSection === section.key ? 'primary.main' : 'action.hover',
+                              transform: 'scale(1.05)',
+                            },
+                          }}
+                        >
+                          <Box sx={{ mr: 1 }}>{section.icon}</Box>
+                          {section.label}
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </ClickAwayListener>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
+
+        {/* Main Content */}
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <WelcomeCard />
@@ -173,26 +254,32 @@ const Disco = () => {
             <DiscoMeteringProgress />
           </Grid>
         </Grid>
-      </Box>
 
-      {showBackToTop && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={scrollToTop}
-          style={{
-            position: 'fixed',
-            bottom: '80px',
-            right: '20px',
-            borderRadius: '50%',
-            minWidth: '50px',
-            height: '50px',
-            zIndex: 1000,
-          }}
-        >
-          <KeyboardArrowUpIcon />
-        </Button>
-      )}
+        {/* Back to Top Button */}
+        {showBackToTop && (
+          <IconButton
+            onClick={scrollToTop}
+            sx={{
+              position: 'fixed',
+              bottom: '2rem',
+              right: '2rem',
+              backgroundColor: 'primary.main',
+              color: 'white',
+              borderRadius: '50%',
+              width: 56,
+              height: 56,
+              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            <NavigationIcon />
+          </IconButton>
+        )}
+      </Box>
     </PageContainer>
   );
 };

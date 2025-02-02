@@ -31,6 +31,7 @@ import { useTheme } from '@mui/material/styles';
 import API_URL from '../../config/apiconfig';
 
 // Import all your logos
+import AbaLogo from 'src/assets/images/Genco_Logos/Aba_Logo.png';
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
 import PhLogo from 'src/assets/images/Genco_Logos/Ph_Logo.jpg';
@@ -46,6 +47,7 @@ import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
 // Logo mapping object
 const logoMapping = {
+  'Aba': AbaLogo,
   'Abuja': AbujaLogo,
   'Benin': BeninLogo,
   'Eko': EkoLogo,

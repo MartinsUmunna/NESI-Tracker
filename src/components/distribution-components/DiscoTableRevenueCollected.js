@@ -27,6 +27,7 @@ import ReactApexChart from 'react-apexcharts';
 import API_URL from '../../config/apiconfig';
 
 // Import logos (assuming these imports are correct)
+import AbaLogo from 'src/assets/images/Genco_Logos/Aba_Logo.png';
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
 import EkoLogo from 'src/assets/images/Genco_Logos/Eko_Logo.jpg';
@@ -40,6 +41,7 @@ import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
 
 const logoMap = {
+  Aba: AbaLogo,
   Abuja: AbujaLogo,
   Benin: BeninLogo,
   Eko: EkoLogo,
