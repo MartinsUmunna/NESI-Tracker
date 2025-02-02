@@ -1,11 +1,13 @@
-import { useRoutes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ThemeSettings } from './theme/Theme';
-import RTL from './layouts/full/shared/customizer/RTL';
-import ScrollToTop from './components/shared/ScrollToTop';
-import Router from './routes/Router';
+import './index.css';
+
 import { CssBaseline, ThemeProvider } from '@mui/material';
 
+import RTL from './layouts/full/shared/customizer/RTL';
+import Router from './routes/Router';
+import ScrollToTop from './components/shared/ScrollToTop';
+import { ThemeSettings } from './theme/Theme';
+import { useRoutes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function App() {
   const routing = useRoutes(Router);
@@ -22,4 +24,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
