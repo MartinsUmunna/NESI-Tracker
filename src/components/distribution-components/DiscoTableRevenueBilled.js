@@ -1,36 +1,32 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+
 import {
+  Avatar,
   Box,
+  CircularProgress,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   TableSortLabel,
   TextField,
   Typography,
-  Paper,
-  TablePagination,
-  IconButton,
-  Avatar,
-  InputAdornment,
-  Switch,
-  FormControlLabel,
-  MenuItem,
-  CircularProgress
 } from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
-import { useTheme } from '@mui/material/styles';
-import { IconSearch, IconFilter } from '@tabler/icons';
-import ReactApexChart from 'react-apexcharts';
-import API_URL from '../../config/apiconfig';
+import { IconFilter, IconSearch } from '@tabler/icons';
 
+import API_URL from '../../config/apiconfig';
 import AbaLogo from 'src/assets/images/Genco_Logos/Aba_Logo.png';
 import AbujaLogo from 'src/assets/images/Genco_Logos/Abuja_Logo.jpg';
 import BeninLogo from 'src/assets/images/Genco_Logos/Benin_Logo.jpg';
-import PhLogo from 'src/assets/images/Genco_Logos/Ph_Logo.jpg';
 import EkoLogo from 'src/assets/images/Genco_Logos/Eko_Logo.jpg';
 import EnuguLogo from 'src/assets/images/Genco_Logos/Enugu_Logo.jpg';
 import IbadanLogo from 'src/assets/images/Genco_Logos/Ibadan_Logo.jpg';
@@ -38,23 +34,29 @@ import IkejaLogo from 'src/assets/images/Genco_Logos/Ikeja_Logo.jpg';
 import JosLogo from 'src/assets/images/Genco_Logos/Jos_Logo.jpg';
 import KadunaLogo from 'src/assets/images/Genco_Logos/Kaduna_Logo.jpg';
 import KanoLogo from 'src/assets/images/Genco_Logos/Kano_Logo.jpg';
+import PhLogo from 'src/assets/images/Genco_Logos/Ph_Logo.jpg';
 import PortharcourtLogo from 'src/assets/images/Genco_Logos/ph_Logo.jpg';
+import PropTypes from 'prop-types';
+import ReactApexChart from 'react-apexcharts';
+import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 import YolaLogo from 'src/assets/images/Genco_Logos/Yola_logo.jpg';
+import { useTheme } from '@mui/material/styles';
+import { visuallyHidden } from '@mui/utils';
 
 const logoMap = {
-  'Aba': AbaLogo,
-  'Abuja': AbujaLogo,
-  'Benin': BeninLogo,
-  'Ph': PhLogo,
-  'Eko': EkoLogo,
-  'Enugu': EnuguLogo,
-  'Ibadan': IbadanLogo,
-  'Ikeja': IkejaLogo,
-  'Jos': JosLogo,
-  'Kaduna': KadunaLogo,
-  'Kano': KanoLogo,
-  'Portharcourt': PortharcourtLogo,
-  'Yola': YolaLogo
+  Aba: AbaLogo,
+  Abuja: AbujaLogo,
+  Benin: BeninLogo,
+  Ph: PhLogo,
+  Eko: EkoLogo,
+  Enugu: EnuguLogo,
+  Ibadan: IbadanLogo,
+  Ikeja: IkejaLogo,
+  Jos: JosLogo,
+  Kaduna: KadunaLogo,
+  Kano: KanoLogo,
+  Portharcourt: PortharcourtLogo,
+  Yola: YolaLogo,
 };
 
 function descendingComparator(a, b, orderBy) {
@@ -160,7 +162,7 @@ const DiscoTableRevenueBilled = () => {
       const data = await response.json();
 
       // Extract unique years and sort them
-      const uniqueYears = [...new Set(data.map(item => item.Year))].sort((a, b) => b - a);
+      const uniqueYears = [...new Set(data.map((item) => item.Year))].sort((a, b) => b - a);
       setYears(uniqueYears);
       setSelectedYear(uniqueYears[0].toString());
 
@@ -201,9 +203,9 @@ const DiscoTableRevenueBilled = () => {
 
   const chartData = React.useMemo(() => {
     return rows
-      .map(row => ({
+      .map((row) => ({
         disco: row.genco,
-        value: row[selectedYear] || 0
+        value: row[selectedYear] || 0,
       }))
       .sort((a, b) => b.value - a.value);
   }, [rows, selectedYear]);
@@ -212,23 +214,22 @@ const DiscoTableRevenueBilled = () => {
     if (value >= 1000000000000) {
       return `₦${(value / 1000000000000).toFixed(2)}T`;
     } else if (value >= 1000000000) {
-      return `₦${(value / 1000000000).toFixed(2)}B`; 
+      return `₦${(value / 1000000000).toFixed(2)}B`;
     } else if (value >= 1000000) {
-      return `₦${(value / 1000000).toFixed(2)}M`; 
+      return `₦${(value / 1000000).toFixed(2)}M`;
     } else if (value >= 1000) {
-      return `₦${(value / 1000).toFixed(2)}K`; 
+      return `₦${(value / 1000).toFixed(2)}K`;
     } else {
-      return `₦${value.toFixed(2)}`; 
+      return `₦${value.toFixed(2)}`;
     }
   };
-  
 
   const chartOptions = {
     chart: {
       type: 'bar',
       height: 600,
       toolbar: {
-        show: false
+        show: false,
       },
       background: 'transparent',
     },
@@ -238,7 +239,7 @@ const DiscoTableRevenueBilled = () => {
         horizontal: true,
         distributed: false,
         dataLabels: {
-          position: 'right'
+          position: 'right',
         },
         barHeight: '70%',
       },
@@ -252,40 +253,40 @@ const DiscoTableRevenueBilled = () => {
       },
       offsetX: 5,
       dropShadow: {
-        enabled: false
+        enabled: false,
       },
       style: {
-        colors: [theme.palette.text.primary]
-      }
+        colors: [theme.palette.text.primary],
+      },
     },
     xaxis: {
-      categories: chartData.map(item => item.disco),
+      categories: chartData.map((item) => item.disco),
       labels: {
         style: {
           colors: [theme.palette.text.primary],
-        }
-      }
+        },
+      },
     },
     yaxis: {
       labels: {
         style: {
           colors: [theme.palette.text.primary],
-        }
-      }
+        },
+      },
     },
     title: {
       text: `DisCo Revenue Billed - ${selectedYear}`,
       align: 'center',
       style: {
-        color: theme.palette.text.primary
-      }
+        color: theme.palette.text.primary,
+      },
     },
     tooltip: {
       theme: 'dark',
       y: {
         formatter: function (val) {
           return formatValue(val);
-        }
+        },
       },
       style: {
         color: theme.palette.text.primary,
@@ -293,14 +294,16 @@ const DiscoTableRevenueBilled = () => {
       background: theme.palette.background.paper,
     },
     legend: {
-      show: false
-    }
+      show: false,
+    },
   };
 
-  const series = [{
-    name: selectedYear,
-    data: chartData.map(item => item.value)
-  }];
+  const series = [
+    {
+      name: selectedYear,
+      data: chartData.map((item) => item.value),
+    },
+  ];
 
   // Compute totals for each column
   const totals = years.reduce((acc, year) => {
@@ -310,15 +313,15 @@ const DiscoTableRevenueBilled = () => {
 
   totals.total = Object.values(totals).reduce((sum, current) => sum + current, 0);
 
-  const filteredRows = rows.filter(row =>
-    row.genco.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredRows = rows.filter((row) => row.genco.toLowerCase().includes(search.toLowerCase()));
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -368,14 +371,12 @@ const DiscoTableRevenueBilled = () => {
                 </MenuItem>
               ))}
             </TextField>
-            <Box sx={{ height: 600 }}>
-              <ReactApexChart 
-                options={chartOptions} 
-                series={series} 
-                type="bar" 
-                height="100%" 
-              />
-            </Box>
+            <ResponsiveEl>
+              {' '}
+              <Box sx={{ height: 600 }}>
+                <ReactApexChart options={chartOptions} series={series} type="bar" height="100%" />
+              </Box>
+            </ResponsiveEl>
           </Box>
         ) : (
           <TableContainer>
@@ -395,11 +396,16 @@ const DiscoTableRevenueBilled = () => {
                         <Avatar src={row.img} alt={row.genco} />
                       </TableCell>
                       <TableCell>{row.genco}</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
+                      <TableCell
+                        align="right"
+                        sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}
+                      >
                         {formatValue(years.reduce((sum, year) => sum + (row[year] || 0), 0))}
                       </TableCell>
-                      {years.map(year => (
-                        <TableCell align="right" key={year}>{formatValue(row[year] || 0)}</TableCell>
+                      {years.map((year) => (
+                        <TableCell align="right" key={year}>
+                          {formatValue(row[year] || 0)}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}
@@ -411,12 +417,18 @@ const DiscoTableRevenueBilled = () => {
               </TableBody>
               <TableBody>
                 <TableRow>
-                  <TableCell colSpan={2} align="right">Totals</TableCell>
+                  <TableCell colSpan={2} align="right">
+                    Totals
+                  </TableCell>
                   <TableCell align="right" sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
                     {formatValue(totals.total)}
-                    </TableCell>
-                  {years.map(year => (
-                    <TableCell align="right" key={year} sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}>
+                  </TableCell>
+                  {years.map((year) => (
+                    <TableCell
+                      align="right"
+                      key={year}
+                      sx={{ fontWeight: 'bold', bgcolor: 'primary.light' }}
+                    >
                       {formatValue(totals[year])}
                     </TableCell>
                   ))}
@@ -427,7 +439,9 @@ const DiscoTableRevenueBilled = () => {
         )}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
           <FormControlLabel
-            control={<Switch checked={dense} onChange={event => setDense(event.target.checked)} />}
+            control={
+              <Switch checked={dense} onChange={(event) => setDense(event.target.checked)} />
+            }
             label="Dense padding"
           />
           <TablePagination

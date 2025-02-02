@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import Chart from 'react-apexcharts';
-import { useTheme } from '@mui/material/styles';
-import { Grid, Stack, Typography, Avatar, Box, FormControl, Select, MenuItem } from '@mui/material';
-import { IconGridDots } from '@tabler/icons';
-import DashboardCard from 'src/components/shared/DashboardCard';
+import { Avatar, Box, FormControl, Grid, MenuItem, Select, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
 import API_URL from '../../config/apiconfig';
+import Chart from 'react-apexcharts';
+import DashboardCard from 'src/components/shared/DashboardCard';
+import { IconGridDots } from '@tabler/icons';
+import { useTheme } from '@mui/material/styles';
 
 const YearlyElectricityConsumption = () => {
   const theme = useTheme();
@@ -19,7 +20,7 @@ const YearlyElectricityConsumption = () => {
     residential: [],
     productive: [],
     public: [],
-    years: []
+    years: [],
   });
 
   const [yearlyData, setYearlyData] = useState({});
@@ -34,30 +35,30 @@ const YearlyElectricityConsumption = () => {
         const sortedData = data.sort((a, b) => a.Year - b.Year);
 
         // Get unique years
-        const years = [...new Set(sortedData.map(item => item.Year))];
+        const years = [...new Set(sortedData.map((item) => item.Year))];
 
         // Initialize consumption data structure
         const consumption = {
           commercial: Array(years.length).fill(0),
           residential: Array(years.length).fill(0),
           productive: Array(years.length).fill(0),
-          public: Array(years.length).fill(0)
+          public: Array(years.length).fill(0),
         };
 
         // Create yearly data structure
         const yearData = {};
-        years.forEach(year => {
+        years.forEach((year) => {
           yearData[year] = {
             commercial: 0,
             residential: 0,
             productive: 0,
             public: 0,
-            year: year
+            year: year,
           };
         });
 
         // Populate consumption data and yearly data
-        sortedData.forEach(item => {
+        sortedData.forEach((item) => {
           const yearIndex = years.indexOf(item.Year);
           const type = item.ConsumptionType.toLowerCase();
           if (type in consumption) {
@@ -68,11 +69,11 @@ const YearlyElectricityConsumption = () => {
 
         setChartData({
           ...consumption,
-          years
+          years,
         });
 
         setYearlyData(yearData);
-        
+
         // Set initial selected year to latest year
         const latestYear = Math.max(...years);
         setSelectedYear(latestYear);
@@ -117,7 +118,7 @@ const YearlyElectricityConsumption = () => {
       labels: {
         formatter: function (value) {
           return value.toLocaleString();
-        }
+        },
       },
       min: 0,
       forceNiceScale: true,
@@ -130,10 +131,10 @@ const YearlyElectricityConsumption = () => {
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
       fillSeriesColor: false,
       y: {
-        formatter: function(value) {
+        formatter: function (value) {
           return value.toLocaleString() + ' MWh';
-        }
-      }
+        },
+      },
     },
   };
 
@@ -149,7 +150,7 @@ const YearlyElectricityConsumption = () => {
     residential: 0,
     productive: 0,
     public: 0,
-    year: selectedYear
+    year: selectedYear,
   };
 
   const totalConsumption = Object.entries(currentYearData)
@@ -159,18 +160,22 @@ const YearlyElectricityConsumption = () => {
   return (
     <DashboardCard title="">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={4}>
+        <Grid item md={4} sm={12}>
           <Typography variant="h4" gutterBottom>
             Yearly Electricity Consumption
           </Typography>
           <Typography variant="body1" paragraph>
-            This chart illustrates the yearly electricity consumption trends across different sectors in Nigeria. It showcases the evolving energy needs of commercial, residential, productive, and public sectors.
+            This chart illustrates the yearly electricity consumption trends across different
+            sectors in Nigeria. It showcases the evolving energy needs of commercial, residential,
+            productive, and public sectors.
           </Typography>
           <Typography variant="body1" paragraph>
-            The data reflects the country's economic growth, urbanization, and increasing electrification efforts, highlighting the importance of sustainable energy solutions to meet the growing demand.
+            The data reflects the country's economic growth, urbanization, and increasing
+            electrification efforts, highlighting the importance of sustainable energy solutions to
+            meet the growing demand.
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid item md={8} sm={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <Select
@@ -224,7 +229,9 @@ const YearlyElectricityConsumption = () => {
                   sx={{ width: 9, mt: 1, height: 9, bgcolor: primary, svg: { display: 'none' } }}
                 />
                 <Box>
-                  <Typography variant="h5">{currentYearData.commercial.toLocaleString()} MWh</Typography>
+                  <Typography variant="h5">
+                    {currentYearData.commercial.toLocaleString()} MWh
+                  </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
                     Commercial {selectedYear}
                   </Typography>
@@ -235,7 +242,9 @@ const YearlyElectricityConsumption = () => {
                   sx={{ width: 9, mt: 1, height: 9, bgcolor: secondary, svg: { display: 'none' } }}
                 />
                 <Box>
-                  <Typography variant="h5">{currentYearData.residential.toLocaleString()} MWh</Typography>
+                  <Typography variant="h5">
+                    {currentYearData.residential.toLocaleString()} MWh
+                  </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
                     Residential {selectedYear}
                   </Typography>
@@ -246,7 +255,9 @@ const YearlyElectricityConsumption = () => {
                   sx={{ width: 9, mt: 1, height: 9, bgcolor: error, svg: { display: 'none' } }}
                 />
                 <Box>
-                  <Typography variant="h5">{currentYearData.productive.toLocaleString()} MWh</Typography>
+                  <Typography variant="h5">
+                    {currentYearData.productive.toLocaleString()} MWh
+                  </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
                     Productive {selectedYear}
                   </Typography>
@@ -257,7 +268,9 @@ const YearlyElectricityConsumption = () => {
                   sx={{ width: 9, mt: 1, height: 9, bgcolor: warning, svg: { display: 'none' } }}
                 />
                 <Box>
-                  <Typography variant="h5">{currentYearData.public.toLocaleString()} MWh</Typography>
+                  <Typography variant="h5">
+                    {currentYearData.public.toLocaleString()} MWh
+                  </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
                     Public {selectedYear}
                   </Typography>
