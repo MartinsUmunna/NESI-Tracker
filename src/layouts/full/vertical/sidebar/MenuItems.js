@@ -1,60 +1,58 @@
 import {
-  IconAward,
-  IconBoxMultiple,
-  IconPoint,
   IconAlertCircle,
-  IconNotes,
-  IconCalendar,
-  IconMail,
-  IconTicket,
-  IconEdit,
-  IconGitMerge,
-  IconCurrencyDollar,
+  IconAperture,
+  IconAppWindow,
   IconApps,
-  IconFileDescription,
-  IconFileDots,
-  IconFiles,
+  IconAward,
   IconBan,
-  IconStar,
-  IconMoodSmile,
+  IconBasket,
   IconBorderAll,
   IconBorderHorizontal,
   IconBorderInner,
-  IconBorderVertical,
+  IconBorderStyle2,
   IconBorderTop,
-  IconUserCircle,
-  IconPackage,
-  IconMessage2,
-  IconBasket,
-  IconChartLine,
-  IconChartArcs,
-  IconChartCandle,
-  IconChartArea,
-  IconChartDots,
-  IconChartDonut3,
-  IconChartRadar,
-  IconLogin,
-  IconUserPlus,
-  IconRotate,
+  IconBorderVertical,
   IconBox,
-  IconAperture,
-  IconShoppingCart,
-  IconHelp,
   IconBoxAlignBottom,
   IconBoxAlignLeft,
+  IconBoxMultiple,
+  IconCalendar,
+  IconChartArcs,
+  IconChartArea,
+  IconChartCandle,
+  IconChartDonut3,
+  IconChartDots,
+  IconChartLine,
+  IconChartRadar,
+  IconCurrencyDollar,
+  IconEdit,
+  IconFileDescription,
+  IconFileDots,
+  IconFiles,
+  IconGitMerge,
+  IconHelp,
   IconLayout,
-  IconZoomCode,
-  IconSettings,
-  IconBorderStyle2,
-  IconAppWindow,
   IconLockAccess,
+  IconLogin,
+  IconMail,
+  IconMessage2,
+  IconMoodSmile,
+  IconNotes,
+  IconPackage,
+  IconPoint,
+  IconRotate,
+  IconSettings,
+  IconShoppingCart,
+  IconStar,
+  IconTicket,
+  IconUserCircle,
+  IconUserPlus,
+  IconZoomCode,
 } from '@tabler/icons';
 
 import { uniqueId } from 'lodash';
 
 const Menuitems = [
-
-
   {
     id: uniqueId(),
     title: 'Industry',
@@ -66,9 +64,8 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Economy',
-    icon: IconAperture,
+    icon: IconCurrencyDollar,
     href: '/econometrics/EconomicData',
-    
   },
   {
     navlabel: true,
@@ -77,9 +74,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'World Energy Report',
-    icon: IconChartDonut3,
+    icon: IconChartLine,
     href: '/World/WorldData',
-  }, 
+  },
   {
     navlabel: true,
     subheader: 'Africa',
@@ -87,15 +84,15 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Africa',
-    icon: IconChartDonut3,
+    icon: IconBox,
     href: '/Africa/AfricaData',
-  }, 
+  },
   {
     id: uniqueId(),
     title: 'West Africa',
-    icon: IconChartDonut3,
+    icon: IconPackage,
     href: '/Africa/WestAfricaData',
-  }, 
+  },
   {
     navlabel: true,
     subheader: 'On-Grid',
@@ -103,42 +100,27 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Generation',
-    icon: IconChartDonut3,
+    icon: IconChartCandle,
     href: '/On-Grid/GenerationData',
-  }, 
-  
+  },
   {
     id: uniqueId(),
     title: 'Transmission',
-    icon: IconChartDonut3,
+    icon: IconGitMerge,
     href: '/transmission/TransmissionData',
-  }, 
-
-  
-
-  
- 
- 
-  
+  },
   {
     id: uniqueId(),
     title: 'Distribution',
-    icon: IconChartDonut3,
+    icon: IconApps,
     href: '/distribution/Disco',
   },
-
-  
   {
     id: uniqueId(),
     title: 'Customer',
-    icon: IconChartDonut3,
+    icon: IconUserCircle,
     href: '/customer/CustomerData',
-  }, 
-  
-      
-    
- 
-  
+  },
   {
     navlabel: true,
     subheader: 'Off-Grid',
@@ -146,9 +128,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Mini Grids',
-    icon: IconChartDonut3,
+    icon: IconBoxMultiple,
     href: '/off-grid/MiniGridsData',
-  }, 
+  },
   {
     navlabel: true,
     subheader: 'Energy Insights',
@@ -156,10 +138,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Reports',
-    icon: IconChartDonut3,
+    icon: IconFileDescription,
     href: '/off-grid/EnergyReportData',
-  }, 
-  
+  },
   {
     navlabel: true,
     subheader: 'Datasets',
@@ -167,11 +148,9 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: 'Datasets',
-    icon: IconChartDonut3,
+    icon: IconFiles,
     href: '/dataset/Dataset_Data',
-  }, 
-  
-  
+  },
 ];
 
 export default Menuitems;
