@@ -7,17 +7,17 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Define DisCo details including colors and customers
 const discoDetails = {
-  "Abuja Disco": { color: "#FF5733", customers: "3.5M", states: "FCT, Nassarawa, Niger, Kogi" },
-  "Benin Disco": { color: "#C70039", customers: "2.2M", states: "Edo, Delta, Ondo, Ekiti" },
-  "Eko Disco": { color: "#900C3F", customers: "4.0M", states: "Lagos South" },
-  "Enugu Disco": { color: "#581845", customers: "2.8M", states: "Enugu, Imo, Anambra, Abia, Ebonyi" },
-  "Ibadan Disco": { color: "#FFC300", customers: "3.3M", states: "Oyo, Ogun, Osun, Kwara" },
-  "Ikeja Disco": { color: "#DAF7A6", customers: "5.1M", states: "Lagos North" },
-  "Jos Disco": { color: "#33FFCE", customers: "1.9M", states: "Plateau, Benue, Bauchi, Gombe" },
-  "Kaduna Disco": { color: "#33FF57", customers: "2.5M", states: "Kaduna, Kebbi, Sokoto, Zamfara" },
-  "Kano Disco": { color: "#3380FF", customers: "2.7M", states: "Kano, Jigawa, Katsina" },
-  "Portharcourt Disco": { color: "#5733FF", customers: "2.1M", states: "Akwa ibom, Cross River, Rivers, Bayelsa" },
-  "Yola Disco": { color: "#8333FF", customers: "1.1M", states: "Adamawa, Borno, Taraba, Yobe" }
+  "Abuja Disco": { color: "#FF5733", customers: "1.25M", states: "FCT, Nassarawa, Niger, Kogi" },
+  "Benin Disco": { color: "#C70039", customers: "1.37M", states: "Edo, Delta, Ondo, Ekiti" },
+  "Eko Disco": { color: "#900C3F", customers: "773k", states: "Lagos South" },
+  "Enugu Disco": { color: "#581845", customers: "1.39M", states: "Enugu, Imo, Anambra, Abia, Ebonyi" },
+  "Ibadan Disco": { color: "#FFC300", customers: "2.49M", states: "Oyo, Ogun, Osun, Kwara" },
+  "Ikeja Disco": { color: "#DAF7A6", customers: "1.28M", states: "Lagos North" },
+  "Jos Disco": { color: "#33FFCE", customers: "747k", states: "Plateau, Benue, Bauchi, Gombe" },
+  "Kaduna Disco": { color: "#33FF57", customers: "877k", states: "Kaduna, Kebbi, Sokoto, Zamfara" },
+  "Kano Disco": { color: "#3380FF", customers: "881k", states: "Kano, Jigawa, Katsina" },
+  "Portharcourt Disco": { color: "#5733FF", customers: "1.17M", states: "Akwa ibom, Cross River, Rivers, Bayelsa" },
+  "Yola Disco": { color: "#8333FF", customers: "817k", states: "Adamawa, Borno, Taraba, Yobe" }
 };
 
 const MapComponent = ({ token }) => {

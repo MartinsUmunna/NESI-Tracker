@@ -30,7 +30,6 @@ const Sidebar = () => {
     return (
       <Box
         sx={{
-          color: '#fff',
           width: toggleWidth,
           flexShrink: 0,
           ...(customizer.isCollapse && {
@@ -38,6 +37,9 @@ const Sidebar = () => {
           }),
         }}
       >
+        {/* ------------------------------------------- */}
+        {/* Sidebar for desktop */}
+        {/* ------------------------------------------- */}
         <Drawer
           anchor="left"
           open
@@ -51,22 +53,32 @@ const Sidebar = () => {
               }),
               width: toggleWidth,
               boxSizing: 'border-box',
-              backgroundColor: '#002060',
-              color: '#fff', // Ensure text color is white
             },
           }}
         >
+          {/* ------------------------------------------- */}
+          {/* Sidebar Box */}
+          {/* ------------------------------------------- */}
           <Box
             sx={{
-              backgroundColor: '#002060',
-              color: 'white', // Confirm text color for consistent application
+              backgroundColor:
+                customizer.activeSidebarBg === '#ffffff' && customizer.activeMode === 'dark'
+                  ? customizer.darkBackground900
+                  : customizer.activeSidebarBg,
+              color: customizer.activeSidebarBg === '#ffffff' ? '' : 'white',
               height: '100%',
             }}
           >
+            {/* ------------------------------------------- */}
+            {/* Logo */}
+            {/* ------------------------------------------- */}
             <Box px={3}>
               <Logo />
             </Box>
             <Scrollbar sx={{ height: 'calc(100% - 190px)' }}>
+              {/* ------------------------------------------- */}
+              {/* Sidebar Items */}
+              {/* ------------------------------------------- */}
               <SidebarItems />
             </Scrollbar>
             <Profile />
@@ -85,16 +97,25 @@ const Sidebar = () => {
       PaperProps={{
         sx: {
           width: customizer.SidebarWidth,
-          backgroundColor: '#000000',
-          color: 'white', 
+          backgroundColor:
+            customizer.activeMode === 'dark'
+              ? customizer.darkBackground900
+              : customizer.activeSidebarBg,
+          color: customizer.activeSidebarBg === '#ffffff' ? '' : 'white',
           border: '0 !important',
           boxShadow: (theme) => theme.shadows[8],
         },
       }}
     >
+      {/* ------------------------------------------- */}
+      {/* Logo */}
+      {/* ------------------------------------------- */}
       <Box px={2}>
         <Logo />
       </Box>
+      {/* ------------------------------------------- */}
+      {/* Sidebar For Mobile */}
+      {/* ------------------------------------------- */}
       <SidebarItems />
     </Drawer>
   );

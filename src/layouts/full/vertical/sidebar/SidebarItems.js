@@ -19,7 +19,7 @@ const SidebarItems = () => {
 
   return (
     <Box sx={{ px: 3 }}>
-      <List sx={{ pt: 0, color: '#fff' }}  className="sidebarNav">
+      <List sx={{ pt: 0 }} className="sidebarNav">
         {Menuitems.map((item, index) => {
           // {/********SubHeader**********/}
           if (item.subheader) {

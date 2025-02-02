@@ -43,7 +43,7 @@ const WelcomeCard = () => {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const response = await axios.get('http://localhost:5006/api/commercial/overview', {
+        const response = await axios.get('http://localhost:5006/api/On-Grid/overview', {
           params: {
             year: year !== 'All' ? year : null,
             month: month !== 'All' ? month : null

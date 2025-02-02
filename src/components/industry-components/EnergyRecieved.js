@@ -15,11 +15,11 @@ const EnergyRecieved = () => {
         height: '100%' 
       }}>
         <Typography variant="h6" gutterBottom textAlign="center">
-          Energy Recieved by DisCos
+          Energy Recieved by DisCos (2024)
         </Typography>
         
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          7,000 MW
+          24,230 GWh
         </Typography>
         
         

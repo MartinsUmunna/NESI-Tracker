@@ -12,7 +12,7 @@ import SolarShareEnergy from 'src/components/world-components/SolarShareEnergy';
 
 const WorldData = () => {
     return (
-      <PageContainer title="Staff Manager" description="this is Staff Overview Dashboard page">
+      <PageContainer title="World Data" description="this is Staff Overview Dashboard page">
         <Box mt={3}>
           <Grid container spacing={3}>
             {/* column */}

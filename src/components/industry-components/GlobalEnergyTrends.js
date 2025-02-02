@@ -27,25 +27,25 @@ const GlobalEnergyTrends = () => {
       title: "Africa Energy Supply Total Yearly",
       description: "In January 2022, the total yearly energy supply in Africa is approximately 950-1,000 million tons of oil equivalent (Mtoe). This energy supply caters to a continent with a rapidly growing population and varied energy needs.",
       image: AfricaEnergySupply,
-      link: "/africa-energy-supply"
+      link: "/AfricaData"
     },
     {
       title: "Africa Energy Supply Mix Yearly",
       description: "Africa's energy supply is diversified, encompassing oil, natural gas, hydroelectric power, solar, wind, and biomass. While some countries rely heavily on fossil fuels like oil and gas, others tap into abundant renewable resources like hydropower, solar, and wind.",
       image: AfricaEnergySupplyMix,
-      link: "/africa-energy-supply-mix"
+      link: "/AfricaData"
     },
     {
       title: "Nigeria Energy Supply Yearly",
       description: "Nigeria's energy supply is primarily derived from oil and gas, contributing significantly to electricity generation and export. The country is investing in renewable sources like solar and hydroelectric power to diversify its energy mix.",
       image: NigeriaEnergySupply,
-      link: "/nigeria-energy-supply"
+      link: "/GencoCapacity"
     },
     {
       title: "Nigeria Energy Supply Mix Yearly",
       description: "Nigeria relies primarily on oil and gas for its energy needs, with hydropower and a growing emphasis on solar contributing to the mix. Efforts to diversify and incorporate more renewables aim to improve reliability and address challenges in the country's energy sector, including issues with access and supply reliability.",
       image: NigeriaEnergySupplyMix,
-      link: "/nigeria-energy-supply-mix"
+      link: "/YearlyEnergyGenerated"
     },
   ];
 

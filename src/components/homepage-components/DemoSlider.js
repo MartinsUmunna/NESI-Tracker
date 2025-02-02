@@ -61,22 +61,22 @@ const demos = [
     title: 'Overview',
   },
   {
-    link: '/commercial/GenerationData',
+    link: '/On-Grid/GenerationData',
     img: darkDemo,
     title: 'Commercial',
   },
   {
-    link: '/financial/Disco',
+    link: '/distribution/Disco',
     img: horizontalDemo,
     title: 'Financial',
   },
   {
-    link: '/technical/CustomerData',
+    link: '/customer/CustomerData',
     img: minisidebarDemo,
     title: 'Technical',
   },
   {
-    link: '/staff/MiniGridsData',
+    link: '/off-grid/MiniGridsData',
     img: rtlDemo,
     title: 'Staff Manager',
   },

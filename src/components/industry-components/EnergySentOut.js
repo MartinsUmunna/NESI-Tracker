@@ -15,11 +15,11 @@ const EnergySentOut = () => {
         height: '100%' 
       }}>
         <Typography variant="h6" gutterBottom textAlign="center">
-          Energy Sent Out by Gencos
+          Energy Sent Out by Gencos (2023)
         </Typography>
         
         <Typography variant="h3" fontWeight={600} sx={{ my: 2 }}>
-          8,200 MW
+          4,044 MWh
         </Typography>
         
         

@@ -27,7 +27,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Yebu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Havenhill Synergy Limited'
       }
     },
     {
@@ -38,7 +38,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '20kW Biogas minigrid in Rije community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Ajima Farms'
       }
     },
     {
@@ -60,7 +60,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Gnami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2014 by  Huawei in partnership with the ministry of power'
       }
     },
     {
@@ -71,7 +71,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '50kW Solar Hybrid minigrid in Makami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2022 by  ACOB Lighting Technology Limited'
       }
     },
     {
@@ -82,7 +82,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '24kW Solar minigrid in Charwa/Chakun community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2016 by Arnergy Solar Limited'
       }
     },
     {
@@ -104,7 +104,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '30kW Solar minigrid in Bambami community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by the IBK Services Limited'
       }
     },
     {
@@ -126,7 +126,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar minigrid in Kurdula community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Go Solar'
       }
     },
     {
@@ -137,7 +137,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '60kW Solar minigrid in Torankawa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by  Protogy Global Services'
       }
     },
     {
@@ -148,7 +148,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '60kW Solar minigrid in Torankawa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by Protogy Global Services'
       }
     },
     {
@@ -159,7 +159,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '64kW Solar Hybrid minigrid in Rokota community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by PowerGen Renewable Energy'
       }
     },
     {
@@ -170,7 +170,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '40kW Solar minigrid in Goton Sarki community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by AY Global Integrated Consult'
       }
     },
     {
@@ -192,7 +192,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '38kW Solar minigrid in Bisanti community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2015 by GVE'
       }
     },
     {
@@ -203,7 +203,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar minigrid in Tunga Jika community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Nayo Utilities'
       }
     },
     {
@@ -225,7 +225,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '10kW Solar minigrid in Gololo community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by ACOB Lighting Technology Limited'
       }
     },
     {
@@ -236,7 +236,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '10kW Solar minigrid in Tarmasuwa community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by ACOB Lighting Technology Limited'
       }
     },
     {
@@ -258,7 +258,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '8kW Solar Hybrid minigrid in Bayan Fada community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by ACOB Lighting Technology Limited'
       }
     },
     {
@@ -269,7 +269,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '47kW Solar minigrid in Kolaku community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed inin 2017 by the GVE'
       }
     },
     {
@@ -291,7 +291,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '18kW Solar minigrid in Ayaba community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in in 2017 by GVE'
       }
     },
     {
@@ -379,7 +379,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar Hybrid minigrid in Obangede community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by New Moon'
       }
     },
     {
@@ -423,7 +423,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Olooji community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by ACOB'
       }
     },
     {
@@ -434,7 +434,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '85kW Solar Hybrid minigrid in Gbamu Gbamu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Rubitec Sola'
       }
     },
     {
@@ -478,7 +478,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '4kW Solar minigrid in Ofetebe community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2013 by F-SGP;UNDP'
       }
     },
     {
@@ -489,7 +489,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '30kW Solar Hybrid minigrid in Ugbonla community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2021 by A4& T Power Solution'
       }
     },
     {
@@ -500,7 +500,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '15kW Solar minigrid in Gbagira community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by A4 &T Power Solutions'
       }
     },
     {
@@ -511,7 +511,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Adebayo community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2021 by ACOB'
       }
     },
     {
@@ -522,7 +522,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '24kW Solar minigrid in Ogbekpen, Ikpoba community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2016 by the Arnergy Solar'
       }
     },
     {
@@ -577,7 +577,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '100kW Solar Hybrid minigrid in Eka Awoke community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Cloud Energy'
       }
     },
     {
@@ -588,7 +588,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '33kW Solar Hybrid minigrid in Umuntumuna Obeagu Isu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Zylab Technologies Nigeria Ltd'
       }
     },
     {
@@ -599,7 +599,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '66kW Solar Hybrid minigrid in Orie Obeagu Isu community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2018 by Zylab Technologies Nigeria Ltd'
       }
     },
     {
@@ -610,7 +610,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '50kW Solar minigrid in Umon Island community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2017 by Nayo Technologies Ltd'
       }
     },
     {
@@ -632,7 +632,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '80kW Solar Hybrid minigrid in Akpabom community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2019 by GVE'
       }
     },
     {
@@ -676,7 +676,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '52kW Solar minigrid in Egbeke (Upgraded) community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2012 by GVE'
       }
     },
     {
@@ -687,7 +687,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '67kW Solar Hybrid minigrid in Akipelai community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Renewvia Energy'
       }
     },
     {
@@ -698,7 +698,7 @@ const minigridsData = {
       },
       'properties': {
         'title': '67kW Solar Hybrid minigrid in Oloibri community',
-        'description': 'Was installed in xxxxx by the xxxxx'
+        'description': 'Was installed in 2020 by Renewvia Energy'
       }
     }
     

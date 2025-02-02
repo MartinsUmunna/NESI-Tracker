@@ -1,238 +1,204 @@
-import React, { useState, useMemo } from 'react';
-import Chart from 'react-apexcharts';
-import { useTheme } from '@mui/material/styles';
-import { CardContent, Typography, Grid, Slider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { Box, Typography, Slider, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 
-const SolarShareEnergy = () => {
-  const theme = useTheme();
-  const [yearRange, setYearRange] = useState([2013, 2023]);
-  
-  const allLocations = [
-    'Africa', 'Africa (EI)', 'Algeria', 'Argentina', 'Asia', 'Asia Pacific (EI)', 'Australia', 'Austria',
-    'Azerbaijan', 'Bangladesh', 'Belarus', 'Belgium', 'Brazil', 'Bulgaria', 'CIS (EI)', 'Canada',
-    'Central America (EI)', 'Chile', 'China', 'Colombia', 'Croatia', 'Czechia', 'Denmark', 'Eastern Africa (EI)',
-    'Ecuador', 'Egypt', 'Estonia', 'Europe', 'Europe (EI)', 'European Union (27)', 'Finland', 'France',
-    'Germany', 'Greece', 'High-income countries', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia',
-    'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Latvia', 'Lithuania',
-    'Lower-middle-income countries', 'Luxembourg', 'Malaysia', 'Mexico', 'Middle Africa (EI)', 'Middle East (EI)',
-    'Morocco', 'Netherlands', 'New Zealand', 'Non-OECD (EI)', 'North America', 'North America (EI)',
-    'North Macedonia', 'Norway', 'OECD (EI)', 'Oceania', 'Oman', 'Pakistan', 'Peru', 'Philippines', 'Poland',
-    'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa',
-    'South America', 'South Korea', 'South and Central America (EI)', 'Spain', 'Sri Lanka', 'Sweden',
-    'Switzerland', 'Taiwan', 'Thailand', 'Trinidad and Tobago', 'Turkey', 'Turkmenistan', 'USSR', 'Ukraine',
-    'United Kingdom', 'United States', 'Upper-middle-income countries', 'Uzbekistan', 'Venezuela', 'Vietnam',
-    'Western Africa (EI)', 'World'
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc2FuYWx5dGljcyIsImEiOiJjbTBwYXQ4c2swMzBiMmtzNjdxZnp4bTY3In0.giNAUdEA7uVxDQW8ir1M9w';
+
+const SolarShareEnergyMap = () => {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [yearRange, setYearRange] = useState([1971, 2023]);
+  const [data, setData] = useState(null);
+  const [selectedRegions, setSelectedRegions] = useState(['World']);
+
+  const regions = [
+    'World', 'Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania',
+    'Czechia', 'Eastern Africa (EI)', 'Europe (EI)', 'European Union (27)',
+    'High-income countries', 'Lower-middle-income countries',
+    'Middle Africa (EI)', 'Middle East (EI)', 'Non-OECD (EI)',
+    'North America (EI)', 'North Macedonia', 'OECD (EI)',
+    'South and Central America (EI)', 'Trinidad and Tobago', 'USSR',
+    'United States', 'Upper-middle-income countries', 'Western Africa (EI)'
   ];
 
-  const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'World'];
-  const defaultSelectedContinents = ['Africa', 'Asia', 'Europe', 'North America', 'South America'];
-  const [selectedLocations, setSelectedLocations] = useState(defaultSelectedContinents);
+  const regionCoordinates = {
+    'World': { center: [0, 20], zoom: 1.5 },
+    'Africa': { center: [20, 0], zoom: 2.5 },
+    'Asia': { center: [100, 30], zoom: 2.5 },
+    'Europe': { center: [15, 50], zoom: 3 },
+    'North America': { center: [-100, 40], zoom: 2.5 },
+    'South America': { center: [-60, -15], zoom: 2.5 },
+    'Oceania': { center: [134, -25], zoom: 3 }
+  };
 
-  const handleChangeYearRange = (event, newValue) => {
+  useEffect(() => {
+    if (map.current) return; // initialize map only once
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/light-v10',
+      center: [0, 20],
+      zoom: 1.5
+    });
+
+    map.current.on('load', () => {
+      fetch('/solar_share_energy_data.geojson')
+        .then(response => response.json())
+        .then(result => {
+          setData(result);
+          map.current.addSource('solar-data', {
+            type: 'geojson',
+            data: result
+          });
+
+          map.current.addLayer({
+            id: 'solar-heatmap',
+            type: 'heatmap',
+            source: 'solar-data',
+            paint: {
+              'heatmap-weight': [
+                'interpolate',
+                ['linear'],
+                ['get', 'SolarShare'],
+                0, 0,
+                0.5, 1
+              ],
+              'heatmap-intensity': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                0, 1,
+                9, 3
+              ],
+              'heatmap-color': [
+                'interpolate',
+                ['linear'],
+                ['heatmap-density'],
+                0, 'rgba(33,102,172,0)',
+                0.2, 'rgb(103,169,207)',
+                0.4, 'rgb(209,229,240)',
+                0.6, 'rgb(253,219,199)',
+                0.8, 'rgb(239,138,98)',
+                1, 'rgb(178,24,43)'
+              ],
+              'heatmap-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                0, 2,
+                9, 20
+              ],
+              'heatmap-opacity': 0.8
+            }
+          });
+
+          updateMap();
+        });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!map.current || !data) return;
+    updateMap();
+  }, [yearRange, selectedRegions, data]);
+
+  const updateMap = () => {
+    if (!map.current.getSource('solar-data')) return;
+
+    const filteredData = {
+      type: 'FeatureCollection',
+      features: data.features.filter(feature => 
+        feature.properties.Year >= yearRange[0] &&
+        feature.properties.Year <= yearRange[1] &&
+        (selectedRegions.includes('World') || selectedRegions.includes(feature.properties.Entity))
+      )
+    };
+
+    map.current.getSource('solar-data').setData(filteredData);
+
+    // Zoom to selected region
+    if (selectedRegions.length === 1 && regionCoordinates[selectedRegions[0]]) {
+      const { center, zoom } = regionCoordinates[selectedRegions[0]];
+      map.current.flyTo({ center, zoom });
+    }
+  };
+
+  const handleYearRangeChange = (event, newValue) => {
     setYearRange(newValue);
   };
 
-  const handleLocationChange = (event) => {
-    setSelectedLocations(event.target.value);
+  const handleRegionChange = (event) => {
+    setSelectedRegions(event.target.value);
   };
-
-  // Modified mock data generation function
-  const generateMockData = () => {
-    return Array.from({ length: 2023 - 1965 + 1 }, (_, index) => {
-      const year = 1965 + index;
-      return allLocations.map(location => ({
-        location,
-        value: parseFloat((Math.random() * 33 + 2).toFixed(2)), 
-        year
-      }));
-    }).flat();
-  };
-
-  const mockData = useMemo(() => generateMockData(), []);
-
-  const filteredData = useMemo(() => {
-    return mockData.filter(d => 
-      d.year >= yearRange[0] && d.year <= yearRange[1] &&
-      selectedLocations.includes(d.location)
-    );
-  }, [yearRange, selectedLocations, mockData]);
-
-  const chartData = useMemo(() => {
-    return selectedLocations.map(location => ({
-      name: location,
-      data: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, index) => {
-        const year = yearRange[0] + index;
-        const value = filteredData
-          .find(d => d.year === year && d.location === location)?.value || 0;
-        return { x: year, y: parseFloat(value.toFixed(2)) };
-      })
-    }));
-  }, [filteredData, yearRange, selectedLocations]);
-
-  const chartOptions = {
-    chart: {
-      type: 'bar',
-      stacked: false,
-      toolbar: {
-        show: false
-      },
-      foreColor: theme.palette.text.primary
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded',
-        borderRadius: 7,
-      },
-    },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
-    xaxis: {
-      type: 'category',
-      categories: Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i),
-      title: {
-        text: 'Year',
-        style: {
-          color: theme.palette.text.primary
-        }
-      },
-      labels: {
-        style: {
-          colors: theme.palette.text.primary
-        },
-        rotateAlways: false,
-        rotate: 0,
-        trim: false
-      },
-      axisBorder: {
-        color: theme.palette.divider
-      },
-      axisTicks: {
-        color: theme.palette.divider
-      }
-    },
-    yaxis: {
-      title: {
-        text: 'Solar Share',
-        style: {
-          color: theme.palette.text.primary
-        }
-      },
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-        style: {
-          colors: theme.palette.text.primary
-        }
-      }
-    },
-    grid: {
-      show: true,
-      borderColor: theme.palette.divider,
-      xaxis: {
-        lines: {
-          show: true
-        }
-      },
-      yaxis: {
-        lines: {
-          show: false
-        }
-      }
-    },
-    fill: {
-      opacity: 1
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        }
-      },
-      theme: theme.palette.mode
-    },
-    legend: {
-      position: 'bottom',
-      horizontalAlign: 'center',
-      offsetX: 40,
-      labels: {
-        colors: theme.palette.text.primary
-      }
-    },
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.secondary.main,
-      theme.palette.error.main,
-      theme.palette.warning.main,
-      theme.palette.info.main,
-      theme.palette.success.main,
-      theme.palette.grey[500]
-    ],
-  };
-
-  const chartTitle = yearRange[0] === yearRange[1]
-    ? `Solar Share by Location in ${yearRange[0]}`
-    : `Solar Share by Location from ${yearRange[0]} to ${yearRange[1]}`;
 
   return (
     <BlankCard>
-      <CardContent sx={{ p: '25px', textAlign: 'left' }}>
-        <Typography variant="h5" gutterBottom>
-          {chartTitle}
-        </Typography>
-
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Locations</InputLabel>
-          <Select
-            multiple
-            value={selectedLocations}
-            onChange={handleLocationChange}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-          >
-            {allLocations.map((location) => (
-              <MenuItem key={location} value={location}>
-                {location}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Typography gutterBottom>Year Range: {yearRange[0]} - {yearRange[1]}</Typography>
-        <Slider
-          value={yearRange}
-          onChange={handleChangeYearRange}
-          valueLabelDisplay="auto"
-          min={1965}
-          max={2023}
-          sx={{ mb: 4 }}
-        />
-
-        <Box sx={{ height: 500 }}>
-          <Chart
-            options={chartOptions}
-            series={chartData}
-            type="bar"
-            height="100%"
+      <Box sx={{ height: '80vh', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h5" gutterBottom>
+            Solar Share Energy Heatmap
+          </Typography>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Regions</InputLabel>
+            <Select
+              multiple
+              value={selectedRegions}
+              onChange={handleRegionChange}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+            >
+              {regions.map((region) => (
+                <MenuItem key={region} value={region}>
+                  {region}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography gutterBottom>Year Range: {yearRange[0]} - {yearRange[1]}</Typography>
+          <Slider
+            value={yearRange}
+            onChange={handleYearRangeChange}
+            onChangeCommitted={handleYearRangeChange}
+            valueLabelDisplay="auto"
+            min={1971}
+            max={2023}
           />
         </Box>
-      </CardContent>
+        <Box ref={mapContainer} sx={{ flex: 1 }} />
+        <Box sx={{ position: 'absolute', bottom: 32, right: 32, background: 'white', padding: 2, borderRadius: 1 }}>
+          <Typography variant="subtitle2" gutterBottom>Solar Share</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 20, height: 20, background: 'rgb(33,102,172)', mr: 1 }} />
+              <Typography variant="body2">Low</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 20, height: 20, background: 'rgb(103,169,207)', mr: 1 }} />
+              <Typography variant="body2">Medium-Low</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 20, height: 20, background: 'rgb(253,219,199)', mr: 1 }} />
+              <Typography variant="body2">Medium</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 20, height: 20, background: 'rgb(239,138,98)', mr: 1 }} />
+              <Typography variant="body2">Medium-High</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 20, height: 20, background: 'rgb(178,24,43)', mr: 1 }} />
+              <Typography variant="body2">High</Typography>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </BlankCard>
   );
 };
 
-export default SolarShareEnergy;
+export default SolarShareEnergyMap;

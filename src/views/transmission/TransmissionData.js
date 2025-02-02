@@ -13,6 +13,7 @@ import Welcome from 'src/layouts/full/shared/welcome/Welcome';
 
 const Industry = () => {
   return (
+    
     <Box>
       <Grid container spacing={3}>
       
@@ -22,14 +23,15 @@ const Industry = () => {
           </Grid>
         {/* column */}
         <Grid item xs={12}>
+            <YearlyTransmissionLossFactor />
+          </Grid>
+        <Grid item xs={12}>
             <EnergyInjectedandDelivered />
           </Grid>
         <Grid item xs={12}>
             <SystemCollapses />
           </Grid>
-        <Grid item xs={12}>
-            <YearlyTransmissionLossFactor />
-          </Grid>
+        
           <Grid item xs={12}>
             <DiscoInvoicefromNBET_Table />
           </Grid>
