@@ -1,5 +1,7 @@
-import { Avatar, Box, Typography, Grid, Stack } from '@mui/material';
 import * as dropdownData from './data';
+
+import { Avatar, Box, Grid, Stack, Typography } from '@mui/material';
+
 import { Link } from 'react-router-dom';
 import React from 'react';
 

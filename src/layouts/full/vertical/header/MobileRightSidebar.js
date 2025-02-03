@@ -1,4 +1,14 @@
-import React, { useState } from 'react';
+import {
+  Box,
+  Collapse,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import {
   IconApps,
   IconCalendarEvent,
@@ -8,20 +18,10 @@ import {
   IconMail,
   IconMessages,
 } from '@tabler/icons';
-import {
-  Box,
-  Typography,
-  Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-} from '@mui/material';
+import React, { useState } from 'react';
 
-import { Link } from 'react-router-dom';
 import AppLinks from './AppLinks';
+import { Link } from 'react-router-dom';
 import QuickLinks from './QuickLinks';
 
 const MobileRightSidebar = () => {
@@ -115,7 +115,7 @@ const MobileRightSidebar = () => {
           }),
         }}
       >
-        <IconGridDots size="21" stroke="1.5" />
+        {/* <IconGridDots size="21" stroke="1.5" /> */}
       </IconButton>
       {/* ------------------------------------------- */}
       {/* Cart Sidebar */}
