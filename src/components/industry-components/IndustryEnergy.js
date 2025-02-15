@@ -1,8 +1,10 @@
-import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, TextField, Typography, useMediaQuery } from '@mui/material';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import API_URL from '../../config/apiconfig';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Chart from 'react-apexcharts';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/EnergyComparisonAllStatesDashboardWidgetCard';
@@ -384,6 +386,7 @@ const IndustryEnergy = () => {
     },
   };
 
+  const isMobile = useMediaQuery('(max-width:600px)');
   return (
     <EnergyComparisonAllStatesDashboardWidgetCard title="Hourly Energy Generated">
       {getCapacityInfo()}
@@ -395,13 +398,15 @@ const IndustryEnergy = () => {
               sx={{ mr: 1 }}
               disabled={!isBeforeYesterday(selectedDate)} // Disable if selected date is yesterday or before
             >
-              Previous Day
+              {isMobile ? <ChevronLeft /> : 'Previous Day'}
             </Button>
             <DatePicker
               label="Select Date"
               value={selectedDate}
               onChange={(newValue) => setSelectedDate(newValue)}
-              renderInput={(params) => <TextField {...params} sx={{ width: 200, mr: 2 }} />}
+              renderInput={(params) => (
+                <TextField {...params} sx={{ width: isMobile ? '100%' : 200, mr: 2 }} />
+              )}
               maxDate={latestDate}
               minDate={new Date('2018-01-01')}
             />
@@ -410,7 +415,7 @@ const IndustryEnergy = () => {
               sx={{ ml: 1 }}
               disabled={isYesterday(selectedDate)} // Disable if selected date is yesterday
             >
-              Next Day
+              {isMobile ? <ChevronRight /> : 'Next Day'}
             </Button>
           </Box>
         </LocalizationProvider>
@@ -419,7 +424,7 @@ const IndustryEnergy = () => {
           label="Select Genco"
           value={selectedGenco}
           onChange={(e) => setSelectedGenco(e.target.value)}
-          sx={{ width: 200 }}
+          sx={{ width: isMobile ? '100%' : 200, ml: 1 }}
         >
           {gencos.map((genco) => (
             <MenuItem key={genco} value={genco}>

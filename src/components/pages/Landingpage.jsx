@@ -1,9 +1,14 @@
 import { Bar, Line } from 'react-chartjs-2';
 import { FiActivity, FiAlertCircle, FiArrowUp, FiBarChart2, FiGlobe, FiZap } from 'react-icons/fi';
+import { Insights, Money } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 import API_URL from 'src/config/apiconfig';
 import { Chart as ChartJS } from 'chart.js/auto';
+import Forex from './LandingPageCharts/forex';
+import { Grid } from '@mui/material';
+import InflationRate from 'src/components/econometrics-components/InflationRate';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -108,7 +113,7 @@ const EnergyTracker = () => {
     fetchBothDays();
   }, []);
   return (
-    <div className="container">
+    <div className="">
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-container">
@@ -123,16 +128,19 @@ const EnergyTracker = () => {
             <a href="#compare" className="nav-link">
               Compare
             </a>
-            <a href="#alerts" className="nav-link">
-              Alerts
-            </a>
+            <div>
+              {' '}
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <div className="hero-section">
-        <div className="hero-content">
+        <div className="hero-content container">
           <div className="text-content">
             <h1 className="hero-heading">
               Track Energy Usage Across <span className="highlight">Nigeria</span> & Beyond
@@ -164,119 +172,114 @@ const EnergyTracker = () => {
 
       {/* Live Stats */}
       {energyData && (
-        <div className="stats-grid">
-          {/* Yesterday's Energy Card */}
-          <div className="stat-card">
-            <div className="stat-header">
-              <div className="stat-icon-wrapper">
-                <FiActivity className="stat-icon" />
+        <div className="container">
+          <div className="stats-grid ">
+            {/* Yesterday's Energy Card */}
+            <div className="stat-card ">
+              <div className="stat-header">
+                <div className="stat-icon-wrapper">
+                  <FiActivity className="stat-icon" />
+                </div>
+                <h3 className="stat-title">Yesterday's Energy Generated</h3>
               </div>
-              <h3 className="stat-title">Yesterday's Energy Generated</h3>
-            </div>
-            <div className="stat-value">{formatNumber(totalEnergyGeneratedHourly)} MW</div>
-            <div className="stat-trend">
-              {trendDirection === 'up' ? (
-                <FiArrowUp className="trend-icon up" />
-              ) : (
-                <FiArrowDown className="trend-icon down" />
-              )}
-              <span>{formatNumber(trendPercentage)}% from previous day</span>
-            </div>
-          </div>
-
-          {/* Previous Day's Energy Card */}
-          <div className="stat-card">
-            <div className="stat-header">
-              <div className="stat-icon-wrapper">
-                <FiActivity className="stat-icon" />
-              </div>
-              <h3 className="stat-title">Previous Day's Energy Generated</h3>
-            </div>
-            <div className="stat-value">{formatNumber(previousDayEnergy)} MW</div>
-            <div className="stat-comparison">
-              <span className="comparison-label">Reference value for comparison</span>
-            </div>
-          </div>
-
-          {/* Daily Change Summary Card */}
-          <div className="stat-card">
-            <div className="stat-header">
-              <div className="stat-icon-wrapper">
+              <div className="stat-value">{formatNumber(totalEnergyGeneratedHourly)} MW</div>
+              <div className="stat-trend">
                 {trendDirection === 'up' ? (
-                  <FiArrowUp className="stat-icon success" />
+                  <FiArrowUp className="trend-icon up" />
                 ) : (
-                  <FiArrowDown className="stat-icon danger" />
+                  <FiArrowDown className="trend-icon down" />
                 )}
+                <span>{formatNumber(trendPercentage)}% from previous day</span>
               </div>
-              <h3 className="stat-title">Daily Change Summary</h3>
             </div>
-            <div className="stat-value">
-              {formatNumber(Math.abs(totalEnergyGeneratedHourly - previousDayEnergy))} MW
+
+            {/* Previous Day's Energy Card */}
+            <div className="stat-card">
+              <div className="stat-header">
+                <div className="stat-icon-wrapper">
+                  <FiActivity className="stat-icon" />
+                </div>
+                <h3 className="stat-title">Previous Day's Energy Generated</h3>
+              </div>
+              <div className="stat-value">{formatNumber(previousDayEnergy)} MW</div>
+              <div className="stat-comparison">
+                <span className="comparison-label">Reference value for comparison</span>
+              </div>
             </div>
-            <div className="stat-description">
-              <span className={`change-indicator ${trendDirection}`}>
-                {trendDirection === 'up' ? 'Increase' : 'Decrease'} from previous day
-              </span>
+
+            {/* Daily Change Summary Card */}
+            <div className="stat-card">
+              <div className="stat-header">
+                <div className="stat-icon-wrapper">
+                  {trendDirection === 'up' ? (
+                    <FiArrowUp className="stat-icon success" />
+                  ) : (
+                    <FiArrowDown className="stat-icon danger" />
+                  )}
+                </div>
+                <h3 className="stat-title">Daily Change Summary</h3>
+              </div>
+              <div className="stat-value">
+                {formatNumber(Math.abs(totalEnergyGeneratedHourly - previousDayEnergy))} MW
+              </div>
+              <div className="stat-description">
+                <span className={`change-indicator ${trendDirection}`}>
+                  {trendDirection === 'up' ? 'Increase' : 'Decrease'} from previous day
+                </span>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Comparison Chart */}
-      <div className="chart-section">
-        <h2 className="section-heading">
-          <FiBarChart2 className="section-icon" />
-          Country Comparison
-        </h2>
-        <div className="chart-container">
-          <Bar
-            data={{
-              labels: energyData?.comparison.labels,
-              datasets: [
-                {
-                  label: 'Nigeria',
-                  data: energyData?.comparison.Nigeria,
-                  backgroundColor: '#10B981',
-                },
-                {
-                  label: 'Germany',
-                  data: energyData?.comparison.Germany,
-                  backgroundColor: '#3B82F6',
-                },
-              ],
-            }}
-          />
+      {/* Features Section */}
+      <div className="container">
+        {' '}
+        <div className="features-section ">
+          <h2 className="section-heading centered container">Why Choose Elect-T?</h2>
+          <div className="features-grid">
+            {[
+              {
+                icon: FiGlobe,
+                title: 'Global Coverage',
+                text: 'Track energy usage across multiple countries',
+              },
+              {
+                icon: FiAlertCircle,
+                title: 'Real-time Alerts',
+                text: 'Get instant notifications for anomalies',
+              },
+              {
+                icon: FiZap,
+                title: 'Smart Analysis',
+                text: 'AI-powered recommendations for efficiency',
+              },
+            ].map((feature, index) => (
+              <div key={index} className="feature-card">
+                <feature.icon className="feature-icon" />
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-description">{feature.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="features-section">
-        <h2 className="section-heading centered">Why Choose PowerTrack?</h2>
-        <div className="features-grid">
-          {[
-            {
-              icon: FiGlobe,
-              title: 'Global Coverage',
-              text: 'Track energy usage across multiple countries',
-            },
-            {
-              icon: FiAlertCircle,
-              title: 'Real-time Alerts',
-              text: 'Get instant notifications for anomalies',
-            },
-            {
-              icon: FiZap,
-              title: 'Smart Analysis',
-              text: 'AI-powered recommendations for efficiency',
-            },
-          ].map((feature, index) => (
-            <div key={index} className="feature-card">
-              <feature.icon className="feature-icon" />
-              <h3 className="feature-title">{feature.title}</h3>
-              <p className="feature-description">{feature.text}</p>
-            </div>
-          ))}
+      <div className="container">
+        <div className="economy-insights">
+          <Insights />
+          <h1>Get Economy Insights</h1>
         </div>
+
+        <Grid container spacing={2} display="flex" alignItems="stretch">
+          <Grid item sm={12} md={6}>
+            {' '}
+            <InflationRate />
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <Forex />
+          </Grid>
+        </Grid>
       </div>
     </div>
   );

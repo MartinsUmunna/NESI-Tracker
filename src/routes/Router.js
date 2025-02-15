@@ -1,7 +1,9 @@
 import React, { lazy } from 'react';
 
 import Loadable from '../layouts/full/shared/loadable/Loadable';
+import LoginPage from 'src/components/pages/auth/Login';
 import { Navigate } from 'react-router-dom';
+import RegisterPage from 'src/components/pages/auth/Register';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -65,6 +67,16 @@ const Router = [
   {
     path: '/',
     element: <EnergyTracker />,
+    children: [],
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+    children: [],
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
     children: [],
   },
   {
