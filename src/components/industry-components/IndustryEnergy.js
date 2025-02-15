@@ -9,18 +9,21 @@ import EnergyComparisonAllStatesDashboardWidgetCard from 'src/components/shared/
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ResponsiveEl from 'src/components/shared/ResponsiveEl';
 import axios from 'axios';
+import { updateEnergyGenerated } from 'src/store/apps/energy/Energy';
+import { useDispatch } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
+export const getYesterdayDate = () => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return yesterday;
+};
 const IndustryEnergy = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
+  const dispatch = useDispatch();
 
   // Function to get yesterday's date
-  const getYesterdayDate = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return yesterday;
-  };
 
   const [data, setData] = useState([]);
   const [processedData, setProcessedData] = useState(Array(24).fill(0));
@@ -80,6 +83,13 @@ const IndustryEnergy = () => {
           endDate: selectedDate.toISOString().split('T')[0],
         },
       });
+
+      const totalEnergyGenerated = response.data.data.reduce((totalEnergy, entry) => {
+        const energyValue = parseFloat(entry.EnergyGeneratedMWh) || 0;
+        return totalEnergy + energyValue;
+      }, 0);
+
+      dispatch(updateEnergyGenerated({ totalEnergyGenerated }));
       const uniqueGencos = [...new Set(response.data.data.map((item) => item.Gencos))];
       const completeGencoList = ['All', ...uniqueGencos];
       setFullGencoList(completeGencoList);

@@ -1,5 +1,6 @@
-import axios from '../../../utils/axios';
 import { filter, map } from 'lodash';
+
+import axios from '../../../utils/axios';
 import { createSlice } from '@reduxjs/toolkit';
 
 const API_URL = '/api/data/eCommerce/ProductsData';
@@ -17,7 +18,7 @@ const initialState = {
     price: 'All',
     rating: '',
   },
-  error: ''
+  error: '',
 };
 
 export const EcommerceSlice = createSlice({

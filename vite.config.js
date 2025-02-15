@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
+import fs from 'fs/promises';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import fs from 'fs/promises';
 import svgr from '@svgr/rollup';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +18,7 @@ export default defineConfig({
     exclude: [],
   },
   build: {
-    outDir: 'dist' // Change this if your output directory is different
+    outDir: 'dist', // Change this if your output directory is different
   },
   optimizeDeps: {
     esbuildOptions: {

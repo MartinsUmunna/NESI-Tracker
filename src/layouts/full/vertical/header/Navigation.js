@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
 
 const AppDD = () => {
@@ -24,12 +25,23 @@ const AppDD = () => {
 
   return (
     <>
-      
-      <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to='/overview/Industry' component={Link}>
+      <Button
+        color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        to="/dashboard/overview/Industry"
+        component={Link}
+      >
         Industry
       </Button>
 
-      <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to='/econometrics/EconomicData' component={Link}>
+      <Button
+        color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        to="/dashboard/econometrics/EconomicData"
+        component={Link}
+      >
         Economy
       </Button>
 
@@ -41,21 +53,29 @@ const AppDD = () => {
       >
         On-Grid
       </Button>
-      <Menu
-        anchorEl={anchorElOnGrid}
-        open={Boolean(anchorElOnGrid)}
-        onClose={handleCloseOnGrid}
-      >
-        <MenuItem onClick={handleCloseOnGrid} component={Link} to='/On-Grid/GenerationData'>
+      <Menu anchorEl={anchorElOnGrid} open={Boolean(anchorElOnGrid)} onClose={handleCloseOnGrid}>
+        <MenuItem
+          onClick={handleCloseOnGrid}
+          component={Link}
+          to="/dashboard/On-Grid/GenerationData"
+        >
           Generation
         </MenuItem>
-        <MenuItem onClick={handleCloseOnGrid} component={Link} to="/transmission/TransmissionData">
+        <MenuItem
+          onClick={handleCloseOnGrid}
+          component={Link}
+          to="/dashboard/transmission/TransmissionData"
+        >
           Transmission
         </MenuItem>
-        <MenuItem onClick={handleCloseOnGrid} component={Link} to="/distribution/Disco">
+        <MenuItem onClick={handleCloseOnGrid} component={Link} to="/dashboard/distribution/Disco">
           Distribution
         </MenuItem>
-        <MenuItem onClick={handleCloseOnGrid} component={Link} to="/customer/CustomerData">
+        <MenuItem
+          onClick={handleCloseOnGrid}
+          component={Link}
+          to="/dashboard/customer/CustomerData"
+        >
           Customer
         </MenuItem>
       </Menu>
@@ -68,20 +88,32 @@ const AppDD = () => {
       >
         Off-Grid
       </Button>
-      <Menu
-        anchorEl={anchorElOffGrid}
-        open={Boolean(anchorElOffGrid)}
-        onClose={handleCloseOffGrid}
-      >
-        <MenuItem onClick={handleCloseOffGrid} component={Link} to='/off-grid/MiniGridsData'>
+      <Menu anchorEl={anchorElOffGrid} open={Boolean(anchorElOffGrid)} onClose={handleCloseOffGrid}>
+        <MenuItem
+          onClick={handleCloseOffGrid}
+          component={Link}
+          to="/dashboard/off-grid/MiniGridsData"
+        >
           Mini Grids
         </MenuItem>
       </Menu>
 
-      <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to="/off-grid/EnergyReportData" component={Link}>
+      <Button
+        color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        to="/dashboard/off-grid/EnergyReportData"
+        component={Link}
+      >
         Energy Insights
       </Button>
-      <Button color="inherit" sx={{ color: (theme) => theme.palette.text.secondary }} variant="text" to="/dataset/Dataset_Data" component={Link}>
+      <Button
+        color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        to="/dashboard/dataset/Dataset_Data"
+        component={Link}
+      >
         Datasets
       </Button>
     </>

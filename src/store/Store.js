@@ -1,13 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import CustomizerReducer from './customizer/CustomizerSlice';
-import ChatsReducer from './apps/chat/ChatSlice';
-import NotesReducer from './apps/notes/NotesSlice';
-import EmailReducer from './apps/email/EmailSlice';
-import TicketReducer from './apps/tickets/TicketSlice';
-import ContactsReducer from './apps/contacts/ContactSlice';
-import EcommerceReducer from './apps/eCommerce/EcommerceSlice';
-import UserProfileReducer from './apps/userProfile/UserProfileSlice';
 import BlogReducer from './apps/blog/BlogSlice';
+import ChatsReducer from './apps/chat/ChatSlice';
+import ContactsReducer from './apps/contacts/ContactSlice';
+import CustomizerReducer from './customizer/CustomizerSlice';
+import EcommerceReducer from './apps/eCommerce/EcommerceSlice';
+import EmailReducer from './apps/email/EmailSlice';
+import EnergyReducer from './apps/energy/Energy';
+import NotesReducer from './apps/notes/NotesSlice';
+import TicketReducer from './apps/tickets/TicketSlice';
+import UserProfileReducer from './apps/userProfile/UserProfileSlice';
+import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     ecommerceReducer: EcommerceReducer,
     userpostsReducer: UserProfileReducer,
     blogReducer: BlogReducer,
+    energyReducer: EnergyReducer,
   },
 });
 

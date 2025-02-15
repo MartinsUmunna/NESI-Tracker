@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Box, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+
 import BlankCard from 'src/components/shared/BlankCard';
+import mapboxgl from 'mapbox-gl';
 
-
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGluc2FuYWx5dGljcyIsImEiOiJjbTBwYXQ4c2swMzBiMmtzNjdxZnp4bTY3In0.giNAUdEA7uVxDQW8ir1M9w';
+mapboxgl.accessToken =
+  'pk.eyJ1IjoibWFydGluc2FuYWx5dGljcyIsImEiOiJjbHpxdXc0MWcxcHd5MmpxdXljc2ZieWJpIn0.t4ZnMZ3-qKEK9DxdE845xw';
 
 const PetrolPricesMap = () => {
   const mapContainer = useRef(null);
@@ -19,14 +21,14 @@ const PetrolPricesMap = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v10',
-      center: [8.6753, 9.0820], // center on Nigeria
-      zoom: 5.5
+      center: [8.6753, 9.082], // center on Nigeria
+      zoom: 5.5,
     });
 
     map.current.on('style.load', () => {
       map.current.addSource('petrol-prices', {
         type: 'geojson',
-        data: '/public/petrol_prices.geojson'
+        data: '/public/petrol_prices.geojson',
       });
 
       map.current.addLayer({
@@ -38,19 +40,24 @@ const PetrolPricesMap = () => {
             'interpolate',
             ['linear'],
             ['get', 'Price'],
-            100, '#ffffcc',
-            150, '#a1dab4',
-            200, '#41b6c4',
-            250, '#2c7fb8',
-            300, '#253494'
+            100,
+            '#ffffcc',
+            150,
+            '#a1dab4',
+            200,
+            '#41b6c4',
+            250,
+            '#2c7fb8',
+            300,
+            '#253494',
           ],
           'fill-opacity': [
             'case',
             ['boolean', ['==', ['get', 'State'], ['literal', hoveredState]], false],
             1,
-            0.75
-          ]
-        }
+            0.75,
+          ],
+        },
       });
 
       map.current.addLayer({
@@ -59,8 +66,8 @@ const PetrolPricesMap = () => {
         source: 'petrol-prices',
         paint: {
           'line-color': '#627BC1',
-          'line-width': 1
-        }
+          'line-width': 1,
+        },
       });
 
       // Add hover effect
@@ -93,7 +100,7 @@ const PetrolPricesMap = () => {
 
           map.current.fitBounds(bounds, {
             padding: 40,
-            duration: 1000
+            duration: 1000,
           });
         }
       });
@@ -108,7 +115,7 @@ const PetrolPricesMap = () => {
       map.current.setFilter('petrol-prices-fill', [
         'all',
         ['==', ['to-number', ['get', 'Year']], year],
-        ['==', ['get', 'Month'], month]
+        ['==', ['get', 'Month'], month],
       ]);
     }
   };
@@ -121,8 +128,18 @@ const PetrolPricesMap = () => {
 
   const years = Array.from(new Set([2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]));
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   return (
@@ -134,25 +151,21 @@ const PetrolPricesMap = () => {
         <Box sx={{ display: 'flex', justifyContent: 'flex-start', p: 2, gap: 2 }}>
           <FormControl size="small" sx={{ minWidth: 80 }}>
             <InputLabel>Year</InputLabel>
-            <Select
-              value={year}
-              label="Year"
-              onChange={(e) => setYear(e.target.value)}
-            >
+            <Select value={year} label="Year" onChange={(e) => setYear(e.target.value)}>
               {years.map((y) => (
-                <MenuItem key={y} value={y}>{y}</MenuItem>
+                <MenuItem key={y} value={y}>
+                  {y}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControl size="small" sx={{ minWidth: 100 }}>
             <InputLabel>Month</InputLabel>
-            <Select
-              value={month}
-              label="Month"
-              onChange={(e) => setMonth(e.target.value)}
-            >
+            <Select value={month} label="Month" onChange={(e) => setMonth(e.target.value)}>
               {months.map((m) => (
-                <MenuItem key={m} value={m}>{m}</MenuItem>
+                <MenuItem key={m} value={m}>
+                  {m}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
