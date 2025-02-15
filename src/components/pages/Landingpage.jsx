@@ -284,6 +284,29 @@ const EnergyTracker = () => {
           </Grid>
         </Grid>
       </div>
+      <footer
+        style={{
+          backgroundColor: '#f8f9fa',
+          padding: '1rem 0',
+          textAlign: 'center',
+          marginTop: 'auto',
+          borderTop: '1px solid #eaeaea',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            fontSize: '0.9rem',
+            color: '#6c757d',
+          }}
+        >
+          <p>
+            Developed with passion by <strong style={{ color: '#007bff' }}>EMRC</strong>
+          </p>
+          <p>© {new Date().getFullYear()} All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };
