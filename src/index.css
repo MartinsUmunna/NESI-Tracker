@@ -245,57 +245,80 @@
 
 /* Navbar styles */
 .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
 }
 
 .nav-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+  margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .logo-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .logo-icon {
-  color: #3b82f6;
-  font-size: 1.5rem;
+  margin-right: 5px;
+  font-size: 1.8rem;
 }
 
-.logo-text {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-}
-
+/* Navigation Links */
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 20px;
 }
 
 .nav-link {
-  color: #4b5563;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-size: 1rem;
+  transition: color 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #3b82f6;
+  color: #61dafb; /* Highlight color */
 }
 
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.login-button {
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.login-button:hover {
+  color: #61dafb; /* Highlight color */
+}
+
+.get-started-button {
+  background-color: #61dafb;
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.get-started-button:hover {
+  background-color: #47bcd4; /* Darker shade on hover */
+}
 /* Hero section */
 .hero-section {
   padding: 9rem 0 4rem;

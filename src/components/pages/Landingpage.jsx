@@ -117,23 +117,30 @@ const EnergyTracker = () => {
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-container">
+          {/* Logo Section */}
           <div className="logo-wrapper">
             <FiZap className="logo-icon" />
             <span className="logo-text">Elec-t</span>
           </div>
+
+          {/* Navigation Links */}
           <div className="nav-links">
-            <a href="#dashboard" className="nav-link">
+            <Link to="/dashboard" className="nav-link">
               Dashboard
-            </a>
+            </Link>
             <a href="#compare" className="nav-link">
               Compare
             </a>
-            <div>
-              {' '}
-              <Link to="/login" className="nav-link">
-                Login
-              </Link>
-            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <Link to="/login" className="nav-link login-button">
+              Login
+            </Link>
+            <Link to="/register" className="get-started-button">
+              Get Started
+            </Link>
           </div>
         </div>
       </nav>
@@ -161,11 +168,7 @@ const EnergyTracker = () => {
             </div>
           </div>
           <div className="illustration-wrapper">
-            <img
-              src="/energy-illustration.svg"
-              alt="Energy Tracking"
-              className="energy-illustration"
-            />
+            <img src="ima.png" alt="Energy Tracking" className="energy-illustration" />
           </div>
         </div>
       </div>
