@@ -1,19 +1,29 @@
-import React from 'react';
-import { IconButton, Box, AppBar, useMediaQuery, Toolbar, styled, Stack, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleSidebar, toggleMobileSidebar } from 'src/store/customizer/CustomizerSlice';
-import { IconMenu2 } from '@tabler/icons';
+import {
+  AppBar,
+  Box,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+  styled,
+  useMediaQuery,
+} from '@mui/material';
+import { toggleMobileSidebar, toggleSidebar } from 'src/store/customizer/CustomizerSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-// components
+import Cart from './Cart';
+import Client from './client-tm';
+import { IconMenu2 } from '@tabler/icons';
+import Language from './Language';
+import MobileRightSidebar from './MobileRightSidebar';
+import Navigation from './Navigation';
 import Notifications from './Notifications';
 import Profile from './Profile';
-import Cart from './Cart';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Search from './Search';
-import Language from './Language';
-import Navigation from './Navigation';
-import MobileRightSidebar from './MobileRightSidebar';
-import Client from './client-tm';
+
+// components
 
 const Header = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
@@ -61,9 +71,7 @@ const Header = () => {
 
         <Search />
 
-        <CenterContainer>
-          {lgUp ? <Navigation /> : null}
-        </CenterContainer>
+        <CenterContainer>{lgUp ? <Navigation /> : null}</CenterContainer>
 
         <Stack spacing={1} direction="row" alignItems="center">
           {lgDown ? <MobileRightSidebar /> : null}

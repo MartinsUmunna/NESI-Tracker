@@ -1,5 +1,13 @@
 import { Bar, Line } from 'react-chartjs-2';
-import { FiActivity, FiAlertCircle, FiArrowUp, FiBarChart2, FiGlobe, FiZap } from 'react-icons/fi';
+import {
+  FiActivity,
+  FiAlertCircle,
+  FiArrowDown,
+  FiArrowUp,
+  FiBarChart2,
+  FiGlobe,
+  FiZap,
+} from 'react-icons/fi';
 import { Insights, Money } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
@@ -15,11 +23,10 @@ import { useSelector } from 'react-redux';
 // import { getYesterdayDate } from 'src/components/industry-components/IndustryEnergy';
 
 function formatNumber(value) {
-  // Use Intl.NumberFormat for locale-aware formatting
   const formatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal', // Use 'currency' if you want to format as currency
-    minimumFractionDigits: 2, // Minimum 2 decimal places
-    maximumFractionDigits: 2, // Maximum 2 decimal places
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 
   return formatter.format(value);
@@ -42,6 +49,8 @@ export const getPreviousToYesterdayDate = () => {
   previousToYesterday.setDate(previousToYesterday.getDate() - 2);
   return previousToYesterday;
 };
+
+console.log(getYesterdayDate(), getPreviousToYesterdayDate());
 const EnergyTracker = () => {
   const [selectedCountry, setSelectedCountry] = useState('Nigeria');
   const [energyData, setEnergyData] = useState(null);
