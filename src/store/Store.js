@@ -9,6 +9,7 @@ import NotesReducer from './apps/notes/NotesSlice';
 import TicketReducer from './apps/tickets/TicketSlice';
 import UserProfileReducer from './apps/userProfile/UserProfileSlice';
 import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './apps/user/userSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     userpostsReducer: UserProfileReducer,
     blogReducer: BlogReducer,
     energyReducer: EnergyReducer,
+    userReducer: userReducer,
   },
 });
 

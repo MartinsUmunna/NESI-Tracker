@@ -2,6 +2,7 @@
 
 import { FiBriefcase, FiGlobe, FiLock, FiMail, FiUser, FiZap } from 'react-icons/fi';
 
+import API_URL from 'src/config/apiconfig';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -15,7 +16,7 @@ const RegisterPage = () => {
     confirmPassword: '',
     company: '',
     country: '',
-    role: 'utility',
+    role: '',
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -80,13 +81,15 @@ const RegisterPage = () => {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/auth/register`,
-          formData,
-        );
-        // Optionally auto-login after registration
-        localStorage.setItem('token', response.data.token);
-        navigate('/dashboard');
+        const prepareFormLoad = {
+          full_name: formData.name,
+          ...formData,
+        };
+        const response = await axios.post(`${API_URL}/sign-up`, prepareFormLoad);
+        alert('Please Login');
+        // // Optionally auto-login after registration
+        // localStorage.setItem('token', response.data.token);
+        navigate('/login');
       } catch (error) {
         setApiError(error.response?.data?.message || 'Registration failed. Please try again.');
       } finally {
